@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.38442798330115224 0.900596944981451 0.20283063956189182 5.24252183975376
-  position -0.4874491326087145 0.5003359103181249 0.37315635934760716
+  orientation 0.2582456412945788 0.9564146166253549 0.13630946356628018 5.303529623148671
+  position -0.551025102212195 0.4024184576187554 0.42710111039347165
 }
 TexturedBackground {
   texture "stadium"
@@ -376,6 +376,7 @@ Robot {
       }
       device [
         RotationalMotor {
+          name "motor1"
         }
       ]
       endPoint DEF WHEEL2 Solid {
@@ -404,6 +405,7 @@ Robot {
       }
       device [
         RotationalMotor {
+          name "motor2"
         }
       ]
       endPoint DEF WHEEL3 Solid {
@@ -432,6 +434,7 @@ Robot {
       }
       device [
         RotationalMotor {
+          name "motor3"
         }
       ]
       endPoint DEF WHEEL4 Solid {
@@ -460,6 +463,7 @@ Robot {
       }
       device [
         RotationalMotor {
+          name "motor4"
         }
       ]
       endPoint DEF WHEEL1 Solid {
