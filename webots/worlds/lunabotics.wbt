@@ -376,12 +376,12 @@ Robot {
       }
       device [
         RotationalMotor {
-          name "motor1"
+          name "motor2"
         }
       ]
       endPoint DEF WHEEL2 Solid {
-        translation 0.06 0 -0.05
-        rotation 0 0 1 1.5708
+        translation 0.059999999999999984 0 -0.04999999999999999
+        rotation 0 -9.358463138675112e-24 1 1.5707999999999998
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -405,12 +405,12 @@ Robot {
       }
       device [
         RotationalMotor {
-          name "motor2"
+          name "motor3"
         }
       ]
       endPoint DEF WHEEL3 Solid {
-        translation -0.06 0 0.05
-        rotation 0 0 1 1.5708
+        translation -0.060000000000000026 8.271806125530277e-25 0.050000000000000024
+        rotation 9.358463138675112e-24 0 1 1.5708
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -434,12 +434,12 @@ Robot {
       }
       device [
         RotationalMotor {
-          name "motor3"
+          name "motor4"
         }
       ]
       endPoint DEF WHEEL4 Solid {
         translation -0.06 0 -0.05
-        rotation 0 0 1 1.5708
+        rotation -7.486770510940092e-23 7.486770510940092e-23 1 1.5707999999999998
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -463,12 +463,12 @@ Robot {
       }
       device [
         RotationalMotor {
-          name "motor4"
+          name "motor1"
         }
       ]
       endPoint DEF WHEEL1 Solid {
-        translation 0.06 0 0.05
-        rotation 0 0 1 1.5708
+        translation 0.060000000000000026 0 0.050000000000000024
+        rotation 1.1230155766410135e-22 0 1 1.5708
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
