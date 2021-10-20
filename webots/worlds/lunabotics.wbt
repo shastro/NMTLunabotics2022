@@ -373,6 +373,7 @@ Robot {
   children [
     HingeJoint {
       jointParameters HingeJointParameters {
+        anchor 0.06 0 -0.05
       }
       device [
         RotationalMotor {
@@ -402,6 +403,7 @@ Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters {
+        anchor -0.06 0 0.05
       }
       device [
         RotationalMotor {
@@ -431,6 +433,7 @@ Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters {
+        anchor -0.06 0 -0.05
       }
       device [
         RotationalMotor {
@@ -460,6 +463,7 @@ Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters {
+        anchor 0.06 0 0.05
       }
       device [
         RotationalMotor {
