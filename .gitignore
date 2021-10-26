@@ -1,3 +1,4 @@
 *~
 ros_demos/rust/target
 ros_demos/python/Pipfile
+ros/robot_kbd/build/*
