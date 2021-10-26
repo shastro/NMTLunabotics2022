@@ -147,6 +147,12 @@ void Motor::update() {
 }
 
 void Motor::setVelocity(double vel) {
+  // Avoid sending duplicate signals to ROS if we can avoid it.
+  if (pos_ == std::numeric_limits<double>::infinity()
+      && vel_ == vel) {
+    return;
+  }
+
   pos_ = std::numeric_limits<double>::infinity();
   vel_ = vel;
 
@@ -154,6 +160,10 @@ void Motor::setVelocity(double vel) {
 }
 
 void Motor::setPosition(double pos) {
+  if (pos_ == pos) {
+    return;
+  }
+
   pos_ = pos;
   // The value of `vel_' will be ignored anyway, don't bother fiddling
   // with it.
