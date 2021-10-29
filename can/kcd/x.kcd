@@ -11,7 +11,8 @@
 				<Value slope="0.0392156862745098" intercept="0" unit="V"/>
 			</Signal>
 			<Signal name="RHT_BCK_MTR_VOLTAGE" offset="8" length="8" endianess="little">
-				<Value slope="1" intercept="0" unit="V"/>
+				<Value slope="0.7843137254901961" intercept="-100.0" unit="V"/>
+
 			</Signal>
 			<Signal name="LFT_FWD_MTR_VOLTAGE" offset="16" length="8" endianess="little">
 				<Value slope="1" intercept="0" unit="V"/>
