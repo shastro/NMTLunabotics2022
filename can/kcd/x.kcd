@@ -1,0 +1,26 @@
+<NetworkDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://kayak.2codeornot2code.org/1.0" xsi:noNamespaceSchemaLocation="Definition.xsd">
+	<Document>
+	xmllint --schema schema.xsd x.kcd --noout
+	Use the above command to verify that this file is correct
+	</Document> 
+	<Node id="1" name="Locomotion Motor ECU" />
+
+	<Bus name="Main">
+		<Message id="0x00A" name="Motor Voltage">
+			<Signal name="LFT_BCK_MTR_VOLTAGE" offset="0" length="8" endianess="little">
+				<Value slope="0.0392156862745098" intercept="0" unit="V"/>
+			</Signal>
+			<Signal name="RHT_BCK_MTR_VOLTAGE" offset="8" length="8" endianess="little">
+				<Value slope="0.7843137254901961" intercept="-100.0" unit="V"/>
+
+			</Signal>
+			<Signal name="LFT_FWD_MTR_VOLTAGE" offset="16" length="8" endianess="little">
+				<Value slope="1" intercept="0" unit="V"/>
+			</Signal>
+			<Signal name="RHT_FWD_MTR_VOLTAGE" offset="24" length="8" endianess="little">
+				<Value slope="1" intercept="0" unit="V"/>
+			</Signal>
+		</Message>
+	</Bus>
+
+</NetworkDefinition>
