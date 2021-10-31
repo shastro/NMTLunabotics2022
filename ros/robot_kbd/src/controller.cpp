@@ -185,7 +185,12 @@ TeleopLunabotics::TeleopLunabotics(string path)
     : back_left_(Motor(path + "/motor2"), pair(1.0, 0.0)),
       back_right_(Motor(path + "/motor4"), pair(0.0, 1.0)),
       front_left_(Motor(path + "/motor1"), pair(1.0, 0.0)),
-      front_right_(Motor(path + "/motor3"), pair(0.0, 1.0)), robot_path_(path) {
+      front_right_(Motor(path + "/motor3"), pair(0.0, 1.0)),
+      back_left_inner_(Motor(path + "/motor6"), pair(1.0, 0.0)),
+      back_right_inner_(Motor(path + "/motor8"), pair(0.0, 1.0)),
+      front_left_inner_(Motor(path + "/motor5"), pair(1.0, 0.0)),
+      front_right_inner_(Motor(path + "/motor7"), pair(0.0, 1.0)),
+      robot_path_(path) {
 }
 
 
@@ -270,6 +275,10 @@ void TeleopLunabotics::keyLoop() {
     back_right_.nav(nav);
     front_left_.nav(nav);
     front_right_.nav(nav);
+    back_left_inner_.nav(nav);
+    back_right_inner_.nav(nav);
+    front_left_inner_.nav(nav);
+    front_right_inner_.nav(nav);
   }
 
   return;
