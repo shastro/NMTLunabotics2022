@@ -21,7 +21,7 @@
 #endif
 
 #include "controller.hpp"
-
+#define KEYCODE_SPACE 0x20
 #define KEYCODE_RIGHT 0x43
 #define KEYCODE_LEFT 0x44
 #define KEYCODE_UP 0x41
@@ -185,7 +185,12 @@ TeleopLunabotics::TeleopLunabotics(string path)
     : back_left_(Motor(path + "/motor2"), pair(1.0, 0.0)),
       back_right_(Motor(path + "/motor4"), pair(0.0, 1.0)),
       front_left_(Motor(path + "/motor1"), pair(1.0, 0.0)),
-      front_right_(Motor(path + "/motor3"), pair(0.0, 1.0)), robot_path_(path) {
+      front_right_(Motor(path + "/motor3"), pair(0.0, 1.0)),
+      back_left_inner_(Motor(path + "/motor6"), pair(1.0, 0.0)),
+      back_right_inner_(Motor(path + "/motor8"), pair(0.0, 1.0)),
+      front_left_inner_(Motor(path + "/motor5"), pair(1.0, 0.0)),
+      front_right_inner_(Motor(path + "/motor7"), pair(0.0, 1.0)),
+      robot_path_(path) {
 }
 
 
@@ -215,14 +220,16 @@ int main(int argc, char **argv) {
 
 void TeleopLunabotics::keyLoop() {
   char c;
-  auto nav = pair(0.0, 0.0);
+
+  double moveSpeed = 0.0;
+  double turnSpeed = 0.0;
 
   puts("Reading from keyboard");
-  puts("---------------------------");
-  puts("Use arrow keys to move the robot. 'q' to quit.");
+  puts("-----------------------------------------------------------");
+  puts("Use arrow keys to move the robot, ' ' to stop, 'q' to quit.");
 
   while (1) {
-    // get the next event from the keyboard
+    // Get the next event from the keyboard.
     try {
       input.readOne(&c);
     } catch (const std::runtime_error &) {
@@ -233,29 +240,45 @@ void TeleopLunabotics::keyLoop() {
     switch (c) {
     case KEYCODE_LEFT:
       ROS_DEBUG("LEFT");
-      nav = pair(-1.0, 1.0);
+      moveSpeed = 0;
+      turnSpeed -= 0.5;
       break;
     case KEYCODE_RIGHT:
       ROS_DEBUG("RIGHT");
-      nav = pair(1.0, -1.0);
+      moveSpeed = 0;
+      turnSpeed += 0.5;
       break;
     case KEYCODE_UP:
       ROS_DEBUG("UP");
-      nav = pair(1.0, 1.0);
+      moveSpeed += 0.5;
+      turnSpeed = 0;
       break;
     case KEYCODE_DOWN:
       ROS_DEBUG("DOWN");
-      nav = pair(-1.0, -1.0);
+      moveSpeed -= 0.5;
+      turnSpeed = 0;
+      break;
+    case KEYCODE_SPACE:
+      ROS_DEBUG("STOP");
+      moveSpeed = 0;
+      turnSpeed = 0;
       break;
     case KEYCODE_Q:
       ROS_DEBUG("quit");
       return;
     }
 
+    auto nav = pair(1.0 * moveSpeed + 1.0 * turnSpeed,
+                    1.0 * moveSpeed - 1.0 * turnSpeed);
+
     back_left_.nav(nav);
     back_right_.nav(nav);
     front_left_.nav(nav);
     front_right_.nav(nav);
+    back_left_inner_.nav(nav);
+    back_right_inner_.nav(nav);
+    front_left_inner_.nav(nav);
+    front_right_inner_.nav(nav);
   }
 
   return;

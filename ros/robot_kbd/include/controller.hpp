@@ -99,8 +99,12 @@ public:
 private:
   ros::NodeHandle nh_;
 
-  // The robot's four wheels.
+  // The robot's outer four wheels.
   NavMotor back_left_, back_right_, front_left_, front_right_;
+
+  // The robot's inner four wheels.
+  NavMotor back_left_inner_, back_right_inner_,
+    front_left_inner_, front_right_inner_;
 
   // The path to the base robot, e.g., "/david_28148_helios".
   std::string robot_path_;
