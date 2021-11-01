@@ -73,7 +73,7 @@ int main(void){
         }
         print_frame(&frame); 
     }
-   if (close(cansockfd) < 0) {
+    if (close(cansockfd) < 0) {
 		perror("Close");
 		return 1;
 	}
