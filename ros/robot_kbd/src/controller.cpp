@@ -202,7 +202,7 @@ void quit(int sig) {
 }
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "teleop_turtle");
+  ros::init(argc, argv, "teleop_lunabotics");
 
   if (argc != 2) {
     cout << "Usage: " << argv[0] << " <robot-path>" << endl;
