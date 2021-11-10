@@ -17,11 +17,11 @@ def main():
     parser.add_argument("start", type=float, help="Start of desired value range (float)")
     parser.add_argument("end", type=float, help="End of desired value range (float)")
     parser.add_argument("nbits", type=int, help="Number of bits used to represent value range (int)")
-    
+
     args = parser.parse_args()
 
     start, slope = calc_map(args.start, args.end, args.nbits)
-   
+
     ss = f"<Value slope=\"{slope}\" intercept=\"{start}\" />"
     print(ss)
 
