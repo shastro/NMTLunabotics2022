@@ -18,7 +18,7 @@
 #include <unistd.h>
 #else
 #include <windows.h>
-#endif
+#endif // _WIN32
 
 #include "controller.hpp"
 #define KEYCODE_SPACE 0x20
@@ -128,7 +128,6 @@ void KeyboardReader::shutdown() {
 
 KeyboardReader input;
 
-
 Motor::Motor(string path) : pos_(0), vel_(0) {
   pos_path_ = path + "/set_position";
   vel_path_ = path + "/set_velocity";
@@ -148,8 +147,7 @@ void Motor::update() {
 
 void Motor::setVelocity(double vel) {
   // Avoid sending duplicate signals to ROS if we can avoid it.
-  if (pos_ == std::numeric_limits<double>::infinity()
-      && vel_ == vel) {
+  if (pos_ == std::numeric_limits<double>::infinity() && vel_ == vel) {
     return;
   }
 
@@ -171,7 +169,6 @@ void Motor::setPosition(double pos) {
   update();
 }
 
-
 NavMotor::NavMotor(Motor m, pair<double, double> mot_vec)
     : motor_(m), mot_vec_(mot_vec) {}
 
@@ -180,19 +177,16 @@ void NavMotor::nav(pair<double, double> nav_vec) {
   motor_.setVelocity(dot);
 }
 
-
-TeleopLunabotics::TeleopLunabotics(string path)
-    : back_left_(Motor(path + "/motor2"), pair(1.0, 0.0)),
-      back_right_(Motor(path + "/motor4"), pair(0.0, 1.0)),
-      front_left_(Motor(path + "/motor1"), pair(1.0, 0.0)),
-      front_right_(Motor(path + "/motor3"), pair(0.0, 1.0)),
-      back_left_inner_(Motor(path + "/motor6"), pair(1.0, 0.0)),
-      back_right_inner_(Motor(path + "/motor8"), pair(0.0, 1.0)),
-      front_left_inner_(Motor(path + "/motor5"), pair(1.0, 0.0)),
-      front_right_inner_(Motor(path + "/motor7"), pair(0.0, 1.0)),
-      robot_path_(path) {
+TeleopLunabotics::TeleopLunabotics(string path) : robot_path_(path) {
+  wheels_.push_back(NavMotor(Motor(path + "/motor1"), pair(1.0, 0.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor2"), pair(1.0, 0.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor3"), pair(0.0, 1.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor4"), pair(0.0, 1.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor5"), pair(1.0, 0.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor6"), pair(1.0, 0.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor7"), pair(0.0, 1.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor8"), pair(0.0, 1.0)));
 }
-
 
 void quit(int sig) {
   (void)sig;
@@ -271,14 +265,9 @@ void TeleopLunabotics::keyLoop() {
     auto nav = pair(1.0 * moveSpeed + 1.0 * turnSpeed,
                     1.0 * moveSpeed - 1.0 * turnSpeed);
 
-    back_left_.nav(nav);
-    back_right_.nav(nav);
-    front_left_.nav(nav);
-    front_right_.nav(nav);
-    back_left_inner_.nav(nav);
-    back_right_inner_.nav(nav);
-    front_left_inner_.nav(nav);
-    front_right_inner_.nav(nav);
+    for (auto wheel : wheels_) {
+      wheel.nav(nav);
+    }
   }
 
   return;

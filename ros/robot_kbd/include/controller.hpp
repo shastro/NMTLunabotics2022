@@ -5,6 +5,9 @@
 
 #include <string>
 #include <utility>
+#include <vector>
+#include <termios.h>
+#include <unistd.h>
 
 #include <ros/ros.h>
 #include <webots_ros/set_float.h>
@@ -99,12 +102,8 @@ public:
 private:
   ros::NodeHandle nh_;
 
-  // The robot's outer four wheels.
-  NavMotor back_left_, back_right_, front_left_, front_right_;
-
-  // The robot's inner four wheels.
-  NavMotor back_left_inner_, back_right_inner_,
-    front_left_inner_, front_right_inner_;
+  // The robot's wheels.
+  std::vector<NavMotor> wheels_;
 
   // The path to the base robot, e.g., "/david_28148_helios".
   std::string robot_path_;
