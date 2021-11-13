@@ -178,14 +178,14 @@ void NavMotor::nav(pair<double, double> nav_vec) {
 }
 
 TeleopLunabotics::TeleopLunabotics(string path) : robot_path_(path) {
-  wheels_.push_back(NavMotor(Motor(path + "/motor1"), pair(1.0, 0.0)));
-  wheels_.push_back(NavMotor(Motor(path + "/motor2"), pair(1.0, 0.0)));
-  wheels_.push_back(NavMotor(Motor(path + "/motor3"), pair(0.0, 1.0)));
-  wheels_.push_back(NavMotor(Motor(path + "/motor4"), pair(0.0, 1.0)));
-  wheels_.push_back(NavMotor(Motor(path + "/motor5"), pair(1.0, 0.0)));
-  wheels_.push_back(NavMotor(Motor(path + "/motor6"), pair(1.0, 0.0)));
-  wheels_.push_back(NavMotor(Motor(path + "/motor7"), pair(0.0, 1.0)));
-  wheels_.push_back(NavMotor(Motor(path + "/motor8"), pair(0.0, 1.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor1"), pair<double, double>(1.0, 0.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor2"), pair<double, double>(1.0, 0.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor3"), pair<double, double>(0.0, 1.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor4"), pair<double, double>(0.0, 1.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor5"), pair<double, double>(1.0, 0.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor6"), pair<double, double>(1.0, 0.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor7"), pair<double, double>(0.0, 1.0)));
+  wheels_.push_back(NavMotor(Motor(path + "/motor8"), pair<double, double>(0.0, 1.0)));
 }
 
 void quit(int sig) {
@@ -262,8 +262,8 @@ void TeleopLunabotics::keyLoop() {
       return;
     }
 
-    auto nav = pair(1.0 * moveSpeed + 1.0 * turnSpeed,
-                    1.0 * moveSpeed - 1.0 * turnSpeed);
+    auto nav = pair<double, double>(1.0 * moveSpeed + 1.0 * turnSpeed,
+                                    1.0 * moveSpeed - 1.0 * turnSpeed);
 
     for (auto wheel : wheels_) {
       wheel.nav(nav);
