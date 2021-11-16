@@ -200,7 +200,7 @@ int main(int argc, char **argv) {
 
   if (argc != 2) {
     cout << "Usage: " << argv[0] << " <robot-path>" << endl;
-    return 1;
+    quit(1);
   }
 
   string robot_path(argv[1]);
