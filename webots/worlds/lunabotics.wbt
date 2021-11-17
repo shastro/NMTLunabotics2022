@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.6213418341427094 0.7620834630123322 0.18210744231718023 5.5705768029384215
-  position -4.1452914058189005 2.0776267937349227 2.8227740935498065
+  orientation 0.6192447063005764 0.7654366220957166 0.17505076770300607 5.59825811143968
+  position -3.239132367868869 0.897462388143258 0.8162913775258988
 }
 TexturedBackground {
   texture "stadium"
@@ -372,6 +372,48 @@ Robot {
   translation -2.35 0.22 0.0800001
   rotation 0 1 0 -1.5707953071795862
   children [
+    Transform {
+      translation 0 0.14 0.41
+      children [
+        Transform {
+          translation 0 0.13 0.03
+          children [
+            Transform {
+              translation 0 0 0.03
+              children [
+                InertialUnit {
+                }
+                Camera {
+                  rotation 0 1 0 3.14159
+                  fieldOfView 2.094
+                  far 1000
+                }
+                Lidar {
+                }
+              ]
+            }
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.1 0.1 0.1
+                metalness 0
+              }
+              geometry Box {
+                size 0.03 0.03 0.03
+              }
+            }
+          ]
+        }
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.8 0.8 0.8
+            metalness 0
+          }
+          geometry Box {
+            size 0.05 0.3 0.05
+          }
+        }
+      ]
+    }
     HingeJoint {
       jointParameters HingeJointParameters {
         anchor -0.26 0 -0.15
