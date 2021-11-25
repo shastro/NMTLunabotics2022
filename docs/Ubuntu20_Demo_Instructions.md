@@ -142,7 +142,7 @@ Btw if you want to see all the services published by the robot run `rosservice l
 
 Now you should have lidar and cameras showing! If not please enable the lidar options under View/Optional Rendering/ in the Webots menu. 
 
-####Moving the robot. 
+#### Moving the robot. 
 
 To move the robot execute the robot_kbd program that we built earlier, and provide it the name of the robot ros node. EG david_42656_15IMH05H. 
 
