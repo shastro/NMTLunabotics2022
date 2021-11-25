@@ -89,14 +89,15 @@ echo "source /path/to/catkin_ws/devel/setup.bash" >> ~/.bashrc
 ## Running the Demo
 Whew! After all that you should be ready to run the demo and control the robot with lidar!
 
+### Building Alex's Robot Controller
 The first thing to do is to build Alex's controller code located under `/ros/robot_kbd` (in the Git directory). The instructions to do so are inside his readme `README.md`. I have copied the contents here for convenience. If in the future these instructions do not work please refer to his original readme for possible updates. 
 
-### robot_kbd
+#### robot_kbd
 
 `robot_kbd` is the manual keyboard controller for the NMT Lunabotics
 2022 team's robot.
 
-#### Building
+##### Building
 
 If your environment is set up correctly, the following sequence of
 commands should cause the program to build:
@@ -111,4 +112,43 @@ The build executable should then be placed in
 `devel/lib/robot_kbd/robot_kbd` from the `build` directory. If that
 doesn't work, talk to Alex (Alex Bethel#8751,
 Alexander.B.Bethel@student.nmt.edu).
+
+### Starting the Sim
+
+The first step is to start **rosmaster** by executing 
+```
+roscore
+```
+
+To start the sim, all you need to do is open webots (run the executable wherever you extracted the tar file), and open the world file called `lidardemo.wbt` which is located under `/webots/worlds/` on the git. (Do this in a separte terminal to the one you ran roscore). 
+
+In the **webots console** you should see something like this (If you do not see a console press `Ctrl+J` in webots):
+```
+INFO: ros: Starting controller: /home/shastro/webots/projects/default/controllers/ros/ros
+[ INFO] [1637800993.392768988]: Robot's unique name is **david_<your_uniqe_name>**.
+[ INFO] [1637800993.398387064]: The controller is now connected to the ROS master.
+```
+If you do not see this and instead see an error like: `[FATAL] [1637801224.231388704]: Failed to contact master at http://localhost:11311. Please start ROS master and restart this controller.` You forgot to run roscore. Restart the simulation by pressing `Ctrl+Shift+T`. 
+
+Everytime you start webots it will assign the robot a unique name, (eg **david_42656_15IMH05H**). Though it will always start with david (since we called the robot that). This name is given to you in the webots console when you start the sim, and is the name of the ros node you will interface with. (Try running `rosnode list` to see the robot id). 
+
+Now to start the camera and lidar execute (in a new terminal):
+```
+rosservice call /david_<your_unique_name>/camera/enable 32
+rosservice call /david_<your_unique_name>/Hokuyo_UTM_30LX/enable 32
+rosservice call /david_<your_unique_name>/Hokuyo_UTM_30LX/enable_point_cloud True
+```
+Btw if you want to see all the services published by the robot run `rosservice list`, try also `rostopic` and `rosnode`. The ros commands support **tab completion** so its much easier to just type `rosservice call /d<TAB>/ca<TAB>/Ho<TAB>/enable 32` to fill out service calls. Pressing tab a few times will also return lists of possible values so **make sure to use tab completion**. 
+
+Now you should have lidar and cameras showing! If not please enable the lidar options under View/Optional Rendering/ in the Webots menu. 
+
+####Moving the robot. 
+
+To move the robot execute the robot_kbd program that we built earlier, and provide it the name of the robot ros node. EG david_42656_15IMH05H. 
+
+Have fun!
+
+#### Extra stuff
+Try running `rosrun rqt_image_view rqt_image_view` and selecting both the camera image and the lidar range image. Very cool to see the real image topics coming from Webots!
+
 
