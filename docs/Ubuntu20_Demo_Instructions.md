@@ -125,7 +125,7 @@ To start the sim, all you need to do is open webots (run the executable wherever
 In the **webots console** you should see something like this (If you do not see a console press `Ctrl+J` in webots):
 ```
 INFO: ros: Starting controller: /home/shastro/webots/projects/default/controllers/ros/ros
-[ INFO] [1637800993.392768988]: Robot's unique name is **david_<your_uniqe_name>**.
+[ INFO] [1637800993.392768988]: Robot's unique name is david_<your_uniqe_name>.
 [ INFO] [1637800993.398387064]: The controller is now connected to the ROS master.
 ```
 If you do not see this and instead see an error like: `[FATAL] [1637801224.231388704]: Failed to contact master at http://localhost:11311. Please start ROS master and restart this controller.` You forgot to run roscore. Restart the simulation by pressing `Ctrl+Shift+T`. 
