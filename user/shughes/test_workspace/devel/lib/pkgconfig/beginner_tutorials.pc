@@ -1,0 +1,8 @@
+prefix=/home/shastro/NMTLunabotics2022/user/shughes/test_workspace/devel
+
+Name: beginner_tutorials
+Description: Description of beginner_tutorials
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

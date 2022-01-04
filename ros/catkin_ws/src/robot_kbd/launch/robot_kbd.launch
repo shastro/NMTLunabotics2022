@@ -1,0 +1,7 @@
+<launch>
+
+    <group ns = "robot_kbd">
+        <node pkg="robot_kbd" name="robot_kbd" type="robot_kbd"/>
+    </group>
+
+</launch>

@@ -1,5 +1,8 @@
 *~
 ros_demos/rust/target
 ros_demos/python/Pipfile
-ros/robot_kbd/build/*
+ros/catkin_ws/src/robot_kbd/build/*
+ros/catkin_ws/src/robot_kbd/devel/*
+ros/catkin_ws/build/*
+ros/catkin_ws/devel/*
 can/utils/can2canarray/build/*
