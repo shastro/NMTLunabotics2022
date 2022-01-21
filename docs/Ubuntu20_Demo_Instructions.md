@@ -90,7 +90,7 @@ echo "source /path/to/catkin_ws/devel/setup.bash" >> ~/.bashrc
 Whew! After all that you should be ready to run the demo and control the robot with lidar!
 
 ### Building Alex's Robot Controller
-The first thing to do is to build Alex's controller code located under `/ros/robot_kbd` (in the Git directory). The instructions to do so are inside his readme `README.md`. I have copied the contents here for convenience. If in the future these instructions do not work please refer to his original readme for possible updates. 
+The first thing to do is to build Alex's controller code located under `/ros/catkin_ws/src/robot_kbd` (in the Git directory). The instructions to do so are inside his readme `README.md`. I have copied the contents here for convenience. If in the future these instructions do not work please refer to his original readme for possible updates. 
 
 #### robot_kbd
 
