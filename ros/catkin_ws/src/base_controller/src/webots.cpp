@@ -5,35 +5,22 @@
 #include <ros/ros.h>
 #include <webots_ros/set_float.h>
 
-#include <string>
-
 #include "main.hpp"
+#include "webots.hpp"
 
 using std::string;
 using std::pair;
 
 // Construct a motor controller at the given path, and initialize it
 // to zero velocity.
-Motor::Motor(string path) : pos_(UND_POS), vel_(0) {
-  // These are standard for Webots -- will need to change for physical
-  // motors.
+WebotsMotor::WebotsMotor(string path) : pos_(UND_POS), vel_(0) {
   pos_path_ = path + "/set_position";
   vel_path_ = path + "/set_velocity";
 
   update();
 }
 
-void Motor::update() {
-  webots_ros::set_float srv_pos;
-  srv_pos.request.value = pos_;
-  ros::service::call(pos_path_, srv_pos);
-
-  webots_ros::set_float srv_vel;
-  srv_vel.request.value = vel_;
-  ros::service::call(vel_path_, srv_vel);
-}
-
-void Motor::setVelocity(double vel) {
+void WebotsMotor::setVelocity(double vel) {
   // Avoid sending duplicate signals to ROS if we can avoid it.
   if (pos_ == UND_POS && vel_ == vel) {
     return;
@@ -45,7 +32,7 @@ void Motor::setVelocity(double vel) {
   update();
 }
 
-void Motor::setPosition(double pos) {
+void WebotsMotor::setPosition(double pos) {
   if (pos_ == pos) {
     return;
   }
@@ -57,10 +44,13 @@ void Motor::setPosition(double pos) {
   update();
 }
 
-NavMotor::NavMotor(Motor m, pair<double, double> mot_vec)
-    : motor_(m), mot_vec_(mot_vec) {}
+// Send the motor's `pos_` and `vel_` to Webots.
+void WebotsMotor::update() {
+  webots_ros::set_float srv_pos;
+  srv_pos.request.value = pos_;
+  ros::service::call(pos_path_, srv_pos);
 
-void NavMotor::nav(pair<double, double> nav_vec) {
-  auto dot = mot_vec_.first * nav_vec.first + mot_vec_.second * nav_vec.second;
-  motor_.setVelocity(dot);
+  webots_ros::set_float srv_vel;
+  srv_vel.request.value = vel_;
+  ros::service::call(vel_path_, srv_vel);
 }

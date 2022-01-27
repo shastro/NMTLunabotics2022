@@ -1,5 +1,10 @@
 // Webots-specific motor controller implementation details.
 
+// Copyright (c) 2021, 2022 NMT Lunabotics. All rights reserved.
+
+#ifndef H_WEBOTS
+#define H_WEBOTS
+
 #include <string>
 
 #include "main.hpp"
@@ -32,3 +37,5 @@ private:
   std::string pos_path_;
   std::string vel_path_;
 };
+
+#endif  // H_WEBOTS

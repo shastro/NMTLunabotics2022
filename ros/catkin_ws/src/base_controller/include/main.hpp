@@ -2,11 +2,15 @@
 
 // Copyright (c) 2021, 2022 NMT Lunabotics. All rights reserved.
 
+#ifndef H_MAIN
+#define H_MAIN
+
+#include <memory>
 #include <string>
-#include <utility>
-#include <vector>
 #include <termios.h>
 #include <unistd.h>
+#include <utility>
+#include <vector>
 
 #include <ros/ros.h>
 #include <webots_ros/set_float.h>
@@ -31,8 +35,6 @@ public:
   // radians.
   virtual void setPosition(double pos) = 0;
 };
-
-// Connect to a motor.
 
 // A Motor, coupled with some information on how that motor's
 // rotations relate to the actions the robot is trying to take.
@@ -60,21 +62,8 @@ public:
   void nav(std::pair<double, double> nav_vec);
 
 private:
-  Motor motor_;
+  std::unique_ptr<Motor> motor_;
   std::pair<double, double> mot_vec_;
 };
 
-// class TeleopLunabotics {
-// public:
-//   TeleopLunabotics(std::string path);
-//   void keyLoop();
-
-// private:
-//   ros::NodeHandle nh_;
-
-//   // The robot's wheels.
-//   std::vector<NavMotor> wheels_;
-
-//   // The path to the base robot, e.g., "/david_28148_helios".
-//   std::string robot_path_;
-// };
+#endif  // H_MAIN
