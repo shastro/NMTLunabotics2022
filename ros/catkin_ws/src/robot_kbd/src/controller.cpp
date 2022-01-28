@@ -189,10 +189,9 @@ TeleopLunabotics::TeleopLunabotics(string path) : robot_path_(path) {
 }
 
 void quit(int sig) {
-  (void)sig;
   input.shutdown();
   ros::shutdown();
-  exit(0);
+  exit(sig);
 }
 
 int main(int argc, char **argv) {
