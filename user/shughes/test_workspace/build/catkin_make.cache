@@ -1,2 +1,2 @@
-beginner_tutorials
--DCATKIN_DEVEL_PREFIX=/home/shastro/NMTLunabotics2022/user/shughes/test_workspace/devel -DCMAKE_INSTALL_PREFIX=/home/shastro/NMTLunabotics2022/user/shughes/test_workspace/install -G Unix Makefiles
+turtlebot3_simulations/turtlebot3_fake:turtlebot3_simulations/turtlebot3_gazebo:turtlebot3_simulations/turtlebot3_simulations
+-DCATKIN_DEVEL_PREFIX=/home/shastro/GIT/user/shughes/test_workspace/devel -DCMAKE_INSTALL_PREFIX=/home/shastro/GIT/user/shughes/test_workspace/install -G Unix Makefiles

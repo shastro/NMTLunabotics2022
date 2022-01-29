@@ -2,7 +2,7 @@
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/shastro/NMTLunabotics2022/user/shughes/test_workspace/install")
+  set(CMAKE_INSTALL_PREFIX "/home/shastro/GIT/user/shughes/test_workspace/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

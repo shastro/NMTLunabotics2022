@@ -7,4 +7,7 @@
 # new environment variables
 
 # modified environment variables
-export PWD='/home/shastro/NMTLunabotics2022/user/shughes/test_workspace/build'
+export CMAKE_PREFIX_PATH="/home/shastro/GIT/user/shughes/test_workspace/devel:$CMAKE_PREFIX_PATH"
+export PWD='/home/shastro/GIT/user/shughes/test_workspace/build'
+export ROSLISP_PACKAGE_DIRECTORIES="/home/shastro/GIT/user/shughes/test_workspace/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export ROS_PACKAGE_PATH="/home/shastro/GIT/user/shughes/test_workspace/src:$ROS_PACKAGE_PATH"
