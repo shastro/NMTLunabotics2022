@@ -1,5 +1,7 @@
 // Navigational motor abstractions.
 
+// Copyright (c) 2021, 2022 NMT Lunabotics. All rights reserved.
+
 #include <memory>
 
 #include "main.hpp"
