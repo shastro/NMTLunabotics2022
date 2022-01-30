@@ -8,7 +8,7 @@ link_directories(${catkin_LIBRARY_DIRS})
 
 catkin_package(CATKIN_DEPENDS geometry_msgs message_runtime std_msgs std_srvs)
 
-add_executable(base_controller src/main.cpp src/webots.cpp)
+add_executable(base_controller src/main.cpp src/webots.cpp src/nav_motor.cpp)
 target_link_libraries(base_controller ${catkin_LIBRARIES})
 
 install(TARGETS base_controller

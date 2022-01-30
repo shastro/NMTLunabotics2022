@@ -8,8 +8,8 @@
 #include "main.hpp"
 #include "webots.hpp"
 
-using std::string;
 using std::pair;
+using std::string;
 
 // Construct a motor controller at the given path, and initialize it
 // to zero velocity.
@@ -53,4 +53,20 @@ void WebotsMotor::update() {
   webots_ros::set_float srv_vel;
   srv_vel.request.value = vel_;
   ros::service::call(vel_path_, srv_vel);
+}
+
+// Initializes the navigation motors for the robot.
+std::vector<NavMotor> init_motors(string path) {
+  // This is specific to the current Webots demo robot.
+  std::vector<NavMotor> motors;
+  motors.push_back(NavMotor(new WebotsMotor(path + "/motor1"), -1.0));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/motor2"), -1.0));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/motor3"), 1.0));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/motor4"), 1.0));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/motor5"), -1.0));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/motor6"), -1.0));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/motor7"), 1.0));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/motor8"), 1.0));
+
+  return motors;
 }

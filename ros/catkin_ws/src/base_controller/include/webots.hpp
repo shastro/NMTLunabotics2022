@@ -12,12 +12,13 @@
 // Marker for undefined position.
 #define UND_POS (std::numeric_limits<double>::infinity())
 
-class WebotsMotor : Motor {
+class WebotsMotor : public MotorController {
+public:
   // Initialize a new WebotsMotor with the given path. By default, the
   // Motor is in Velocity mode, with 0 radians per second.
   WebotsMotor(std::string Path);
 
-  // Motor functions.
+  // Motor controller functions.
   void setVelocity(double vel);
   void setPosition(double pos);
 
