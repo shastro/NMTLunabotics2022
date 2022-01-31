@@ -50,12 +50,19 @@ private:
 int main(int argc, char **argv) {
   ros::init(argc, argv, "base_controller");
 
-  if (argc != 2) {
-    std::cout << "Usage: " << argv[0] << " <robot-path>" << std::endl;
+  if (argc != 3) {
+    std::cout << "Usage: " << argv[0] << " <robot-path> <cmd-vel-path>"
+              << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "robot-path    Path to the robot root." << std::endl;
+    std::cout << "cmd-vel-path  Path to a topic generating" << std::endl;
+    std::cout << "              `geometry_msgs/Twist` messages." << std::endl;
     quit(1);
   }
 
   std::string robot_path(argv[1]);
+  std::string cmd_vel_path(argv[2]);
   ros::NodeHandle nh;
 
   // Initialize the navigation motors.
@@ -63,8 +70,7 @@ int main(int argc, char **argv) {
 
   // Subscribe to the `cmd_vel` topic, whose packet types are
   // `geometry_msgs.msg.Twist`.
-  ros::Subscriber sub =
-      nh.subscribe(robot_path + "/cmd_vel", 1, &Robot::twist, &robot);
+  ros::Subscriber sub = nh.subscribe(cmd_vel_path, 1, &Robot::twist, &robot);
 
   ros::spin();
 }
