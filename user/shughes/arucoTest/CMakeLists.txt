@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.8)
+project(aruco_testproject)
+find_project(aruco REQUIRED)
+add_executable(aruco_simple aruco_simple.cpp)
+target_link_libraries(aruco_simple aruco)
