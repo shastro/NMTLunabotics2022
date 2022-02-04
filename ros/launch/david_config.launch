@@ -1,0 +1,41 @@
+<!--*- xml -*-->
+
+<launch>
+  <!-- <node pkg="sensor_node_pkg" type="sensor_node_type" name="sensor_node_name" output="screen"> -->
+  <!--   <param name="sensor_param" value="param_value" /> -->
+  <!-- </node> -->
+
+  <!-- <node pkg="odom_node_pkg" type="odom_node_type" name="odom_node" output="screen"> -->
+  <!--   <param name="odom_param" value="param_value" /> -->
+  <!-- </node> -->
+
+  <!-- <node pkg="transform_configuration_pkg" type="transform_configuration_type" name="transform_configuration_name" output="screen"> -->
+  <!--   <param name="transform_configuration_param" value="param_value" /> -->
+  <!-- </node> -->
+
+  <!-- Ok let's see what we've got... -->
+
+  <!-- First things first, we're gonna need the transforms for sure. -->
+  <include file="transforms.launch" />
+
+  <!-- Next, we need odometry. In real life, odometry is done through
+       the RealSense. -->
+  <include file="$(find realsense2_camera)/launch/rs_t265.launch" />
+
+  <!-- In the simulation, though, odometry is done through Webots. Not
+       sure whether that will require a different configuration or
+       not. -->
+
+  <!-- We should also launch the lidar, I suppose, because that'll
+       provide our mapping input data. -->
+  <include file="$(find rplidar_ros)/launch/rplidar.launch"></include>
+
+  <!-- Next we should probably set up an actual map. -->
+  <node name="mapnode" pkg="gmapping" type="slam_gmapping" args="scan:=scan" />
+
+  <!-- `weir_gmapping` is a filename (relative to somewhere). It'll
+       need to change. Not sure whether it's actually strictly
+       necessary? -->
+  <node name="mapsaver" pkg="map_server" type="map_saver"
+        args="-f weir_gmapping" />
+</launch>
