@@ -5,18 +5,16 @@
 using namespace std;
 int main(int argc,char **argv)
 {
-   cv::Mat im;
-
+    cv::Mat im;
 
     cv::VideoCapture cap;
 
-
-    int deviceID = 0;             // 0 = open default camera
-    int apiID = cv::CAP_ANY;      // 0 = autodetect default API
-
+    cap.open(0);
+    //int deviceID = 0;             // 0 = open default camera
+    //int apiID = cv::CAP_ANY;      // 0 = autodetect default API
 
     // open selected camera using selected API
-    cap.open(deviceID, apiID);
+    //cap.open(deviceID, apiID);
     // check if we succeeded
     if (!cap.isOpened()) {
         cerr << "ERROR! Unable to open camera\n";
@@ -43,7 +41,7 @@ int main(int argc,char **argv)
 
       cv::imshow("image",im);
 
-      // cv::waitKey(0);
+      cv::waitKey(10);
    }
 }
 
