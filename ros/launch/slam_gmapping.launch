@@ -1,15 +1,11 @@
+<!--*- xml -*-->
+
 <launch>
   <include file="$(find rplidar_ros)/launch/rplidar.launch"></include>
   <include file="$(find realsense2_camera)/launch/rs_t265.launch"></include>
 
-
-  <node name="tfcameralink_laser" pkg="tf" type="static_transform_publisher" args="-0.06 0.0 0.0 0.0 0.0 0.0 camera_link laser 100" respawn="true" />
-
-  <node name="tfodom_cameraodom" pkg="tf" type="static_transform_publisher" args="0.0 0.0 0.0 0.0 0.0 0.0 odom camera_odom_frame 100" respawn="true" />
-
-  <node name="tfcamera_base" pkg="tf" type="static_transform_publisher" args="0.0 0.0 0.0 0.0 0.0 0.0 camera_link base_link 100" respawn="true" />
+  <include file="transforms.launch" />
 
   <node name="mapnode" pkg="gmapping" type="slam_gmapping" args="scan:=scan" />
-
   <node name="mapsaver" pkg="map_server" type="map_saver" args="-f /home/shastro/GIT/ros/maps/weir_gmapping" />
 </launch>
