@@ -1,6 +1,7 @@
 <!--*- xml -*-->
 
 <!-- ROS launch file for the robot's transforms. -->
+<!-- Should be moved to a URDF at some point and use the robot state publisher instead --> 
 
 <launch>
   <node name="tfcameralink_laser"
