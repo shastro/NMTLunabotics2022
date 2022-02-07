@@ -1,0 +1,16 @@
+# base_local_planner configuration, which is responsible for computing
+# velocity commands to send to the base controller given a high-level
+# plan.
+
+TrajectoryPlannerROS:
+  min_vel_x: 0.1
+  max_vel_x: 0.45
+
+  max_vel_theta: 1.0
+  min_in_place_val_theta: 0.4
+
+  acc_lim_theta: 3.2
+  acc_lim_x: 2.5
+  acc_lim_y: 2.5
+
+  holonomic_robot: true

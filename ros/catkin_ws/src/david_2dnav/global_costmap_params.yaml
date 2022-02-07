@@ -1,0 +1,11 @@
+# Global navigation cost-map configuration parameters.
+
+global_costmap:
+  # Not sure about /map here...
+  global_frame: /map
+  robot_base_frame: base_link
+  update_frequency: 5.0
+
+  # Use `static_map` because the map here is maintained by a map
+  # server node.
+  static_map: true
