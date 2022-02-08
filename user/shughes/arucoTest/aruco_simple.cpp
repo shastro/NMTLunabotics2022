@@ -35,7 +35,9 @@ int main(int argc,char **argv)
       auto markers=Detector.detect(im,camera,0.07);//0.05 is the marker size
 
       for(auto m:markers){
+	  aruco::CvDrawingUtils::draw3dCube(im, m, camera);
           aruco::CvDrawingUtils::draw3dAxis(im,m,camera);
+	  m.draw(im);
           cout<<m.Rvec<<" "<<m.Tvec<<endl;
       }
 
