@@ -1,0 +1,21 @@
+<!--*- xml -*-->
+
+<!-- ROS launch file for the robot's transforms. -->
+<!-- Should be moved to a URDF at some point and use the robot state publisher instead --> 
+
+<launch>
+  <node name="tfcameralink_laser"
+        pkg="tf2_ros" type="static_transform_publisher"
+        args="0.0 0.0 0.0 3.141592 0.0 0.0 camera_link laser"
+        respawn="true" />
+
+  <node name="tfodom_cameraodom"
+        pkg="tf2_ros" type="static_transform_publisher"
+        args="0.0 0.0 0.0 0.0 0.0 0.0 odom camera_odom_frame"
+        respawn="true" />
+
+  <node name="tfcamera_base"
+        pkg="tf2_ros" type="static_transform_publisher"
+        args="0.0 0.0 0.0 0.0 0.0 0.0 camera_link base_link"
+        respawn="true" />
+</launch>

@@ -1,0 +1,11 @@
+<!--*- xml -*-->
+
+<launch>
+  <include file="$(find rplidar_ros)/launch/rplidar.launch"></include>
+  <include file="$(find realsense2_camera)/launch/rs_t265.launch"></include>
+
+  <include file="transforms.launch" />
+
+  <node name="mapnode" pkg="gmapping" type="slam_gmapping" args="scan:=scan" />
+  <node name="mapsaver" pkg="map_server" type="map_saver" args="-f /home/shastro/GIT/ros/maps/weir_gmapping" />
+</launch>
