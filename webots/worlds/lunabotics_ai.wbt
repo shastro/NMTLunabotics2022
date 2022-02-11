@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.9651873163432896 0.21068352842258242 -0.1550028877842269 1.6132419502846307
-  position -5.353201552979876 1.5693960497677177 0.11633793214945068
+  orientation -0.9705706972089917 0.1442726192293685 -0.19281580085654107 1.5881344915482125
+  position -7.463840806825038 2.3741889713232 0.1598331128961904
 }
 TexturedBackground {
   texture "stadium"
@@ -446,8 +446,8 @@ Robot {
         }
       ]
       endPoint DEF WHEEL6 Solid {
-        translation 0.25999975580853574 -6.30447530053374e-06 -0.14999982144284107
-        rotation 9.14778156897713e-10 1 9.147955223623389e-10 1.5707999999996816
+        translation 0.26000003973641084 -6.9791133020266044e-06 -0.15001235492762072
+        rotation -0.08486547881565734 0.9927717521817203 -0.08486517881573223 1.57806
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -631,4 +631,8 @@ Robot {
   physics Physics {
   }
   controller "ros"
+  controllerArgs [
+    "--use-sim-time"
+    "--clock"
+  ]
 }
