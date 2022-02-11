@@ -1,0 +1,10 @@
+<!--*- xml -*-->
+
+<launch>
+  <include file="transforms.launch" />
+  <include file="$(find realsense2_camera)/launch/rs_t265.launch" />
+  <include file="$(find rplidar_ros)/launch/rplidar.launch"></include>
+  <node name="mapnode" pkg="gmapping" type="slam_gmapping" args="scan:=scan" />
+  <node name="mapsaver" pkg="map_server" type="map_saver"
+        args="-f weir_gmapping" />
+</launch>

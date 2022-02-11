@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>david_2dnav</name>
+  <version>0.1.0</version>
+  <description>
+    Navigation stack integration for the Lunabotics robot.
+  </description>
+  <maintainer email="abethel@cs.nmt.edu">Alex Bethel</maintainer>
+  <license>GPLv3</license>
+
+  <url type="website">https://www.nmtlunabotics.com/</url>
+  <url type="repository">https://github.com/shastro/NMTLunabotics2022</url>
+  <author email="abethel@cs.nmt.edu">Alex Bethel</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>move_base</build_depend>
+  <build_export_depend>move_base</build_export_depend>
+  <exec_depend>move_base</exec_depend>
+</package>
