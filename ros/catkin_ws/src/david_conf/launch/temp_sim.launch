@@ -16,6 +16,7 @@
 	<param name="base_frame" value="base_link" />
 	<param name="odom_frame" value="odom" />
 	<param name="map_size" value="4096" />
+	<param name="scan_topic" value="$(arg robot_path)/Hokuyo_URG_04LX/laser_scan" />
 
 </node>
 
