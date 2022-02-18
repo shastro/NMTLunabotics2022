@@ -13,3 +13,4 @@ ROS, Webots, etc. set up on your machine.
 - Add a viewer for the map and whatever other topics should be visualized.
   - To enable the map, click `Add` in the lower left, then select `Map`, and set the `Topic` in the added node to the only option, `/map`.
   - To enable transform viewing, click `Add`, then select `TF`. This should work without any further configuration.
+  - To speed up this process, when running rviz you can click `File`, then select `Open Config` and select the config under `./ros/catkin_ws/src/david_conf/rviz/sim_hector.rviz`
