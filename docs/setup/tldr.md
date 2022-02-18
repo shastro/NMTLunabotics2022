@@ -5,7 +5,7 @@ ROS, Webots, etc. set up on your machine.
 
 - `cd` into the root git directory.
 - Source the development shell script: `. ./ros/catkin_ws/devel/setup.bash`.
-- Set up the navigation nodes, etc.: `roslaunch ./ros/catkin_ws/src/david_conf/launch/temp_sim.launch robot_path:=david_sim`.
+- Set up the navigation nodes, etc.: `roslaunch david_conf temp_sim.sh robot_path:=david_sim`.
 - In another terminal, set up the main world simulation: `webots webots/worlds/lunabotics_ai.wbt`.
 - In another terminal, enable the lidar mechanism: `rosservice call '/david_sim/Hokuyo_URG_04LX/enable' 64`.
 - Enable the lidar point cloud: `rosservice call /david_sim/Hokuyo_URG_04LX/enable_point_cloud 64`.
