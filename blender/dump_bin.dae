@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <asset>
+    <contributor>
+      <author>Blender User</author>
+      <authoring_tool>Blender 3.1.0 Beta commit date:2022-02-24, commit time:18:35, hash:0781c22ceedc</authoring_tool>
+    </contributor>
+    <created>2022-02-25T15:18:22</created>
+    <modified>2022-02-25T15:18:22</modified>
+    <unit name="meter" meter="1"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_effects>
+    <effect id="arucoboard-effect">
+      <profile_COMMON>
+        <newparam sid="arucoboard_png-surface">
+          <surface type="2D">
+            <init_from>arucoboard_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="arucoboard_png-sampler">
+          <sampler2D>
+            <source>arucoboard_png-surface</source>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <texture texture="arucoboard_png-sampler" texcoord="UVMap"/>
+            </diffuse>
+            <index_of_refraction>
+              <float sid="ior">1.45</float>
+            </index_of_refraction>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_images>
+    <image id="arucoboard_png" name="arucoboard_png">
+      <init_from>arucoboard.png</init_from>
+    </image>
+  </library_images>
+  <library_materials>
+    <material id="arucoboard-material" name="arucoboard">
+      <instance_effect url="#arucoboard-effect"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="arucoboard-mesh" name="arucoboard">
+      <mesh>
+        <source id="arucoboard-mesh-positions">
+          <float_array id="arucoboard-mesh-positions-array" count="12">-3.135544 0.3169403 0.3867152 -3.135544 0.3169403 0.08269113 -3.135544 -0.1128868 0.3867152 -3.135544 -0.1128868 0.08269113</float_array>
+          <technique_common>
+            <accessor source="#arucoboard-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="arucoboard-mesh-normals">
+          <float_array id="arucoboard-mesh-normals-array" count="3">-1 0 0</float_array>
+          <technique_common>
+            <accessor source="#arucoboard-mesh-normals-array" count="1" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="arucoboard-mesh-map-0">
+          <float_array id="arucoboard-mesh-map-0-array" count="12">1 0 0 1 0 0 1 0 1 1 0 1</float_array>
+          <technique_common>
+            <accessor source="#arucoboard-mesh-map-0-array" count="6" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="arucoboard-mesh-vertices">
+          <input semantic="POSITION" source="#arucoboard-mesh-positions"/>
+        </vertices>
+        <triangles material="arucoboard-material" count="2">
+          <input semantic="VERTEX" source="#arucoboard-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#arucoboard-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#arucoboard-mesh-map-0" offset="2" set="0"/>
+          <p>1 0 0 2 0 1 0 0 2 1 0 3 3 0 4 2 0 5</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="Plane_005-mesh" name="Plane.005">
+      <mesh>
+        <source id="Plane_005-mesh-positions">
+          <float_array id="Plane_005-mesh-positions-array" count="24">-3.442417 -0.4028021 0.4471921 -3.142417 -0.4028021 0.4471921 -3.442417 0.5971979 0.4471921 -3.142417 0.5971979 0.4471921 -3.442417 -0.4028021 0.008474409 -3.142417 -0.4028021 0.008474409 -3.442417 0.5971979 0.008474409 -3.142417 0.5971979 0.008474409</float_array>
+          <technique_common>
+            <accessor source="#Plane_005-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_005-mesh-normals">
+          <float_array id="Plane_005-mesh-normals-array" count="18">0 0 -1 0 0 1 -1 0 0 1 0 0 0 -1 0 0 1 0</float_array>
+          <technique_common>
+            <accessor source="#Plane_005-mesh-normals-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_005-mesh-map-0">
+          <float_array id="Plane_005-mesh-map-0-array" count="72">0 1 1 0 0 0 1 0 0 1 0 0 1 1 1 0 1 0 0 0 0 1 0 1 0 1 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 0 1 0 1 1 0 1 1 1 1 1 1 0 0 0 0 0 0 1 0 1 0 1 1 1 1 0 1 0 0 0</float_array>
+          <technique_common>
+            <accessor source="#Plane_005-mesh-map-0-array" count="36" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_005-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_005-mesh-positions"/>
+        </vertices>
+        <triangles count="12">
+          <input semantic="VERTEX" source="#Plane_005-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_005-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_005-mesh-map-0" offset="2" set="0"/>
+          <p>2 0 0 1 0 1 0 0 2 5 1 3 6 1 4 4 1 5 3 2 6 5 2 7 1 2 8 0 3 9 6 3 10 2 3 11 2 4 12 7 4 13 3 4 14 1 5 15 4 5 16 0 5 17 2 0 18 3 0 19 1 0 20 5 1 21 7 1 22 6 1 23 3 2 24 7 2 25 5 2 26 0 3 27 4 3 28 6 3 29 2 4 30 6 4 31 7 4 32 1 5 33 5 5 34 4 5 35</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="Plane_001-mesh" name="Plane.001">
+      <mesh>
+        <source id="Plane_001-mesh-positions">
+          <float_array id="Plane_001-mesh-positions-array" count="24">-3.442417 -0.4028021 0.5 -3.142417 -0.4028021 0.5 -3.442417 0.5971979 0.5 -3.142417 0.5971979 0.5 -3.442417 -0.4028021 0.4647581 -3.142417 -0.4028021 0.4647581 -3.442417 0.5971979 0.4647581 -3.142417 0.5971979 0.4647581</float_array>
+          <technique_common>
+            <accessor source="#Plane_001-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_001-mesh-normals">
+          <float_array id="Plane_001-mesh-normals-array" count="18">0 0 -1 0 0 1 -1 0 0 1 0 0 0 -1 0 0 1 0</float_array>
+          <technique_common>
+            <accessor source="#Plane_001-mesh-normals-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane_001-mesh-map-0">
+          <float_array id="Plane_001-mesh-map-0-array" count="72">0 1 1 0 0 0 1 0 0 1 0 0 1 1 1 0 1 0 0 0 0 1 0 1 0 1 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 0 1 0 1 1 0 1 1 1 1 1 1 0 0 0 0 0 0 1 0 1 0 1 1 1 1 0 1 0 0 0</float_array>
+          <technique_common>
+            <accessor source="#Plane_001-mesh-map-0-array" count="36" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane_001-mesh-vertices">
+          <input semantic="POSITION" source="#Plane_001-mesh-positions"/>
+        </vertices>
+        <triangles count="12">
+          <input semantic="VERTEX" source="#Plane_001-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane_001-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Plane_001-mesh-map-0" offset="2" set="0"/>
+          <p>2 0 0 1 0 1 0 0 2 5 1 3 6 1 4 4 1 5 3 2 6 5 2 7 1 2 8 0 3 9 6 3 10 2 3 11 2 4 12 7 4 13 3 4 14 1 5 15 4 5 16 0 5 17 2 0 18 3 0 19 1 0 20 5 1 21 7 1 22 6 1 23 3 2 24 7 2 25 5 2 26 0 3 27 4 3 28 6 3 29 2 4 30 6 4 31 7 4 32 1 5 33 5 5 34 4 5 35</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="arucoboard" name="arucoboard" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#arucoboard-mesh" name="arucoboard">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="arucoboard-material" target="#arucoboard-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Plane_007" name="Plane.007" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_005-mesh" name="Plane.007"/>
+      </node>
+      <node id="Plane_001" name="Plane.001" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#Plane_001-mesh" name="Plane.001"/>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene"/>
+  </scene>
+</COLLADA>
