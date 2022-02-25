@@ -3,10 +3,10 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.6320184912294545 -0.6477990555380555 -0.42533399862701715 3.913666109862633
-  position -0.30125923400275045 3.4045061622489117 7.813590166091232
+  orientation 0.6963853050850976 -0.6748184141104565 -0.24426955364716293 3.734902149458478
+  position -1.5566374127802878 5.4119785998115395 4.566483524874744
   follow "david"
-  followType "Mounted Shot"
+  followType "None"
 }
 TexturedBackground {
   texture "stadium"
@@ -32,8 +32,8 @@ Robot {
         }
       ]
       endPoint DEF WHEEL8 Solid {
-        translation -0.29 -6.30448000116246e-06 -0.1499999999999999
-        rotation -5.630657204062738e-10 1 -5.630538109064348e-10 1.5707999999996816
+        translation -0.29 -6.304479999386103e-06 -0.1499999999999999
+        rotation -5.630657204069059e-10 1 -5.630538109088776e-10 1.5707999999996816
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -63,8 +63,8 @@ Robot {
         }
       ]
       endPoint DEF WHEEL7 Solid {
-        translation -0.2899999999999997 -6.30448000116246e-06 0.1499999999999999
-        rotation 1.9506492564981012e-10 1 1.9507965257275495e-10 1.5707999999996831
+        translation -0.2899999999999995 -6.304479999386103e-06 0.1499999999999999
+        rotation 1.9506492564843522e-10 1 1.9507965256986765e-10 1.5707999999996831
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -94,8 +94,8 @@ Robot {
         }
       ]
       endPoint DEF WHEEL6 Solid {
-        translation 0.2899999999999995 -6.99363000045139e-06 -0.15001199999999804
-        rotation -0.08486547881565752 0.9927717521817203 -0.08486517881573244 1.5780599999999996
+        translation 0.28999999999999904 -6.993629998675033e-06 -0.15001199999999626
+        rotation -0.08486547881565769 0.9927717521817203 -0.08486517881573265 1.5780599999999996
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -125,8 +125,8 @@ Robot {
         }
       ]
       endPoint DEF WHEEL5 Solid {
-        translation 0.28999899999999973 2.28570999993849e-05 0.15000400000000225
-        rotation -8.403914879440654e-08 0.9999999999999902 1.1279921023431274e-07 1.5707999788240243
+        translation 0.2899989999999995 2.2857100002937614e-05 0.15000400000000402
+        rotation -8.40391487944102e-08 0.9999999999999902 1.1279921023431488e-07 1.5707999788240246
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -156,8 +156,8 @@ Robot {
         }
       ]
       endPoint DEF WHEEL2 Solid {
-        translation 0.2899999999999994 -6.304480000718371e-06 -0.4500000000000002
-        rotation 3.637079452394416e-10 1 3.637232833293514e-10 1.5707999999996822
+        translation 0.289999999999999 -6.304479999386103e-06 -0.4500000000000002
+        rotation 3.637079452352272e-10 1 3.63723283323027e-10 1.5707999999996822
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -187,8 +187,8 @@ Robot {
         }
       ]
       endPoint DEF WHEEL3 Solid {
-        translation -0.29 8.652229998240557e-06 0.44999800000000034
-        rotation -8.595985228800902e-10 1 6.258004427521915e-10 1.5708000009869552
+        translation -0.29 8.652230000905092e-06 0.44999800000000034
+        rotation -8.59598522882175e-10 1 6.258004427490422e-10 1.5708000009869552
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -218,8 +218,8 @@ Robot {
         }
       ]
       endPoint DEF WHEEL4 Solid {
-        translation -0.2899860000000003 0.00020483399999848828 -0.4499949999999999
-        rotation -1.0804974537646556e-07 0.9999999999986489 1.640269586617092e-06 1.570799958013457
+        translation -0.28998600000000047 0.0002048340000015969 -0.4499949999999999
+        rotation -1.0804974537647273e-07 0.9999999999986489 1.640269586617076e-06 1.570799958013457
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -249,8 +249,8 @@ Robot {
         }
       ]
       endPoint DEF WHEEL1 Solid {
-        translation 0.29000299999999946 0.00018079599999865081 0.4499810000000002
-        rotation -4.7072210721143397e-07 0.9999999999998767 1.586915859922039e-07 1.5708001110799596
+        translation 0.290002999999999 0.00018079600000220353 0.4499810000000002
+        rotation -4.70722107211439e-07 0.9999999999998767 1.5869158599220466e-07 1.5708001110799596
         children [
           DEF WHEEL Shape {
             appearance PBRAppearance {
@@ -1423,7 +1423,7 @@ Solid {
   name "model_arena_demo_flat.obj"
   boundingObject Mesh {
     url [
-      "/home/shastro/GIT/blender/model_arena_demo_flat.obj"
+      "../../blender/model_arena_demo_flat.obj"
     ]
   }
 }
