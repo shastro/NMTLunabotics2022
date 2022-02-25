@@ -2,7 +2,7 @@
   <include file="$(find rplidar_ros)/launch/rplidar.launch"></include>
   <include file="$(find realsense2_camera)/launch/rs_t265.launch"></include>
 
-  <include file="transforms.launch" />
+  <include file="$(find david_conf)/launch/transforms.launch" />
 
   <node pkg="hector_mapping" type="hector_mapping" name="hector_mapping" output="screen" >
     <param name="pub_map_odom_transform" value="true"/>
