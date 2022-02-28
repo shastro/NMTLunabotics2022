@@ -63,10 +63,6 @@ std::vector<NavMotor> init_motors(string path) {
   motors.push_back(NavMotor(new WebotsMotor(path + "/motor2"), -1.0));
   motors.push_back(NavMotor(new WebotsMotor(path + "/motor3"), 1.0));
   motors.push_back(NavMotor(new WebotsMotor(path + "/motor4"), 1.0));
-  motors.push_back(NavMotor(new WebotsMotor(path + "/motor5"), -1.0));
-  motors.push_back(NavMotor(new WebotsMotor(path + "/motor6"), -1.0));
-  motors.push_back(NavMotor(new WebotsMotor(path + "/motor7"), 1.0));
-  motors.push_back(NavMotor(new WebotsMotor(path + "/motor8"), 1.0));
 
   return motors;
 }
