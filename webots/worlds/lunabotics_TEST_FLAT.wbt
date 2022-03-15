@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation -0.21040142633482742 0.706463366855089 0.6757519893333962 3.292026337486425
-  position 0.2857273144763184 1.349998471462219 0.3574138840300374
+  orientation -0.042347108560136626 0.6666633756517223 0.7441550013009699 3.7965446857058476
+  position -0.14838008360218558 1.6416399737197511 -0.8691360301612956
   follow "david"
   followType "None"
 }
@@ -19,12 +19,39 @@ Robot {
   children [
     Track {
       translation 0.29 0 0
+      rotation 0 0 1 1.5707963268
+      children [
+        TrackWheel {
+          position 0 -0.45
+          children [
+            Shape {
+              appearance PBRAppearance {
+              }
+              geometry Box {
+                size 0.08 0.1 0.1
+              }
+            }
+          ]
+        }
+        TrackWheel {
+          position 0 0.45
+          children [
+            Shape {
+              appearance PBRAppearance {
+              }
+              geometry Box {
+                size 0.08 0.1 0.1
+              }
+            }
+          ]
+        }
+      ]
       name "left_track"
       boundingObject Group {
         children [
           Transform {
             translation 2.24549e-12 0 -0.45
-            rotation 0 1 0 1.5707963268
+            rotation 1 0 0 1.5707963268
             children [
               Cylinder {
                 height 0.08
@@ -34,7 +61,7 @@ Robot {
           }
           Transform {
             translation 2.24549e-12 0 0.45
-            rotation 0 1 0 1.5707963268
+            rotation 1 0 0 1.5707963268
             children [
               Cylinder {
                 height 0.08
@@ -43,7 +70,7 @@ Robot {
             ]
           }
           Box {
-            size 0.08 0.1 0.9
+            size 0.1 0.08 0.9
           }
         ]
       }
@@ -57,12 +84,39 @@ Robot {
     }
     Track {
       translation -0.29 0 0
+      rotation 0 0 1 1.5707963268
+      children [
+        TrackWheel {
+          position 0 0.45
+          children [
+            Shape {
+              appearance PBRAppearance {
+              }
+              geometry Box {
+                size 0.08 0.1 0.1
+              }
+            }
+          ]
+        }
+        TrackWheel {
+          position 0 -0.45
+          children [
+            Shape {
+              appearance PBRAppearance {
+              }
+              geometry Box {
+                size 0.08 0.1 0.1
+              }
+            }
+          ]
+        }
+      ]
       name "right_track"
       boundingObject Group {
         children [
           Transform {
             translation 2.24549e-12 0 -0.45
-            rotation 0 1 0 1.5707963268
+            rotation 1 0 0 1.5707963268
             children [
               Cylinder {
                 height 0.08
@@ -72,7 +126,7 @@ Robot {
           }
           Transform {
             translation 2.24549e-12 0 0.45
-            rotation 0 1 0 1.5707963268
+            rotation 1 0 0 1.5707963268
             children [
               Cylinder {
                 height 0.08
@@ -81,7 +135,7 @@ Robot {
             ]
           }
           Box {
-            size 0.08 0.1 0.9
+            size 0.1 0.08 0.9
           }
         ]
       }
