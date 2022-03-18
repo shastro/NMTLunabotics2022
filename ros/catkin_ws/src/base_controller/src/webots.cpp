@@ -46,6 +46,8 @@ void WebotsMotor::setPosition(double pos) {
 
 // Send the motor's `pos_` and `vel_` to Webots.
 void WebotsMotor::update() {
+  std::cout << "Debug: updating position & velocity";
+
   webots_ros::set_float srv_pos;
   srv_pos.request.value = pos_;
   ros::service::call(pos_path_, srv_pos);
@@ -59,10 +61,8 @@ void WebotsMotor::update() {
 std::vector<NavMotor> init_motors(string path) {
   // This is specific to the current Webots demo robot.
   std::vector<NavMotor> motors;
-  motors.push_back(NavMotor(new WebotsMotor(path + "/motor1"), -1.0));
-  motors.push_back(NavMotor(new WebotsMotor(path + "/motor2"), -1.0));
-  motors.push_back(NavMotor(new WebotsMotor(path + "/motor3"), 1.0));
-  motors.push_back(NavMotor(new WebotsMotor(path + "/motor4"), 1.0));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/left_motor"), -1.0));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/right_motor"), 1.0));
 
   return motors;
 }

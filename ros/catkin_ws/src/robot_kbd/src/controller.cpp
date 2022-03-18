@@ -138,10 +138,12 @@ Motor::Motor(string path) : pos_(0), vel_(0) {
 void Motor::update() {
   webots_ros::set_float srv_pos;
   srv_pos.request.value = pos_;
+  cout << "Calling " << pos_path_ << " with param " << srv_pos.request.value << endl;
   ros::service::call(pos_path_, srv_pos);
 
   webots_ros::set_float srv_vel;
   srv_vel.request.value = vel_;
+  cout << "Calling " << vel_path_ << " with param " << srv_vel.request.value << endl;
   ros::service::call(vel_path_, srv_vel);
 }
 
@@ -179,13 +181,9 @@ void NavMotor::nav(pair<double, double> nav_vec) {
 
 TeleopLunabotics::TeleopLunabotics(string path) : robot_path_(path) {
   wheels_.push_back(
-      NavMotor(Motor(path + "/motor1"), pair<double, double>(1.0, 0.0)));
+      NavMotor(Motor(path + "/left_motor"), pair<double, double>(1.0, 0.0)));
   wheels_.push_back(
-      NavMotor(Motor(path + "/motor2"), pair<double, double>(1.0, 0.0)));
-  wheels_.push_back(
-      NavMotor(Motor(path + "/motor3"), pair<double, double>(0.0, 1.0)));
-  wheels_.push_back(
-      NavMotor(Motor(path + "/motor4"), pair<double, double>(0.0, 1.0)));
+      NavMotor(Motor(path + "/right_motor"), pair<double, double>(0.0, 1.0)));
 }
 
 void quit(int sig) {
