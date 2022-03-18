@@ -1,10 +1,21 @@
 #VRML_SIM R2022a utf8
 WorldInfo {
   coordinateSystem "NUE"
+  contactProperties [
+    ContactProperties {
+    }
+    ContactProperties {
+      material1 "test"
+      material2 "test"
+      coulombFriction [
+        100
+      ]
+    }
+  ]
 }
 Viewpoint {
-  orientation -0.042347108560136626 0.6666633756517223 0.7441550013009699 3.7965446857058476
-  position -0.14838008360218558 1.6416399737197511 -0.8691360301612956
+  orientation 0.1280486741083099 -0.7290703607963644 -0.672354033279613 2.350573195344463
+  position 3.246114164018688 4.380812632923838 -3.1702303454926093
   follow "david"
   followType "None"
 }
@@ -47,6 +58,7 @@ Robot {
         }
       ]
       name "left_track"
+      contactMaterial "test"
       boundingObject Group {
         children [
           Transform {
@@ -112,6 +124,7 @@ Robot {
         }
       ]
       name "right_track"
+      contactMaterial "test"
       boundingObject Group {
         children [
           Transform {
@@ -482,6 +495,7 @@ Solid {
         }
       ]
       name "Plane.005"
+      contactMaterial "test"
     }
     Solid {
       rotation 0 1 0 0
@@ -1304,6 +1318,7 @@ Solid {
     }
   ]
   name "model_arena_demo_flat.obj"
+  contactMaterial "test"
   boundingObject Mesh {
     url [
       "../../blender/model_arena_demo_flat.obj"

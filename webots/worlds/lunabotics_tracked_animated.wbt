@@ -1,0 +1,169 @@
+#VRML_SIM R2022a utf8
+WorldInfo {
+  contactProperties [
+    ContactProperties {
+    }
+  ]
+}
+Viewpoint {
+  orientation 0.16023892746073465 0.1379519774323408 -0.9773907806239736 1.7425743354552108
+  position 0.02927641081077425 1.4899914723826353 0.7922775446631263
+  follow "robot"
+  followType "Mounted Shot"
+}
+Robot {
+  translation 0 0 0.28
+  children [
+    Track {
+      translation 0 -0.23 0
+      children [
+        TrackWheel {
+          position -0.26 0
+          radius 0.05
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 1 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.05
+                radius 0.05
+              }
+            }
+          ]
+        }
+        TrackWheel {
+          position 0.27 0
+          radius 0.05
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 1 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.05
+                radius 0.05
+              }
+            }
+          ]
+        }
+      ]
+      name "left_track"
+      boundingObject Box {
+        size 0.6 0.07 0.1
+      }
+      physics Physics {
+      }
+      device [
+        LinearMotor {
+          name "left_motor"
+        }
+      ]
+      animatedGeometry Shape {
+        appearance PBRAppearance {
+          metalness 0
+        }
+        geometry Cylinder {
+          height 0.07
+          radius 0.005
+        }
+      }
+      geometriesCount 36
+    }
+    Track {
+      translation 0 0.23 0
+      children [
+        TrackWheel {
+          position -0.26 0
+          radius 0.05
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 1 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.05
+                radius 0.05
+              }
+            }
+          ]
+        }
+        TrackWheel {
+          position 0.27 0
+          radius 0.05
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0 1 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.05
+                radius 0.05
+              }
+            }
+          ]
+        }
+      ]
+      name "right_track"
+      boundingObject Box {
+        size 0.6 0.07 0.1
+      }
+      physics Physics {
+      }
+      device [
+        LinearMotor {
+          name "right_motor"
+        }
+      ]
+      animatedGeometry Shape {
+        appearance PBRAppearance {
+          metalness 0
+        }
+        geometry Cylinder {
+          height 0.07
+          radius 0.005
+        }
+      }
+      geometriesCount 36
+    }
+    Shape {
+      appearance PBRAppearance {
+        baseColor 1 0.2 0.2
+        metalness 0
+      }
+      geometry Box {
+        size 0.6 0.4 0.05
+      }
+    }
+  ]
+  boundingObject Box {
+    size 0.6 0.4 0.05
+  }
+  physics Physics {
+  }
+  controller "ros"
+  controllerArgs [
+    "--clock"
+    "--auto-publish"
+    "--use-sim-time"
+    "--name=david_sim"
+  ]
+}
+TexturedBackground {
+}
+Solid {
+  children [
+    Shape {
+      geometry Box {
+        size 10 10 0.1
+      }
+    }
+  ]
+  boundingObject Box {
+    size 10 10 0.1
+  }
+}
