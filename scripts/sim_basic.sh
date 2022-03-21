@@ -39,7 +39,7 @@ wait_and_call /david_sim/Hokuyo_URG_04LX/enable_point_cloud 64
 
 # Start up RVIZ; use `true` because we still need to clean up, even if
 # it fails.
-rviz || true
+rviz -d ../ros/catkin_ws/src/david_conf/rviz/sim_hector.rviz || true
 
 # Kill the entire simulation.
 killall webots || true
