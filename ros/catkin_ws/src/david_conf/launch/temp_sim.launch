@@ -2,7 +2,7 @@
   <arg name="robot_path" />
   <param name="use_sim_time" value="true" />
 
-  <node pkg="tf" type="static_transform_publisher" name="base2laser" args="0 0 0 0 3.14159 3.14159 base_link /$(arg robot_path)/laser 32" />
+  <node pkg="tf" type="static_transform_publisher" name="base2laser" args="0 0.07 0 3.14159 0 3.14159 base_link /$(arg robot_path)/laser 32" />
 
   <node pkg="tf" type="static_transform_publisher" name="odom2baselink" args="0 0 0 0 0 0 odom base_link 32" />
 
