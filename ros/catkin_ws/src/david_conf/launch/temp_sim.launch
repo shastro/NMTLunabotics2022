@@ -18,4 +18,6 @@
     <param name="scan_topic" value="$(arg robot_path)/laser/laser_scan" />
     <!-- <param name="map_pub_period" value="2.00" /> -->
   </node>
+
+  <include file="$(find david_2dnav)/launch/move_base.launch" />
 </launch>

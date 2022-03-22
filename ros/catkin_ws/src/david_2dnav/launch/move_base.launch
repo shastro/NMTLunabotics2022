@@ -11,7 +11,7 @@
   <!--       args="$(find my_map_package)/my_map.pgm my_map_resolution"/> -->
 
   <!--- Run AMCL. -->
-  <!-- <include file="$(find amcl)/examples/amcl_omni.launch" /> -->
+  <!-- <include file="$(find amcl)/examples/amcl_diff.launch" /> -->
 
   <node name="move_base"
         pkg="move_base" type="move_base"
