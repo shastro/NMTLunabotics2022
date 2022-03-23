@@ -3,12 +3,12 @@
 # plan.
 
 TrajectoryPlannerROS:
-  min_vel_x: 0.05
-  max_vel_x: 0.05
-  max_vel_y: 0.05
+  min_vel_x: 0.000001
+  max_vel_x: 0.005
+  max_vel_y: 0.005
 
-  max_vel_theta: 0.05
-  min_in_place_val_theta: 0.005
+  max_vel_theta: 0.005
+  min_in_place_val_theta: 0.0005
 
   acc_lim_theta: 0.01
   acc_lim_x: 0.5
