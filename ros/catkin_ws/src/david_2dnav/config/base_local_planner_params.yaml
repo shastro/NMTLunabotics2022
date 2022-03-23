@@ -4,14 +4,18 @@
 
 TrajectoryPlannerROS:
   min_vel_x: 0.05
-  max_vel_x: 0.45
+  max_vel_x: 0.05
+  max_vel_y: 0.05
 
-  max_vel_theta: 0.1
-  min_in_place_val_theta: 0.05
+  max_vel_theta: 0.05
+  min_in_place_val_theta: 0.005
 
-  acc_lim_theta: 3.2
-  acc_lim_x: 2.5
-  acc_lim_y: 2.5
+  acc_lim_theta: 0.01
+  acc_lim_x: 0.5
+  acc_lim_y: 0.5
+
+  yaw_goal_tolerance: 0.05
+  xy_goal_tolerance: 0.2
 
   # We are not a holonomic robot, instead we are differential drive. Our robot has no way to "strafe"
 
