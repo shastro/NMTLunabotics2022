@@ -61,8 +61,8 @@ void WebotsMotor::update() {
 std::vector<NavMotor> init_motors(string path) {
   // This is specific to the current Webots demo robot.
   std::vector<NavMotor> motors;
-  motors.push_back(NavMotor(new WebotsMotor(path + "/left_motor"), -1.0));
-  motors.push_back(NavMotor(new WebotsMotor(path + "/right_motor"), 1.0));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/left_motor"), -0.264));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/right_motor"), 0.264));
 
   return motors;
 }
