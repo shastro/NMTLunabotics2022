@@ -3,16 +3,16 @@
 # plan.
 
 TrajectoryPlannerROS:
-  min_vel_x: 0.000001
-  max_vel_x: 0.005
-  max_vel_y: 0.005
+  min_vel_x: 0.01
+  max_vel_x: 0.05
+  max_vel_y: 0.0
 
-  max_vel_theta: 0.005
-  min_in_place_val_theta: 0.0005
+  max_vel_theta: 0.1
+  min_in_place_val_theta: 0.05
 
   acc_lim_theta: 0.01
   acc_lim_x: 0.5
-  acc_lim_y: 0.5
+  acc_lim_y: 0.0
 
   yaw_goal_tolerance: 0.05
   xy_goal_tolerance: 0.2
