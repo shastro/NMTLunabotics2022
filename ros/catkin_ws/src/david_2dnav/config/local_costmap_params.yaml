@@ -1,21 +1,26 @@
 # Local cost-map configuration parameters.
 
 local_costmap:
-  global_frame: odom
+  global_frame: map
   robot_base_frame: base_link
-  update_frequency: 5
+  update_frequency: 10
+
+  # From https://answers.ros.org/question/293696/move_base-to-use-map-published-on-a-certain-topic/
+  always_send_full_costmap: true
+  map_type: costmap
 
   # Visualization information frequency.
-  publish_frequency: 2.0
+  publish_frequency: 5
   static_map: false
 
   # `true` here means the map stays centered around the robot. Might
   # impact reliability one way or the other; not sure, though.
   rolling_window: true
+  
 
   # In meters.
-  width: 6.0
-  height: 6.0
+  width: 12.0
+  height: 12.0
 
   # Should probably be the same as the resolution of the static map.
   resolution: 0.05
