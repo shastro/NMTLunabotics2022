@@ -1,0 +1,4 @@
+/home/shastro/GIT/user/shughes/arucoboard/build/CMakeFiles/rebuild_cache.dir
+/home/shastro/GIT/user/shughes/arucoboard/build/CMakeFiles/edit_cache.dir
+/home/shastro/GIT/user/shughes/arucoboard/build/CMakeFiles/detect_board.dir
+/home/shastro/GIT/user/shughes/arucoboard/build/CMakeFiles/testboard.dir
