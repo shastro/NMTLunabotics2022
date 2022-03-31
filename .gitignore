@@ -7,3 +7,4 @@ ros/catkin_ws/build/*
 ros/catkin_ws/devel/*
 can/utils/can2canarray/build/*
 *.wbproj
+.#*
