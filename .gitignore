@@ -6,5 +6,6 @@ ros/catkin_ws/src/robot_kbd/devel/*
 ros/catkin_ws/build/*
 ros/catkin_ws/devel/*
 can/utils/can2canarray/build/*
+blender/*.blend1
 *.wbproj
 .#*
