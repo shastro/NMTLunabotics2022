@@ -132,6 +132,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/shastro/GIT/user/shughes/test_workspace/build/gtest/cmake_install.cmake")
   include("/home/shastro/GIT/user/shughes/test_workspace/build/turtlebot3_simulations/turtlebot3_simulations/cmake_install.cmake")
+  include("/home/shastro/GIT/user/shughes/test_workspace/build/action_tutorials/cmake_install.cmake")
   include("/home/shastro/GIT/user/shughes/test_workspace/build/turtlebot3_simulations/turtlebot3_fake/cmake_install.cmake")
   include("/home/shastro/GIT/user/shughes/test_workspace/build/turtlebot3_simulations/turtlebot3_gazebo/cmake_install.cmake")
 
