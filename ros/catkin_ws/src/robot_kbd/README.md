@@ -1,5 +1,9 @@
 # robot_kbd
 
+This package is deprecated as it uses raw motor functions rather than
+interfacing with `base_controller`. Use a terminal-based controller
+like `turtlebot3_teleop_key` for similar functionality, if needed.
+
 `robot_kbd` is the manual keyboard controller for the NMT Lunabotics
 2022 team's robot.
 
