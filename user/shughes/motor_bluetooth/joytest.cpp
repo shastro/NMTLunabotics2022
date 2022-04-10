@@ -18,9 +18,12 @@
 
 int main(int argc, char **argv) {
   // Create an instance of Joystick
-  Joystick joystick("/dev/input/js0");
+  Joystick joystick("/dev/input/js0", true);
 
-  EightBitPro2Button button;
+  // Create joystick enums
+  Pro2Button button;
+  Pro2Axis axis;
+
   // Ensure that it was found and that we can use it
   if (!joystick.isFound()) {
     printf("[ERROR] failed to open joystick.\n");
@@ -28,28 +31,34 @@ int main(int argc, char **argv) {
   }
 
   while (true) {
-    // Restrict rate
-    usleep(1000);
-
     // Attempt to sample an event from the joystick
     JoystickEvent event;
     if (joystick.sample(&event)) {
       if (event.isButton()) {
-        button = static_cast<EightBitPro2Button>(event.number);
+        button = static_cast<Pro2Button>(event.number);
+
         switch (button) {
-        case EightBitPro2Button::X {
-          printf("Pressed X")
+
+        case Pro2Button::X:
+          printf("Pressed X");
+          printf("Value %d \n", event.value);
+
+        case Pro2Button::Y:
+          printf("Pressed Y");
+          printf("Value %d \n", event.value);
+
+        default:
+          printf("Pressed %d\n", event.number);
         }
-        }
-        if (button == EightBitPro2Button::X) {
-          printf("FUCK\n");
-        } else if (button == EightBitPro2Button::Y) {
-          printf("SHIT\n");
-        }
-        printf("Button %u is %s\n", event.number,
-               event.value == 0 ? "up" : "down");
       } else if (event.isAxis()) {
-        printf("Axis %u is at position %d\n", event.number, event.value);
+        axis = static_cast<Pro2Axis>(event.number);
+
+        switch (axis) {
+        case Pro2Axis::rightTrigger:
+          if ( event.value > -30000 ) {
+              printf("Pressed rightTrigger %d\n", event.value);
+          }
+        }
       }
     }
   }
