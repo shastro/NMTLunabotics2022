@@ -2,21 +2,24 @@
 
 // Copyright (c) 2021, 2022 NMT Lunabotics. All rights reserved.
 
-#include <geometry_msgs/Twist.h>
-#include <ros/ros.h>
-
+#include <cstdlib>
 #include <iostream>
 #include <limits>
 #include <string>
 #include <utility>
 
+#include <geometry_msgs/Twist.h>
+#include <ros/ros.h>
+
 #include "main.hpp"
+
+using namespace std;
 
 static void quit(int sig);
 
 class Robot {
 public:
-  Robot(std::vector<NavMotor> motors) { motors_ = std::move(motors); }
+  Robot(vector<NavMotor> motors) { motors_ = move(motors); }
 
   void twist(const geometry_msgs::Twist &msg) {
     const geometry_msgs::Vector3 &linear = msg.linear;
@@ -51,18 +54,17 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "base_controller");
 
   if (argc != 3) {
-    std::cout << "Usage: " << argv[0] << " <robot-path> <cmd-vel-path>"
-              << std::endl;
-    std::cout << std::endl;
+    cout << "Usage: " << argv[0] << " <robot-path> <cmd-vel-path>" << endl
+         << endl
+         << "robot-path    Path to the robot root." << endl
+         << "cmd-vel-path  Path to a topic generating" << endl
+         << "              `geometry_msgs/Twist` messages." << endl;
 
-    std::cout << "robot-path    Path to the robot root." << std::endl;
-    std::cout << "cmd-vel-path  Path to a topic generating" << std::endl;
-    std::cout << "              `geometry_msgs/Twist` messages." << std::endl;
-    quit(1);
+    return EXIT_FAILURE;
   }
 
-  std::string robot_path(argv[1]);
-  std::string cmd_vel_path(argv[2]);
+  string robot_path = argv[1];
+  string cmd_vel_path = argv[2];
   ros::NodeHandle nh;
 
   // Initialize the navigation motors.
