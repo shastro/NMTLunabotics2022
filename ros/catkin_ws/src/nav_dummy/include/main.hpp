@@ -13,7 +13,6 @@
 #include <vector>
 
 #include <ros/ros.h>
-#include <webots_ros/set_float.h>
 
 // nothing here yet :O
 
