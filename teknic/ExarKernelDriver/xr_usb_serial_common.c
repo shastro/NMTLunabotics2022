@@ -1647,7 +1647,7 @@ static int xr_usb_serial_suspend(struct usb_interface *intf, pm_message_t messag
 	if (cnt)
 		return 0;
 
-	if (tty_port_initilized(&xr_usb_serial->port))
+	if (tty_port_initialized(&xr_usb_serial->port))
 		stop_data_traffic(xr_usb_serial);
 
 	return 0;
