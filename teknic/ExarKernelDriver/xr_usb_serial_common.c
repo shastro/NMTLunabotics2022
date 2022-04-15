@@ -1668,7 +1668,7 @@ static int xr_usb_serial_resume(struct usb_interface *intf)
 	if (cnt)
 		return 0;
 
-	if (tty_port_initilized(&xr_usb_serial->port))
+	if (tty_port_initialized(&xr_usb_serial->port))
 	{
 		rv = usb_submit_urb(xr_usb_serial->ctrlurb, GFP_NOIO);
 
