@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(base_controller)
 
-if($ENV{LOGNAME} EQUAL pi)
+if($ENV{LOGNAME} STREQUAL pi)
   # We're on the actual robot; link to Teknic.
   find_package(catkin REQUIRED COMPONENTS geometry_msgs message_generation rosconsole roscpp roscpp_serialization roslib rostime std_msgs std_srvs)
   include_directories(include ${catkin_INCLUDE_DIRS} ../../../../teknic/inc/inc-pub)

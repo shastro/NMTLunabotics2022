@@ -13,7 +13,6 @@
 #include <vector>
 
 #include <ros/ros.h>
-#include <webots_ros/set_float.h>
 
 // Direct connection to a motor of some type. This class is meant to
 // abstract away the difference between a Webots motor and a physical
