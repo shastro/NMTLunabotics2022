@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
   try {
 
     SysManager::FindComHubPorts(comHubPorts);
-    printf("Found %d SC Hubs\n", comHubPorts.size());
+    printf("Found %zd SC Hubs\n", comHubPorts.size());
 
     for (portCount = 0;
          portCount < comHubPorts.size() && portCount < NET_CONTROLLER_MAX;
@@ -71,9 +71,10 @@ int main(int argc, char *argv[]) {
       printf(" Port[%d]: state=%d, nodes=%d\n", myPort.NetNumber(),
              myPort.OpenState(), myPort.NodeCount());
 
-      // Once the code gets past this point, it can be assumed that the Port has
-      // been opened without issue Now we can get a reference to our port object
-      // which we will use to access the node objects
+      // Once the code gets past this point, it can be assumed that
+      // the Port has been opened without issue Now we can get a
+      // reference to our port object which we will use to access the
+      // node objects
 
       for (size_t iNode = 0; iNode < myPort.NodeCount(); iNode++) {
         // Create a shortcut reference for a node
@@ -107,7 +108,7 @@ int main(int argc, char *argv[]) {
                                // time values of the node's Ready status
         while (!theNode.Motion.IsReady()) {
           if (myMgr->TimeStampMsec() > timeout) {
-            printf("Error: Timed out waiting for Node %d to enable\n", iNode);
+            printf("Error: Timed out waiting for Node %zd to enable\n", iNode);
             msgUser("Press any key to continue."); // pause so the user can see
                                                    // the error message; waits
                                                    // for user to press a key
@@ -119,12 +120,12 @@ int main(int argc, char *argv[]) {
         // homed,
         if (theNode.Motion.Homing.HomingValid()) {
           if (theNode.Motion.Homing.WasHomed()) {
-            printf("Node %d has already been homed, current position is: "
+            printf("Node %zd has already been homed, current position is: "
                    "\t%8.0f \n",
                    iNode, theNode.Motion.PosnMeasured.Value());
             printf("Rehoming Node... \n");
           } else {
-            printf("Node [%d] has not been homed.  Homing Node now...\n",
+            printf("Node [%zd] has not been homed.  Homing Node now...\n",
                    iNode);
           }
           // Now we will home the Node
@@ -149,13 +150,11 @@ int main(int argc, char *argv[]) {
           }
           printf("Node completed homing\n");
         } else {
-          printf("Node[%d] has not had homing setup through ClearView.  The "
+          printf("Node[%zd] has not had homing setup through ClearView.  The "
                  "node will not be homed.\n",
                  iNode);
         }
       }
-
-
 
       // JOYSTICK SAMPLE LOOP
       while (true) {
@@ -199,6 +198,9 @@ int main(int argc, char *argv[]) {
                 printf("Pressed rightTrigger %d\n", event.value);
               }
               break;
+
+            default:;
+              // Do nothing.
             }
           }
         }
