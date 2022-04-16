@@ -22,4 +22,7 @@ private:
   // TODO: Implementation details.
 };
 
+#define TIME_TILL_TIMEOUT 10000 // The timeout used for homing(ms)
+#define POLL_INTERVAL 10        // Motor init polling (ms)
+
 #endif // H_TEKNIC
