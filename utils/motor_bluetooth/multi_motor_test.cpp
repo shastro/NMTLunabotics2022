@@ -1,6 +1,5 @@
 // Required include files
 #include "single_motor_test.hpp"
-#include <map>
 #include <vector>
 
 using namespace std;
