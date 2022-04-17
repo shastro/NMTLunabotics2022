@@ -39,6 +39,6 @@ private:
   // Unexports the GPIO pin.
   void unexport_gpio();
 
+  // GPIO pin number.
   unsigned int _num;
-  // GPIO number associated with the instance of an object
 };
