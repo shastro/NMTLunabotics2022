@@ -2,7 +2,7 @@
 
 using namespace sFnd;
 
-// Send message and wait for newline
+// Send message and wait for newline.
 void msgUser(const char *msg) {
   std::cout << msg;
   getchar();
