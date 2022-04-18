@@ -42,3 +42,31 @@ private:
   // GPIO pin number.
   unsigned int _num;
 };
+
+// A GPIO output pin.
+class GPIOOut {
+public:
+  // Initialize communications with the numbered GPIO pin.
+  GPIOOut(unsigned int num);
+
+  // Set the value on the pin.
+  void set(bool val);
+
+private:
+  // The underlying pin object, which should be in output mode.
+  GPIOPin _pin;
+};
+
+// A GPIO input pin.
+class GPIOIn {
+public:
+  // Initialize communications with the numbered GPIO pin.
+  GPIOIn(unsigned int num);
+
+  // Get the value from the pin.
+  bool get();
+
+private:
+  // The underlying pin object, which should be in input mode.
+  GPIOPin _pin;
+};
