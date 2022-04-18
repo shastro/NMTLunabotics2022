@@ -12,8 +12,14 @@ using namespace sFnd;
 
 static void joystick_sample_loop(Joystick &joystick, SysManager *myMgr,
                                  IPort *myPort);
-static vector<MotorID> button_control_scheme(Pro2Button button);
-static vector<MotorID> axis_control_scheme(Pro2Axis axis);
+static ButtonCommand button_control_scheme(Pro2Button button);
+static AxisCommand axis_control_scheme(Pro2Axis axis);
+
+ButtonCommand::ButtonCommand(vector<MotorID> _motors, int _direction)
+    : motors(_motors), direction(_direction) {}
+
+AxisCommand::AxisCommand(vector<MotorID> _motors, int _basis, int _direction)
+    : motors(_motors), basis(_basis), direction(_direction) {}
 
 int main(int argc, char *argv[]) {
   msgUser("Motion Example starting. Press Enter to continue.");
@@ -206,50 +212,89 @@ static void joystick_sample_loop(Joystick &joystick, SysManager *myMgr,
     // Calculate the motors that need to move, and whether they need
     // to be activated or not.
     vector<MotorID> motors;
-    bool activate = false;
+    int targetVelocity;
     if (event.isButton()) {
-      activate = event.value == 1;
-
       Pro2Button button = static_cast<Pro2Button>(event.number);
-      if (button == Pro2Button::start && activate) {
-        printf("Pressed start; exiting\n");
-        return;
-      }
 
-      motors = button_control_scheme(button);
+      ButtonCommand cmd = button_control_scheme(button);
+      motors = cmd.motors;
+      targetVelocity = (event.value == 1) ? 500 : 0;
     } else if (event.isAxis()) {
-      activate = event.value > -30000;
-
       Pro2Axis axis = static_cast<Pro2Axis>(event.number);
-      motors = axis_control_scheme(axis);
+
+      AxisCommand cmd = axis_control_scheme(axis);
+      motors = cmd.motors;
+      targetVelocity =
+          (event.value - cmd.basis) * cmd.direction * (500.0 / 65536);
     }
 
     for (auto &motor : motors) {
-      setNodeVel(myMgr, myPort, motor, activate ? 500 : 0);
+      setNodeVel(myMgr, myPort, motor, targetVelocity);
     }
   }
 }
 
 // Get the list of motors that need to move when a button is pressed
 // or released.
-static vector<MotorID> button_control_scheme(Pro2Button button) {
+static ButtonCommand button_control_scheme(Pro2Button button) {
+  // X -> dump up
+  // B -> dump down
+
+  // Arduino commands:
+  // leftBumper -> lower
+  // rightBumper -> raise
   switch (button) {
-  case Pro2Button::Y:
-    return vector<MotorID>({0});
+  case Pro2Button::X:
+    return ButtonCommand({MotorIdent::DumpL, MotorIdent::DumpR}, 1);
+
+  case Pro2Button::B:
+    return ButtonCommand({MotorIdent::DumpL, MotorIdent::DumpR}, -1);
+
+  case Pro2Button::start:
+    // Stop every motor.
+    return ButtonCommand(
+        {
+            MotorIdent::Auger,
+            MotorIdent::DumpL,
+            MotorIdent::DepthL,
+            MotorIdent::LocomotionL,
+            MotorIdent::LocomotionR,
+            MotorIdent::DepthR,
+            MotorIdent::DumpR,
+
+        },
+        0);
 
   default:
-    return vector<MotorID>();
+    return ButtonCommand({}, 0);
   }
 }
 
 // Get the list of motors that need to move when a trigger (axis) is
 // pressed or released.
-static vector<MotorID> axis_control_scheme(Pro2Axis axis) {
+static AxisCommand axis_control_scheme(Pro2Axis axis) {
+  // dpadY -> depth
+  // rightTrigger -> auger clockwise
+  // leftTrigger -> auger counterclockwise
+  // leftThumbY -> left locomotion
+  // rightThumbY -> right locomotion
   switch (axis) {
+  case Pro2Axis::dpadY:
+    return AxisCommand({MotorIdent::DepthL, MotorIdent::DepthR}, 0, 1);
+
   case Pro2Axis::rightTrigger:
-    return vector<MotorID>({0});
+    return AxisCommand({MotorIdent::Auger}, -32767, 1);
+
+  case Pro2Axis::leftTrigger:
+    return AxisCommand({MotorIdent::Auger}, -32767, -1);
+
+  case Pro2Axis::leftThumbY:
+    return AxisCommand({MotorIdent::LocomotionL}, 0, 1);
+
+  case Pro2Axis::rightThumbY:
+    return AxisCommand({MotorIdent::LocomotionL}, 0, 1);
 
   default:
-    return vector<MotorID>();
+    return AxisCommand({}, 0, 0);
   }
 }
