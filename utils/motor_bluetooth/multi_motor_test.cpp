@@ -218,14 +218,14 @@ static void joystick_sample_loop(Joystick &joystick, SysManager *myMgr,
 
       ButtonCommand cmd = button_control_scheme(button);
       motors = cmd.motors;
-      targetVelocity = (event.value == 1) ? 500 : 0;
+      targetVelocity = ((event.value == 1) ? 30 : 0) * cmd.direction;
     } else if (event.isAxis()) {
       Pro2Axis axis = static_cast<Pro2Axis>(event.number);
 
       AxisCommand cmd = axis_control_scheme(axis);
       motors = cmd.motors;
       targetVelocity =
-          (event.value - cmd.basis) * cmd.direction * (500.0 / 65536);
+          (event.value - cmd.basis) * cmd.direction * (30.0 / 65536);
     }
 
     for (auto &motor : motors) {
