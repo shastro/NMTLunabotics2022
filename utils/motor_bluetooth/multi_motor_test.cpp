@@ -1,5 +1,6 @@
 // Required include files
 #include "single_motor_test.hpp"
+#include <unistd.h>
 #include <vector>
 
 using namespace std;
@@ -14,6 +15,7 @@ static void joystick_sample_loop(Joystick &joystick, SysManager *myMgr,
                                  IPort *myPort);
 static ButtonCommand button_control_scheme(Pro2Button button);
 static AxisCommand axis_control_scheme(Pro2Axis axis);
+static Joystick joystick_connect();
 
 ButtonCommand::ButtonCommand(vector<MotorID> _motors, int _velocity)
     : motors(_motors), velocity(_velocity) {}
@@ -28,13 +30,8 @@ int main(int argc, char *argv[]) {
   std::vector<std::string> comHubPorts;
 
   // Create an instance of Joystick
-  Joystick joystick("/dev/input/js0", true);
-
-  // Ensure that it was found and that we can use it
-  if (!joystick.isFound()) {
-    printf("[ERROR] failed to open joystick.\n");
-    abort();
-  }
+  // Joystick joystick("/dev/input/js0", true);
+  Joystick joystick = joystick_connect();
 
   // Create the SysManager object. This object will coordinate actions among
   // various ports
@@ -165,6 +162,7 @@ int main(int argc, char *argv[]) {
         // }
       }
 
+      printf("All nodes enabled, entering joystick loop\n");
       joystick_sample_loop(joystick, myMgr, &myPort);
 
       //////////////////////////////////////////////////////////////////////////////////////////////
@@ -204,10 +202,12 @@ static void joystick_sample_loop(Joystick &joystick, SysManager *myMgr,
   while (true) {
     // Attempt to sample an event from the joystick
     JoystickEvent event;
+    printf("Waiting for joystick event...\n");
     if (!joystick.sample(&event)) {
       printf("Unable to read event; joystick crashed.\n");
       return;
     }
+    printf("Joystick event received\n");
 
     // Calculate the motors that need to move, and whether they need
     // to be activated or not.
@@ -228,10 +228,10 @@ static void joystick_sample_loop(Joystick &joystick, SysManager *myMgr,
           (event.value - cmd.basis) * cmd.velocity * (1.0 / 65536);
     }
 
-    // for (auto &motor : motors) {
-    //   // setNodeVel(myMgr, myPort, motor, targetVelocity);
-    //   setNodeVel(myMgr, myPort, motor, 5);
-    // }
+    for (auto &motor : motors) {
+      // setNodeVel(myMgr, myPort, motor, targetVelocity);
+      setNodeVel(myMgr, myPort, motor, 5);
+    }
   }
 }
 
@@ -297,5 +297,16 @@ static AxisCommand axis_control_scheme(Pro2Axis axis) {
 
   default:
     return AxisCommand({}, 0, 0);
+  }
+}
+
+static Joystick joystick_connect() {
+  while (true) {
+    printf("Waiting for joystick...\n");
+    Joystick joystick("/dev/input/js0", true);
+    if (joystick.isFound())
+      return joystick;
+
+    sleep(2);
   }
 }
