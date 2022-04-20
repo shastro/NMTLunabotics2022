@@ -292,7 +292,7 @@ static AxisCommand axis_control_scheme(Pro2Axis axis) {
     return AxisCommand({MotorIdent::LocomotionL}, 0, 10);
 
   case Pro2Axis::rightThumbY:
-    return AxisCommand({MotorIdent::LocomotionL}, 0, 10);
+    return AxisCommand({MotorIdent::LocomotionL}, 0, -10);
 
   default:
     return AxisCommand({}, 0, 0);
