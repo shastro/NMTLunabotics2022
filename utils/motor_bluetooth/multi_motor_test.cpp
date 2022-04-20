@@ -15,11 +15,11 @@ static void joystick_sample_loop(Joystick &joystick, SysManager *myMgr,
 static ButtonCommand button_control_scheme(Pro2Button button);
 static AxisCommand axis_control_scheme(Pro2Axis axis);
 
-ButtonCommand::ButtonCommand(vector<MotorID> _motors, int _direction)
-    : motors(_motors), direction(_direction) {}
+ButtonCommand::ButtonCommand(vector<MotorID> _motors, int _velocity)
+    : motors(_motors), velocity(_velocity) {}
 
-AxisCommand::AxisCommand(vector<MotorID> _motors, int _basis, int _direction)
-    : motors(_motors), basis(_basis), direction(_direction) {}
+AxisCommand::AxisCommand(vector<MotorID> _motors, int _basis, int _velocity)
+    : motors(_motors), basis(_basis), velocity(_velocity) {}
 
 int main(int argc, char *argv[]) {
   msgUser("Motion Example starting. Press Enter to continue.");
@@ -218,14 +218,14 @@ static void joystick_sample_loop(Joystick &joystick, SysManager *myMgr,
 
       ButtonCommand cmd = button_control_scheme(button);
       motors = cmd.motors;
-      targetVelocity = ((event.value == 1) ? 5 : 0) * cmd.direction;
+      targetVelocity = ((event.value == 1) ? 1 : 0) * cmd.velocity;
     } else if (event.isAxis()) {
       Pro2Axis axis = static_cast<Pro2Axis>(event.number);
 
       AxisCommand cmd = axis_control_scheme(axis);
       motors = cmd.motors;
       targetVelocity =
-          (event.value - cmd.basis) * cmd.direction * (5.0 / 65536);
+          (event.value - cmd.basis) * cmd.velocity * (1.0 / 65536);
     }
 
     for (auto &motor : motors) {
@@ -245,10 +245,10 @@ static ButtonCommand button_control_scheme(Pro2Button button) {
   // rightBumper -> raise
   switch (button) {
   case Pro2Button::X:
-    return ButtonCommand({MotorIdent::DumpL, MotorIdent::DumpR}, 1);
+    return ButtonCommand({MotorIdent::DumpL, MotorIdent::DumpR}, 30);
 
   case Pro2Button::B:
-    return ButtonCommand({MotorIdent::DumpL, MotorIdent::DumpR}, -1);
+    return ButtonCommand({MotorIdent::DumpL, MotorIdent::DumpR}, -30);
 
   case Pro2Button::start:
     // Stop every motor.
@@ -283,16 +283,16 @@ static AxisCommand axis_control_scheme(Pro2Axis axis) {
     return AxisCommand({MotorIdent::DepthL, MotorIdent::DepthR}, 0, 1);
 
   case Pro2Axis::rightTrigger:
-    return AxisCommand({MotorIdent::Auger}, -32767, 1);
+    return AxisCommand({MotorIdent::Auger}, -32767, 1000);
 
   case Pro2Axis::leftTrigger:
-    return AxisCommand({MotorIdent::Auger}, -32767, -1);
+    return AxisCommand({MotorIdent::Auger}, -32767, -1000);
 
   case Pro2Axis::leftThumbY:
-    return AxisCommand({MotorIdent::LocomotionL}, 0, 1);
+    return AxisCommand({MotorIdent::LocomotionL}, 0, 10);
 
   case Pro2Axis::rightThumbY:
-    return AxisCommand({MotorIdent::LocomotionL}, 0, 1);
+    return AxisCommand({MotorIdent::LocomotionL}, 0, 10);
 
   default:
     return AxisCommand({}, 0, 0);

@@ -29,11 +29,11 @@ public:
 // A command associated with pressing a button.
 struct ButtonCommand {
   // Create a new ButtonCommand, in which the list of `motors' all
-  // move in direction `direction'.
-  ButtonCommand(std::vector<MotorID> _motors, int _direction);
+  // move with velocity `velocity` with the sign indicating direction.
+  ButtonCommand(std::vector<MotorID> _motors, int _velocity);
 
   std::vector<MotorID> motors;
-  int direction;
+  int velocity;
 };
 
 // A command associated with moving an axis.
@@ -41,11 +41,11 @@ struct AxisCommand {
   // Create a new AxisCommand, in which the list of `motors' all move
   // in direction `direction'. An axis position of `basis' is treated
   // as zero (no motion).
-  AxisCommand(std::vector<MotorID> _motors, int _basis, int _direction);
+  AxisCommand(std::vector<MotorID> _motors, int _basis, int _velocity);
 
   std::vector<MotorID> motors;
   int basis;
-  int direction;
+  int velocity;
 };
 
 // ---- motor_utils.cpp ----
