@@ -229,7 +229,8 @@ static void joystick_sample_loop(Joystick &joystick, SysManager *myMgr,
     }
 
     for (auto &motor : motors) {
-      setNodeVel(myMgr, myPort, motor, targetVelocity);
+      // setNodeVel(myMgr, myPort, motor, targetVelocity);
+      setNodeVel(myMgr, myPort, motor, -5);
     }
   }
 }
