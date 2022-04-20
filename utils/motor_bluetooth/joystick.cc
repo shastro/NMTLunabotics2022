@@ -24,15 +24,16 @@
 
 Joystick::Joystick()
 {
-  openPath("/dev/input/js0");
+  // openPath("/dev/input/js0");
+  openPath("a.txt");
 }
 
-Joystick::Joystick(int joystickNumber)
-{
-  std::stringstream sstm;
-  sstm << "/dev/input/js" << joystickNumber;
-  openPath(sstm.str());
-}
+// Joystick::Joystick(int joystickNumber)
+// {
+//   std::stringstream sstm;
+//   sstm << "/dev/input/js" << joystickNumber;
+//   openPath(sstm.str());
+// }
 
 Joystick::Joystick(std::string devicePath)
 {
@@ -47,15 +48,20 @@ Joystick::Joystick(std::string devicePath, bool blocking)
 void Joystick::openPath(std::string devicePath, bool blocking)
 {
   // Open the device using either blocking or non-blocking
-  _fd = open(devicePath.c_str(), blocking ? O_RDONLY : O_RDONLY | O_NONBLOCK);
+  // _fd = open(devicePath.c_str(), blocking ? O_RDONLY : O_RDONLY | O_NONBLOCK);
+  _fd = fopen(devicePath.c_str(), "r");
 }
 
 bool Joystick::sample(JoystickEvent* event)
 {
-  int bytes = read(_fd, event, sizeof(*event)); 
+  printf("s = %ld\n", sizeof(*event));
+  // int bytes = read(_fd, event, sizeof(*event));
+  int bytes = fread(event, 1, sizeof(*event), _fd);
 
-  if (bytes == -1)
+  printf("bytes = %d\n", bytes);
+  if (bytes == -1) {
     return false;
+  }
 
   // NOTE if this condition is not met, we're probably out of sync and this
   // Joystick instance is likely unusable
@@ -64,12 +70,14 @@ bool Joystick::sample(JoystickEvent* event)
 
 bool Joystick::isFound()
 {
-  return _fd >= 0;
+  // return _fd >= 0;
+  return _fd != 0;
 }
 
 Joystick::~Joystick()
 {
-  close(_fd);
+  if (_fd)
+    fclose(_fd);
 }
 
 std::ostream& operator<<(std::ostream& os, const JoystickEvent& e)

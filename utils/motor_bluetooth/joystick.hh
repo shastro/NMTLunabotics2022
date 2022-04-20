@@ -17,6 +17,7 @@
 
 #include <string>
 #include <iostream>
+#include <stdio.h>
 
 #define JS_EVENT_BUTTON 0x01 // button pressed/released
 #define JS_EVENT_AXIS   0x02 // joystick moved
@@ -102,7 +103,8 @@ class Joystick
 private:
   void openPath(std::string devicePath, bool blocking=false);
 
-  int _fd;
+  // int _fd;
+  FILE *_fd;
 
 public:
   ~Joystick();

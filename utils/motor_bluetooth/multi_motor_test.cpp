@@ -2,6 +2,7 @@
 #include "single_motor_test.hpp"
 #include <unistd.h>
 #include <vector>
+#include <unistd.h>
 
 using namespace std;
 using namespace sFnd;
@@ -30,8 +31,12 @@ int main(int argc, char *argv[]) {
   std::vector<std::string> comHubPorts;
 
   // Create an instance of Joystick
-  // Joystick joystick("/dev/input/js0", true);
-  Joystick joystick = joystick_connect();
+  Joystick joystick("/dev/input/js0", true);
+  // Joystick joystick = joystick_connect();
+  // Joystick joystick("a2.txt", true);
+
+  // JoystickEvent evt;
+  // printf("%d\n", joystick.sample(&evt));
 
   // Create the SysManager object. This object will coordinate actions among
   // various ports
@@ -209,17 +214,22 @@ static void joystick_sample_loop(Joystick &joystick, SysManager *myMgr,
     }
     printf("Joystick event received\n");
 
+    printf("event.time = %d\n", event.time);
+    printf("event.value = %d\n", event.value);
+
     // Calculate the motors that need to move, and whether they need
     // to be activated or not.
     vector<MotorID> motors;
     int targetVelocity;
     if (event.isButton()) {
+      printf("Button event\n");
       Pro2Button button = static_cast<Pro2Button>(event.number);
 
       ButtonCommand cmd = button_control_scheme(button);
       motors = cmd.motors;
       targetVelocity = ((event.value == 1) ? 1 : 0) * cmd.velocity;
     } else if (event.isAxis()) {
+      printf("Axis event\n");
       Pro2Axis axis = static_cast<Pro2Axis>(event.number);
 
       AxisCommand cmd = axis_control_scheme(axis);
@@ -229,9 +239,10 @@ static void joystick_sample_loop(Joystick &joystick, SysManager *myMgr,
     }
 
     for (auto &motor : motors) {
-      // setNodeVel(myMgr, myPort, motor, targetVelocity);
-      setNodeVel(myMgr, myPort, motor, 5);
+      setNodeVel(myMgr, myPort, motor, targetVelocity);
+      // setNodeVel(myMgr, myPort, motor, 5);
     }
+    // break;
   }
 }
 
@@ -245,11 +256,11 @@ static ButtonCommand button_control_scheme(Pro2Button button) {
   // leftBumper -> lower
   // rightBumper -> raise
   switch (button) {
-  // case Pro2Button::X:
-  //   return ButtonCommand({MotorIdent::DumpL, MotorIdent::DumpR}, 30);
+  case Pro2Button::X:
+    return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, 30);
 
-  // case Pro2Button::B:
-  //   return ButtonCommand({MotorIdent::DumpL, MotorIdent::DumpR}, -30);
+  case Pro2Button::B:
+    return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, -30);
 
   case Pro2Button::start:
     // Stop every motor.
@@ -280,33 +291,33 @@ static AxisCommand axis_control_scheme(Pro2Axis axis) {
   // leftThumbY -> left locomotion
   // rightThumbY -> right locomotion
   switch (axis) {
-  // case Pro2Axis::dpadY:
-  //   return AxisCommand({MotorIdent::DepthL, MotorIdent::DepthR}, 0, 30);
+  case Pro2Axis::dpadY:
+    return AxisCommand({MotorIdent::DepthL, MotorIdent::DepthR}, 0, 30);
 
-  // case Pro2Axis::rightTrigger:
-  //   return AxisCommand({MotorIdent::Auger}, -32767, 1000);
+  case Pro2Axis::rightTrigger:
+    return AxisCommand({MotorIdent::Auger}, -32767, 1000);
 
-  // case Pro2Axis::leftTrigger:
-  //   return AxisCommand({MotorIdent::Auger}, -32767, -1000);
+  case Pro2Axis::leftTrigger:
+    return AxisCommand({MotorIdent::Auger}, -32767, -1000);
 
   case Pro2Axis::leftThumbY:
-    return AxisCommand({MotorIdent::LocomotionL}, 0, 10);
+    return AxisCommand({MotorIdent::LocomotionL}, 0, -10);
 
   case Pro2Axis::rightThumbY:
-    return AxisCommand({MotorIdent::LocomotionL}, 0, -10);
+    return AxisCommand({MotorIdent::LocomotionR}, 0, 10);
 
   default:
     return AxisCommand({}, 0, 0);
   }
 }
 
-static Joystick joystick_connect() {
-  while (true) {
-    printf("Waiting for joystick...\n");
-    Joystick joystick("/dev/input/js0", true);
-    if (joystick.isFound())
-      return joystick;
+// static Joystick joystick_connect() {
+//   while (true) {
+//     printf("Waiting for joystick...\n");
+//     Joystick joystick("/dev/input/js0", true);
+//     if (joystick.isFound())
+//       return joystick;
 
-    sleep(2);
-  }
-}
+//     sleep(2);
+//   }
+// }
