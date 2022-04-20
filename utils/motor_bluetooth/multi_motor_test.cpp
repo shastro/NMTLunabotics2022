@@ -280,7 +280,7 @@ static AxisCommand axis_control_scheme(Pro2Axis axis) {
   // rightThumbY -> right locomotion
   switch (axis) {
   case Pro2Axis::dpadY:
-    return AxisCommand({MotorIdent::DepthL, MotorIdent::DepthR}, 0, 1);
+    return AxisCommand({MotorIdent::DepthL, MotorIdent::DepthR}, 0, 30);
 
   case Pro2Axis::rightTrigger:
     return AxisCommand({MotorIdent::Auger}, -32767, 1000);
