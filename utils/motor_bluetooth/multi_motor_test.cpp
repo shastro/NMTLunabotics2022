@@ -127,42 +127,42 @@ int main(int argc, char *argv[]) {
         // At this point the Node is enabled, and we will now check to see if
         // the Node has been homed Check the Node to see if it has already been
         // homed,
-        if (theNode.Motion.Homing.HomingValid()) {
-          if (theNode.Motion.Homing.WasHomed()) {
-            printf("Node %zd has already been homed, current position is: "
-                   "\t%8.0f \n",
-                   iNode, theNode.Motion.PosnMeasured.Value());
-            printf("Rehoming Node... \n");
-          } else {
-            printf("Node [%zd] has not been homed.  Homing Node now...\n",
-                   iNode);
-          }
-          // Now we will home the Node
-          theNode.Motion.Homing.Initiate();
+        // if (theNode.Motion.Homing.HomingValid()) {
+        //   if (theNode.Motion.Homing.WasHomed()) {
+        //     printf("Node %zd has already been homed, current position is: "
+        //            "\t%8.0f \n",
+        //            iNode, theNode.Motion.PosnMeasured.Value());
+        //     printf("Rehoming Node... \n");
+        //   } else {
+        //     printf("Node [%zd] has not been homed.  Homing Node now...\n",
+        //            iNode);
+        //   }
+        //   // Now we will home the Node
+        //   theNode.Motion.Homing.Initiate();
 
-          timeout = myMgr->TimeStampMsec() +
-                    TIME_TILL_TIMEOUT; // define a timeout in case the node is
-          // unable to enable
-          //  Basic mode - Poll until disabled
-          while (!theNode.Motion.Homing.WasHomed()) {
-            if (myMgr->TimeStampMsec() > timeout) {
-              printf("Node did not complete homing:  \n\t -Ensure Homing "
-                     "settings have been defined through ClearView. \n\t "
-                     "-Check for alerts/Shutdowns \n\t -Ensure timeout is "
-                     "longer than the longest possible homing move.\n");
-              msgUser(
-                  "Press any key to continue."); // pause so the user can see
-              // the error message; waits for
-              // user to press a key
-              return -2;
-            }
-          }
-          printf("Node completed homing\n");
-        } else {
-          printf("Node[%zd] has not had homing setup through ClearView.  The "
-                 "node will not be homed.\n",
-                 iNode);
-        }
+        //   timeout = myMgr->TimeStampMsec() +
+        //             TIME_TILL_TIMEOUT; // define a timeout in case the node is
+        //   // unable to enable
+        //   //  Basic mode - Poll until disabled
+        //   while (!theNode.Motion.Homing.WasHomed()) {
+        //     if (myMgr->TimeStampMsec() > timeout) {
+        //       printf("Node did not complete homing:  \n\t -Ensure Homing "
+        //              "settings have been defined through ClearView. \n\t "
+        //              "-Check for alerts/Shutdowns \n\t -Ensure timeout is "
+        //              "longer than the longest possible homing move.\n");
+        //       msgUser(
+        //           "Press any key to continue."); // pause so the user can see
+        //       // the error message; waits for
+        //       // user to press a key
+        //       return -2;
+        //     }
+        //   }
+        //   printf("Node completed homing\n");
+        // } else {
+        //   printf("Node[%zd] has not had homing setup through ClearView.  The "
+        //          "node will not be homed.\n",
+        //          iNode);
+        // }
       }
 
       joystick_sample_loop(joystick, myMgr, &myPort);
