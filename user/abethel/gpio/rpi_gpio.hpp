@@ -33,7 +33,7 @@ public:
   bool getval_gpio();
 
 private:
-  // Exports the GPIO pin.
+  // Enables software control of the GPIO pin.
   void export_gpio();
 
   // Unexports the GPIO pin.

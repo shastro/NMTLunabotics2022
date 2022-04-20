@@ -57,7 +57,7 @@ bool GPIOPin::getval_gpio() {
   return val != "0";
 }
 
-// Set the direction of communication.
+// Enables software control of the GPIO pin.
 void GPIOPin::export_gpio() {
   string filename = "/sys/class/gpio/export";
   ofstream file(filename);
