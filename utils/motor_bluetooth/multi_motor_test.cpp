@@ -228,10 +228,10 @@ static void joystick_sample_loop(Joystick &joystick, SysManager *myMgr,
           (event.value - cmd.basis) * cmd.velocity * (1.0 / 65536);
     }
 
-    for (auto &motor : motors) {
-      // setNodeVel(myMgr, myPort, motor, targetVelocity);
-      setNodeVel(myMgr, myPort, motor, -5);
-    }
+    // for (auto &motor : motors) {
+    //   // setNodeVel(myMgr, myPort, motor, targetVelocity);
+    //   setNodeVel(myMgr, myPort, motor, 5);
+    // }
   }
 }
 
@@ -245,11 +245,11 @@ static ButtonCommand button_control_scheme(Pro2Button button) {
   // leftBumper -> lower
   // rightBumper -> raise
   switch (button) {
-  case Pro2Button::X:
-    return ButtonCommand({MotorIdent::DumpL, MotorIdent::DumpR}, 30);
+  // case Pro2Button::X:
+  //   return ButtonCommand({MotorIdent::DumpL, MotorIdent::DumpR}, 30);
 
-  case Pro2Button::B:
-    return ButtonCommand({MotorIdent::DumpL, MotorIdent::DumpR}, -30);
+  // case Pro2Button::B:
+  //   return ButtonCommand({MotorIdent::DumpL, MotorIdent::DumpR}, -30);
 
   case Pro2Button::start:
     // Stop every motor.
@@ -280,14 +280,14 @@ static AxisCommand axis_control_scheme(Pro2Axis axis) {
   // leftThumbY -> left locomotion
   // rightThumbY -> right locomotion
   switch (axis) {
-  case Pro2Axis::dpadY:
-    return AxisCommand({MotorIdent::DepthL, MotorIdent::DepthR}, 0, 30);
+  // case Pro2Axis::dpadY:
+  //   return AxisCommand({MotorIdent::DepthL, MotorIdent::DepthR}, 0, 30);
 
-  case Pro2Axis::rightTrigger:
-    return AxisCommand({MotorIdent::Auger}, -32767, 1000);
+  // case Pro2Axis::rightTrigger:
+  //   return AxisCommand({MotorIdent::Auger}, -32767, 1000);
 
-  case Pro2Axis::leftTrigger:
-    return AxisCommand({MotorIdent::Auger}, -32767, -1000);
+  // case Pro2Axis::leftTrigger:
+  //   return AxisCommand({MotorIdent::Auger}, -32767, -1000);
 
   case Pro2Axis::leftThumbY:
     return AxisCommand({MotorIdent::LocomotionL}, 0, 10);
