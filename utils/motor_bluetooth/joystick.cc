@@ -62,6 +62,11 @@ bool Joystick::sample(JoystickEvent* event)
   return bytes == sizeof(*event);
 }
 
+Joystick::Joystick(Joystick &&other) {
+  _fd = other._fd;
+  other._fd = -1;
+}
+
 bool Joystick::isFound()
 {
   return _fd >= 0;
@@ -69,7 +74,8 @@ bool Joystick::isFound()
 
 Joystick::~Joystick()
 {
-  close(_fd);
+  if (_fd >= 0)
+    close(_fd);
 }
 
 std::ostream& operator<<(std::ostream& os, const JoystickEvent& e)
@@ -79,5 +85,3 @@ std::ostream& operator<<(std::ostream& os, const JoystickEvent& e)
      << " value=" << static_cast<int>(e.value);
   return os;
 }
-
-

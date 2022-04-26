@@ -131,7 +131,7 @@ public:
   /**
    * Joystick objects can be moved
    */
-  Joystick(Joystick &&) = default;
+  Joystick(Joystick &&other);
 
   /**
    * Initialises an instance for the joystick device specified and provide
