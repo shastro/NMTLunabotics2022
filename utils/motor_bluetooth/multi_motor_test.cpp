@@ -59,7 +59,11 @@ static void joystick_sample_loop() {
     }
 
     for (MotorID &motor : motors) {
-      port.getNodes().at(motor).setVel(targetVelocity);
+      try {
+        port.getNodes().at(motor).setVel(targetVelocity);
+      } catch (string err) {
+        cout << "Motor " << motor << " error: " << err << endl;
+      }
     }
   }
 }
