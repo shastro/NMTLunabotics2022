@@ -58,8 +58,8 @@ static void joystick_sample_loop() {
       targetVelocity = (event.value - cmd.basis) * cmd.velocity * (1.0 / 65536);
     }
 
-    for (SimpleNode &motor : port.getNodes()) {
-      motor.setVel(targetVelocity);
+    for (MotorID &motor : motors) {
+      port.getNodes().at(motor).setVel(targetVelocity);
     }
   }
 }
@@ -91,7 +91,6 @@ static ButtonCommand button_control_scheme(Pro2Button button) {
             MotorIdent::LocomotionR,
             MotorIdent::DepthR,
             MotorIdent::DumpR,
-
         },
         0);
 
