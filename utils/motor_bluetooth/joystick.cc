@@ -12,54 +12,49 @@
 //
 // Copyright Drew Noakes 2013-2016
 
+// Modified by Alex Bethel (2022) for NMT Lunabotics:
+// - Fixed unsoundness bug in move constructor.
+// - Switched to exceptions rather than C-style validity querying.
+
 #include "joystick.hh"
 
-#include <sys/types.h>
-#include <sys/stat.h>
+#include "unistd.h"
 #include <fcntl.h>
 #include <iostream>
-#include <string>
 #include <sstream>
-#include "unistd.h"
+#include <string>
+#include <sys/stat.h>
+#include <sys/types.h>
 
-Joystick::Joystick()
-{
-  openPath("/dev/input/js0");
-}
+Joystick::Joystick() { openPath("/dev/input/js0"); }
 
-Joystick::Joystick(int joystickNumber)
-{
+Joystick::Joystick(int joystickNumber) {
   std::stringstream sstm;
   sstm << "/dev/input/js" << joystickNumber;
   openPath(sstm.str());
 }
 
-Joystick::Joystick(std::string devicePath)
-{
-  openPath(devicePath);
-}
+Joystick::Joystick(std::string devicePath) { openPath(devicePath); }
 
-Joystick::Joystick(std::string devicePath, bool blocking)
-{
+Joystick::Joystick(std::string devicePath, bool blocking) {
   openPath(devicePath, blocking);
 }
 
-void Joystick::openPath(std::string devicePath, bool blocking)
-{
+void Joystick::openPath(std::string devicePath, bool blocking) {
   // Open the device using either blocking or non-blocking
   _fd = open(devicePath.c_str(), blocking ? O_RDONLY : O_RDONLY | O_NONBLOCK);
+  if (_fd < 0)
+    throw "Error opening joystick device";
 }
 
-bool Joystick::sample(JoystickEvent* event)
-{
-  int bytes = read(_fd, event, sizeof(*event)); 
+JoystickEvent Joystick::sample() {
+  JoystickEvent event;
+  int bytes = read(_fd, &event, sizeof(event));
 
-  if (bytes == -1)
-    return false;
+  if (bytes != sizeof(event))
+    throw "Error reading joystick event";
 
-  // NOTE if this condition is not met, we're probably out of sync and this
-  // Joystick instance is likely unusable
-  return bytes == sizeof(*event);
+  return event;
 }
 
 Joystick::Joystick(Joystick &&other) {
@@ -67,19 +62,12 @@ Joystick::Joystick(Joystick &&other) {
   other._fd = -1;
 }
 
-bool Joystick::isFound()
-{
-  return _fd >= 0;
-}
-
-Joystick::~Joystick()
-{
+Joystick::~Joystick() {
   if (_fd >= 0)
     close(_fd);
 }
 
-std::ostream& operator<<(std::ostream& os, const JoystickEvent& e)
-{
+std::ostream &operator<<(std::ostream &os, const JoystickEvent &e) {
   os << "type=" << static_cast<int>(e.type)
      << " number=" << static_cast<int>(e.number)
      << " value=" << static_cast<int>(e.value);

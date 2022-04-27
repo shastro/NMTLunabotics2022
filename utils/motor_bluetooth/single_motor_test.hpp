@@ -53,13 +53,43 @@ struct AxisCommand {
 // Send message and wait for newline.
 void msgUser(const char *msg);
 
-// Set the velocity of a node on the port.
-void setNodeVel(sFnd::SysManager *mgr, sFnd::IPort *port, MotorID nodeNum,
-                double vel);
+class SimpleNode {
+public:
+  SimpleNode(sFnd::SysManager *mgr, sFnd::INode *node);
+  ~SimpleNode();
 
-// Set the velocity of every motor on the port.
-void setAllNodeVel(sFnd::SysManager *myMgr, sFnd::IPort *myPort, double goal);
+  void setVel(double vel);
+  void setPos(double pos);
 
-// Set the position of a node on the port.
-void setNodePos(sFnd::SysManager *mgr, sFnd::IPort *port, MotorID nodeNum,
-                double pos);
+  int type();
+  std::string userID();
+  std::string firmwareVersion();
+  int serial();
+  std::string model();
+
+private:
+  void _enableNode();
+  void _setStandardUnits();
+
+  sFnd::SysManager *_mgr;
+  sFnd::INode *_node;
+};
+
+class SimplePort {
+public:
+  SimplePort(sFnd::SysManager *mgr, sFnd::IPort *port);
+  ~SimplePort();
+
+  static std::vector<SimplePort> getPorts();
+
+  int netNumber();
+  int openState();
+  size_t nodeCount();
+
+  std::vector<SimpleNode> &getNodes();
+
+private:
+  sFnd::SysManager *_mgr;
+  sFnd::IPort *_port;
+  std::vector<SimpleNode> _nodes;
+};

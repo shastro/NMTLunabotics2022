@@ -140,15 +140,9 @@ public:
   Joystick(std::string devicePath, bool blocking);
 
   /**
-   * Returns true if the joystick was found and may be used, otherwise false.
+   * Samples an event from the joystick.
    */
-  bool isFound();
-
-  /**
-   * Attempts to populate the provided JoystickEvent instance with data
-   * from the joystick. Returns true if data is available, otherwise false.
-   */
-  bool sample(JoystickEvent* event);
+  JoystickEvent sample();
 };
 
 #endif
