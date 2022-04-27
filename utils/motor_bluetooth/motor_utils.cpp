@@ -21,8 +21,7 @@ void setNodeVel(SysManager *mgr, IPort *port, MotorID nodeNum, double vel) {
 }
 
 // Set the velocity of every motor on the port.
-void moveNodesFixed(SysManager *mgr, IPort *port, double vel) {
-  // TODO: Rename this function.
+void setAllNodeVel(SysManager *mgr, IPort *port, double vel) {
   for (int i = 0; i < port->NodeCount(); i++) {
     setNodeVel(mgr, port, i, vel);
   }

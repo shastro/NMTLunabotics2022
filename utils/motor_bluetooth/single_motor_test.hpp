@@ -58,7 +58,7 @@ void setNodeVel(sFnd::SysManager *mgr, sFnd::IPort *port, MotorID nodeNum,
                 double vel);
 
 // Set the velocity of every motor on the port.
-void moveNodesFixed(sFnd::SysManager *myMgr, sFnd::IPort *myPort, double goal);
+void setAllNodeVel(sFnd::SysManager *myMgr, sFnd::IPort *myPort, double goal);
 
 // Set the position of a node on the port.
 void setNodePos(sFnd::SysManager *mgr, sFnd::IPort *port, MotorID nodeNum,

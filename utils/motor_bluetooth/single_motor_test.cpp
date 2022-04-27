@@ -175,9 +175,9 @@ int main(int argc, char *argv[]) {
               printf("Value %d \n", event.value);
 
               if (event.value == 1) {
-                moveNodesFixed(myMgr, &myPort, 500);
+                setAllNodeVel(myMgr, &myPort, 500);
               } else {
-                moveNodesFixed(myMgr, &myPort, 0);
+                setAllNodeVel(myMgr, &myPort, 0);
               }
               break;
             case Pro2Button::start:
