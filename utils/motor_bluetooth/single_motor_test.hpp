@@ -53,22 +53,51 @@ struct AxisCommand {
 // Send message and wait for newline.
 void msgUser(const char *msg);
 
+// A Teknic node, i.e., a motor. Teknic motors are powerful but have a
+// complicated interface; this class exposes just the functionality we
+// need for Lunabotics, and abstracts away much of the boilerplate
+// code for working with motors.
 class SimpleNode {
 public:
+  // Wraps the INode in a SimpleNode class, enabling the node and
+  // setting it to use standard units.
   SimpleNode(sFnd::SysManager *mgr, sFnd::INode *node);
+
+  // Disables the motor before shutdown.
   ~SimpleNode();
 
+  // Sets the motor's velocity, disregarding position.
   void setVel(double vel);
+
+  // Sets the motor's target position. Only works on tuned, homed
+  // motors.
   void setPos(double pos);
 
+  // Gets the motor's type.
   int type();
+
+  // Gets the motor's user ID.
   std::string userID();
+
+  // Gets the motor's firmware version.
   std::string firmwareVersion();
+
+  // Gets the motor's serial number.
   int serial();
+
+  // Gets the motor's model number.
   std::string model();
 
+  // Gets the raw underlying node object, for more advanced
+  // operations.
+  sFnd::INode *getNode();
+
 private:
+  // Attempts to turn on the motor; throws an exception if this fails.
   void _enableNode();
+
+  // Sets the motor to use the standard units (revolutions per minute,
+  // etc.).
   void _setStandardUnits();
 
   sFnd::SysManager *_mgr;
@@ -77,16 +106,32 @@ private:
 
 class SimplePort {
 public:
+  // Wraps the IPort in a SimplePort class, initializing all the nodes
+  // (motors) on the port.
   SimplePort(sFnd::SysManager *mgr, sFnd::IPort *port);
+
+  // Disables all motors and disconnects from the port.
   ~SimplePort();
 
+  // Gets the list of every port (Teknic board) connected to the host
+  // machine.
   static std::vector<SimplePort> getPorts();
 
+  // Gets the network number of this port.
   int netNumber();
-  int openState();
+
+  // Gets whether this port is open, flashing, etc.
+  openStates openState();
+
+  // Gets the number of nodes (motors) attached to this port.
   size_t nodeCount();
 
+  // Gets the list of nodes attached to this port.
   std::vector<SimpleNode> &getNodes();
+
+  // Gets the raw underlying port object, for more advanced
+  // operations.
+  sFnd::IPort *getPort();
 
 private:
   sFnd::SysManager *_mgr;

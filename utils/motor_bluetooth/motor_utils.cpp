@@ -37,6 +37,8 @@ int SimpleNode::serial() { return _node->Info.SerialNumber.Value(); }
 
 string SimpleNode::model() { return _node->Info.Model.Value(); }
 
+INode *SimpleNode::getNode() { return _node; }
+
 void SimpleNode::_enableNode() {
   _node->EnableReq(false);
 
@@ -100,8 +102,10 @@ vector<SimplePort> SimplePort::getPorts() {
 
 int SimplePort::netNumber() { return _port->NetNumber(); }
 
-int SimplePort::openState() { return _port->OpenState(); }
+openStates SimplePort::openState() { return _port->OpenState(); }
 
 size_t SimplePort::nodeCount() { return _port->NodeCount(); }
 
 vector<SimpleNode> &SimplePort::getNodes() { return _nodes; }
+
+IPort *SimplePort::getPort() { return _port; }
