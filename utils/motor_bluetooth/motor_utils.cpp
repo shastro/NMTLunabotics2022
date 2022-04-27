@@ -74,7 +74,10 @@ SimplePort::SimplePort(SysManager *mgr, IPort *port) : _mgr(mgr), _port(port) {
     _nodes.push_back(SimpleNode(_mgr, &_port->Nodes(i)));
 }
 
-SimplePort::~SimplePort() { _mgr->PortsClose(); }
+SimplePort::~SimplePort() {
+  _nodes = {};
+  _mgr->PortsClose();
+}
 
 vector<SimplePort> SimplePort::getPorts() {
   size_t portCount = 0;
