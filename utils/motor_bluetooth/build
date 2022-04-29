@@ -1,2 +1,0 @@
-g++ multi_motor_test.cpp motor_utils.cpp joystick.cc -Wall -lsFoundation20 -lpthread -I ../../teknic/inc/inc-pub -o bluetooth_motor_control
-# g++ single_motor_test.cpp motor_utils.cpp joystick.cc -Wall -lsFoundation20 -lpthread -I ../../teknic/inc/inc-pub -o bluetooth_motor_control

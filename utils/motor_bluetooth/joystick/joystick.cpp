@@ -16,7 +16,7 @@
 // - Fixed unsoundness bug in move constructor.
 // - Switched to exceptions rather than C-style validity querying.
 
-#include "joystick.hh"
+#include "joystick.hpp"
 
 #include "unistd.h"
 #include <fcntl.h>

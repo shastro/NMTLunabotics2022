@@ -2,7 +2,9 @@
 //
 // Copyright (c) 2022 by NMT Lunabotics. All rights reserved.
 
-#include "single_motor_test.hpp"
+#include "motor/motor_utils.hpp"
+#include "joystick/joystick.hpp"
+#include "joystick/8Bitdoh.hpp"
 #include <unistd.h>
 #include <vector>
 

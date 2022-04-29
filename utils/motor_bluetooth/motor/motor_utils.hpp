@@ -1,5 +1,3 @@
-#include "8Bitdoh.hpp"
-#include "joystick.hh"
 #include "pubSysCls.h"
 #include <iostream>
 #include <stdio.h>
