@@ -19,7 +19,18 @@ SimpleNode::SimpleNode(SysManager *mgr, INode *node) {
   _setStandardUnits();
 }
 
-SimpleNode::~SimpleNode() { _node->EnableReq(false); }
+SimpleNode::~SimpleNode() {
+  if (_node)
+    _node->EnableReq(false);
+}
+
+SimpleNode::SimpleNode(SimpleNode &&src) {
+  _mgr = src._mgr;
+  _node = src._node;
+
+  src._mgr = nullptr;
+  src._node = nullptr;
+}
 
 void SimpleNode::setVel(double vel) { _node->Motion.MoveVelStart(vel); }
 
@@ -77,8 +88,20 @@ SimplePort::SimplePort(SysManager *mgr, IPort *port) : _mgr(mgr), _port(port) {
 }
 
 SimplePort::~SimplePort() {
-  _nodes = {};
-  _mgr->PortsClose();
+  // Need to disable every node *before* we disconnect from the port.
+  _nodes.clear();
+
+  if (_mgr)
+    _mgr->PortsClose();
+}
+
+SimplePort::SimplePort(SimplePort &&src) {
+  _mgr = src._mgr;
+  _port = src._port;
+  _nodes = move(src._nodes);
+
+  src._mgr = nullptr;
+  src._port = nullptr;
 }
 
 vector<SimplePort> SimplePort::getPorts() {

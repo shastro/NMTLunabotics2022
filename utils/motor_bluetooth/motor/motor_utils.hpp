@@ -64,6 +64,10 @@ public:
   // Disables the motor before shutdown.
   ~SimpleNode();
 
+  // Nodes are moved, not copied.
+  SimpleNode(SimpleNode &src) = delete;
+  SimpleNode(SimpleNode &&src);
+
   // Sets the motor's velocity, disregarding position.
   void setVel(double vel);
 
@@ -110,6 +114,10 @@ public:
 
   // Disables all motors and disconnects from the port.
   ~SimplePort();
+
+  // Ports are moved, not copied.
+  SimplePort(SimplePort &src) = delete;
+  SimplePort(SimplePort &&src);
 
   // Gets the list of every port (Teknic board) connected to the host
   // machine.
