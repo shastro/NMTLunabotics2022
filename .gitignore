@@ -9,3 +9,4 @@ can/utils/can2canarray/build/*
 blender/*.blend1
 *.wbproj
 .#*
+*.o
