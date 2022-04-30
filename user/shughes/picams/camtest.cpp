@@ -4,6 +4,9 @@
 int main(int, char **) {
   // open the first webcam plugged in the computer
   cv::VideoCapture camera(0);
+  camera.release(0);
+  cv::VideoCapture camera(0);
+
   if (!camera.isOpened()) {
     std::cerr << "ERROR: Could not open camera" << std::endl;
     return 1;
