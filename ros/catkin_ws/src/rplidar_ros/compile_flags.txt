@@ -1,0 +1,7 @@
+-DROSCONSOLE_BACKEND_LOG4CXX
+-DROS_BUILD_SHARED_LIBS=1
+-DROS_PACKAGE_NAME="rplidar_ros"
+-I../../devel/include
+-Iinclude
+-I/opt/ros/noetic/include
+-I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp
