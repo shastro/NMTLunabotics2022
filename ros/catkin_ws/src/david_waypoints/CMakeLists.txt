@@ -7,12 +7,6 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
 )
 
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-  geometry_msgs
-)
-
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
@@ -21,11 +15,6 @@ include_directories(
 add_executable(waypoints src/waypoints.cpp)
 
 target_link_libraries(
-  navigation
+  waypoints
   ${catkin_LIBRARIES}
-)
-
-add_dependencies(
-  navigation
-  ${david_action_EXPORTED_TARGETS}
 )
