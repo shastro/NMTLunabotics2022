@@ -1,0 +1,8 @@
+prefix=/home/alex/src/lunabotics/user/abethel/test_workspace/install
+
+Name: simple_action_server
+Description: Description of simple_action_server
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: actionlib_msgs

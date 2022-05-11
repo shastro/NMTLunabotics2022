@@ -1,0 +1,12 @@
+# Navigation action messages.
+
+# Goal definition.
+geometry_msgs/Point target
+
+---
+# Result definition.
+float64 error
+
+---
+# Feedback definition.
+geometry_msgs/Point current
