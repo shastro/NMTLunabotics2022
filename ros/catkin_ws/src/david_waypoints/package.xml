@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>david_waypoints</name>
+  <version>0.0.0</version>
+  <description>
+    The david_waypoints package is designed to locate the points in
+    the Lunabotics competition that need to be navigated to in the
+    different steps. Currently, the approach is to use cameras to
+    locate an ArUco board attached to the collection bin, then measure
+    the mining area etc. off of that.
+  </description>
+
+  <maintainer email="Alexander.Bethel@student.nmt.edu">
+    Alexander Bethel
+  </maintainer>
+  <maintainer email="skyler.hughes@student.nmt.edu">
+    Skyler Hughes
+  </maintainer>
+
+  <license>GPLv3</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>
