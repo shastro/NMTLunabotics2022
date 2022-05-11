@@ -1,0 +1,38 @@
+[
+    {
+        "arguments": [
+            "clang++",
+            "-c",
+            "-DROSCONSOLE_BACKEND_LOG4CXX",
+            "-DROS_BUILD_SHARED_LIBS=1",
+            "-DROS_PACKAGE_NAME=\"simple_action_server\"",
+            "-I/home/alex/src/lunabotics/user/abethel/test_workspace/devel/include",
+            "-I/home/alex/src/lunabotics/user/abethel/test_workspace/src/simple_action_server/include",
+            "-I/opt/ros/noetic/include",
+            "-I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp",
+            "-o",
+            "src/fibonacci_client.cpp.o",
+            "src/fibonacci_client.cpp"
+        ],
+        "directory": "/home/alex/src/lunabotics/user/abethel/test_workspace/src/simple_action_server",
+        "file": "src/fibonacci_client.cpp"
+    },
+    {
+        "arguments": [
+            "clang++",
+            "-c",
+            "-DROSCONSOLE_BACKEND_LOG4CXX",
+            "-DROS_BUILD_SHARED_LIBS=1",
+            "-DROS_PACKAGE_NAME=\"simple_action_server\"",
+            "-I/home/alex/src/lunabotics/user/abethel/test_workspace/devel/include",
+            "-I/home/alex/src/lunabotics/user/abethel/test_workspace/src/simple_action_server/include",
+            "-I/opt/ros/noetic/include",
+            "-I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp",
+            "-o",
+            "src/fibonacci_server.cpp.o",
+            "src/fibonacci_server.cpp"
+        ],
+        "directory": "/home/alex/src/lunabotics/user/abethel/test_workspace/src/simple_action_server",
+        "file": "src/fibonacci_server.cpp"
+    }
+]
