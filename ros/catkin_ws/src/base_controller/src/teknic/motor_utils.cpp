@@ -59,6 +59,9 @@ double SimpleNode::velocity() {return _node->Motion.VelMeasured.Value();}
 // Get measured torque (returns percentage of maximum by default)
 double SimpleNode::torque() {return _node->Motion.TrqMeasured.Value();}
 
+// Get measured rms_level (returns percentage of maximum
+double SimpleNode::rms() {return _node->Status.RMSlevel.Value();}
+
 void SimpleNode::_enableNode() {
   _node->EnableReq(false);
 

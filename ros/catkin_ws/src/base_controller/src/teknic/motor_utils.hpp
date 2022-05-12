@@ -107,6 +107,9 @@ public:
   // Get measured torque (returns percentage of maximum by default)
   double torque();
 
+  // Get measured rms_level (returns percentage of maximum
+  double rms(); 
+
 private:
   // Attempts to turn on the motor; throws an exception if this fails.
   void _enableNode();
