@@ -70,7 +70,7 @@ void SimpleNode::_enableNode() {
   _node->Status.AlertsClear();
   _node->Motion.NodeStopClear();
 
-  cout << "EnableReq(true)" << endl; // wait, what?
+  cout << "EnableReq(true)" << endl;
   _node->EnableReq(true);
 
   // Node should be enabled; wait around in case it takes time.

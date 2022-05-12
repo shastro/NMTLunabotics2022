@@ -130,10 +130,10 @@ static AxisCommand axis_control_scheme(Pro2Axis axis) {
     return AxisCommand({MotorIdent::Auger}, -32767, -1000);
 
   case Pro2Axis::leftThumbY:
-    return AxisCommand({MotorIdent::LocomotionL}, 0, -10);
+    return AxisCommand({MotorIdent::LocomotionL}, 0, -500);
 
   case Pro2Axis::rightThumbY:
-    return AxisCommand({MotorIdent::LocomotionR}, 0, 10);
+    return AxisCommand({MotorIdent::LocomotionR}, 0, 500);
 
   default:
     return AxisCommand({}, 0, 0);
