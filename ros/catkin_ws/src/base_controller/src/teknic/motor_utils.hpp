@@ -1,3 +1,6 @@
+#ifndef H_MOTOR_UTILS_
+#define H_MOTOR_UTILS_
+
 #include "pubSysCls.h"
 #include <iostream>
 #include <stdio.h>
@@ -16,10 +19,12 @@ typedef size_t MotorID;
 class MotorIdent {
 public:
   static const MotorID Auger = 0;
-  static const MotorID DepthL = 1;
-  static const MotorID LocomotionL = 2;
-  static const MotorID LocomotionR = 3;
-  static const MotorID DepthR = 4;
+  static const MotorID DumpL = 1;
+  static const MotorID DepthL = 2;
+  static const MotorID LocomotionL = 3;
+  static const MotorID LocomotionR = 4;
+  static const MotorID DepthR = 5;
+  static const MotorID DumpR = 6;
 };
 
 // A command associated with pressing a button.
@@ -142,3 +147,5 @@ private:
   sFnd::IPort *_port;
   std::vector<SimpleNode> _nodes;
 };
+
+#endif // H_MOTOR_UTILS_

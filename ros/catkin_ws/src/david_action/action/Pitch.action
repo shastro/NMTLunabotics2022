@@ -1,0 +1,17 @@
+# Pitch action messages.
+
+# Goal definition.
+
+# True if the goal is to raise the pitch motors, such that the robot
+# is prepared for digging; false if the goal is to lower them.
+bool raised
+
+---
+# Result definition.
+
+---
+# Feedback definition.
+
+# The progress towards being fully raised; approaches 1 if `raised` =
+# true, or 0 if `raised` = false.
+float64 progress

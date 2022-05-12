@@ -8,21 +8,20 @@
 #include <string>
 
 #include "main.hpp"
+#include "../src/teknic/motor_utils.hpp" // FIXME
 
 class TeknicMotor : public MotorController {
 public:
   // Initialize a new TeknicMotor. TODO: contructor details.
-  TeknicMotor();
+  TeknicMotor(SimpleNode &node);
 
   // Motor controller functions.
   void setVelocity(double vel);
   void setPosition(double pos);
 
 private:
-  // TODO: Implementation details.
+  // The SimpleNode backing this motor.
+  SimpleNode &_node;
 };
-
-#define TIME_TILL_TIMEOUT 10000 // The timeout used for homing(ms)
-#define POLL_INTERVAL 10        // Motor init polling (ms)
 
 #endif // H_TEKNIC
