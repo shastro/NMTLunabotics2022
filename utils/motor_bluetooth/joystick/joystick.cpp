@@ -26,6 +26,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+using namespace std;
+
 Joystick::Joystick() { openPath("/dev/input/js0"); }
 
 Joystick::Joystick(int joystickNumber) {
@@ -44,7 +46,7 @@ void Joystick::openPath(std::string devicePath, bool blocking) {
   // Open the device using either blocking or non-blocking
   _fd = open(devicePath.c_str(), blocking ? O_RDONLY : O_RDONLY | O_NONBLOCK);
   if (_fd < 0)
-    throw "Error opening joystick device";
+    throw string("Error opening joystick device");
 }
 
 JoystickEvent Joystick::sample() {
@@ -52,7 +54,7 @@ JoystickEvent Joystick::sample() {
   int bytes = read(_fd, &event, sizeof(event));
 
   if (bytes != sizeof(event))
-    throw "Error reading joystick event";
+    throw string("Error reading joystick event");
 
   return event;
 }

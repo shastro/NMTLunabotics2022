@@ -68,7 +68,7 @@ void SimpleNode::_enableNode() {
   double timeout = _mgr->TimeStampMsec() + TIME_TILL_TIMEOUT;
   while (!_node->Motion.IsReady()) {
     if (_mgr->TimeStampMsec() > timeout) {
-      throw "Failed to enable node";
+      throw string("Failed to enable node");
     }
   }
 }
