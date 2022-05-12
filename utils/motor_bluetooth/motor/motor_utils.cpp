@@ -70,8 +70,8 @@ void SimpleNode::_enableNode() {
   _node->Status.AlertsClear();
   _node->Motion.NodeStopClear();
 
-  cout << "EnableReq(false) again" << endl; // wait, what?
-  _node->EnableReq(false);
+  cout << "EnableReq(true)" << endl; // wait, what?
+  _node->EnableReq(true);
 
   // Node should be enabled; wait around in case it takes time.
   double timeout = _mgr->TimeStampMsec() + TIME_TILL_TIMEOUT;
@@ -94,8 +94,10 @@ void SimpleNode::_setStandardUnits() {
 }
 
 SimplePort::SimplePort(SysManager *mgr, IPort *port) : _mgr(mgr), _port(port) {
+  cout << "Setting up port with " << nodeCount() << " nodes..." << endl;
   for (size_t i = 0; i < nodeCount(); i++)
     _nodes.push_back(SimpleNode(_mgr, &_port->Nodes(i)));
+  cout << "Finished setting up port." << endl;
 }
 
 SimplePort::~SimplePort() {
