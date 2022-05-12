@@ -15,8 +15,13 @@ SimpleNode::SimpleNode(SysManager *mgr, INode *node) {
   _mgr = mgr;
   _node = node;
 
+  cout << "Enabling node " << node << "..." << endl;
   _enableNode();
+  cout << "Enable finished." << endl;
+
+  cout << "Setting standard units..." << endl;
   _setStandardUnits();
+  cout << "Set standard units." << endl;
 }
 
 SimpleNode::~SimpleNode() {
@@ -51,26 +56,32 @@ string SimpleNode::model() { return _node->Info.Model.Value(); }
 INode *SimpleNode::getNode() { return _node; }
 
 void SimpleNode::_enableNode() {
+  cout << "EnableReq(false)" << endl;
   _node->EnableReq(false);
 
   // I have no idea why this is here, but it's in the example code.
   // ~~Alex
+  cout << "Delaying" << endl;
   _mgr->Delay(200);
 
   // Clean up node commands, status, &c. to prepare to enable the
   // node.
+  cout << "Clearing commands" << endl;
   _node->Status.AlertsClear();
   _node->Motion.NodeStopClear();
 
+  cout << "EnableReq(false) again" << endl; // wait, what?
   _node->EnableReq(false);
 
   // Node should be enabled; wait around in case it takes time.
   double timeout = _mgr->TimeStampMsec() + TIME_TILL_TIMEOUT;
+  cout << "Spinning for node to be ready" << endl;
   while (!_node->Motion.IsReady()) {
     if (_mgr->TimeStampMsec() > timeout) {
       throw string("Failed to enable node");
     }
   }
+  cout << "Spinning finished" << endl;
 }
 
 void SimpleNode::_setStandardUnits() {

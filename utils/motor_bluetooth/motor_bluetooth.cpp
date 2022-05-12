@@ -36,8 +36,14 @@ AxisCommand::AxisCommand(vector<MotorID> _motors, int _basis, int _velocity)
 // Connects to the joystick and the motors, and controls the motors
 // according to the commands received.
 static void joystick_sample_loop() {
+  cout << "Connecting to joystick..." << endl;
   Joystick joystick = joystick_connect();
+  cout << "Connected." << endl;
+
+  cout << "Connecting to ports..." << endl;
   vector<SimplePort> ports = SimplePort::getPorts();
+  cout << "Connected." << endl;
+
   SimplePort &port = ports.at(0);
 
   while (true) {
