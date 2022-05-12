@@ -80,23 +80,23 @@ static ButtonCommand button_control_scheme(Pro2Button button) {
   // leftBumper -> lower
   // rightBumper -> raise
   switch (button) {
-  case Pro2Button::X:
-    return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, 30);
+  // case Pro2Button::X:
+  //   return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, 30);
 
-  case Pro2Button::B:
-    return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, -30);
+  // case Pro2Button::B:
+  //   return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, -30);
 
   case Pro2Button::start:
     // Stop every motor.
     return ButtonCommand(
         {
             MotorIdent::Auger,
-            MotorIdent::DumpL,
+            // MotorIdent::DumpL,
             MotorIdent::DepthL,
             MotorIdent::LocomotionL,
             MotorIdent::LocomotionR,
             MotorIdent::DepthR,
-            MotorIdent::DumpR,
+            // MotorIdent::DumpR,
         },
         0);
 

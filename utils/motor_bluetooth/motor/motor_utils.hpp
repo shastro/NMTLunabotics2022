@@ -16,12 +16,10 @@ typedef size_t MotorID;
 class MotorIdent {
 public:
   static const MotorID Auger = 0;
-  static const MotorID DumpL = 1;
-  static const MotorID DepthL = 2;
-  static const MotorID LocomotionL = 3;
-  static const MotorID LocomotionR = 4;
-  static const MotorID DepthR = 5;
-  static const MotorID DumpR = 6;
+  static const MotorID DepthL = 1;
+  static const MotorID LocomotionL = 2;
+  static const MotorID LocomotionR = 3;
+  static const MotorID DepthR = 4;
 };
 
 // A command associated with pressing a button.
