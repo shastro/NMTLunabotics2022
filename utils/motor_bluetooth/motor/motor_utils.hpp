@@ -15,17 +15,13 @@ typedef size_t MotorID;
 // Motor identifier constants. TODO: Combine this and MotorID.
 class MotorIdent {
 public:
-  // static const MotorID Auger = 0;
-  // static const MotorID DumpL = 1;
-  // static const MotorID DepthL = 2;
-  // static const MotorID LocomotionL = 3;
-  // static const MotorID LocomotionR = 4;
-  // static const MotorID DepthR = 5;
-  // static const MotorID DumpR = 6;
-
-  // Temporary setup
-  static const MotorID LocomotionL = 0;
-  static const MotorID LocomotionR = 1;
+  static const MotorID Auger = 0;
+  static const MotorID DumpL = 1;
+  static const MotorID DepthL = 2;
+  static const MotorID LocomotionL = 3;
+  static const MotorID LocomotionR = 4;
+  static const MotorID DepthR = 5;
+  static const MotorID DumpR = 6;
 };
 
 // A command associated with pressing a button.

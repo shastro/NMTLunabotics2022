@@ -80,23 +80,23 @@ static ButtonCommand button_control_scheme(Pro2Button button) {
   // leftBumper -> lower
   // rightBumper -> raise
   switch (button) {
-  // case Pro2Button::X:
-  //   return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, 30);
+  case Pro2Button::X:
+    return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, 30);
 
-  // case Pro2Button::B:
-  //   return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, -30);
+  case Pro2Button::B:
+    return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, -30);
 
   case Pro2Button::start:
     // Stop every motor.
     return ButtonCommand(
         {
-            // MotorIdent::Auger,
-            // MotorIdent::DumpL,
-            // MotorIdent::DepthL,
+            MotorIdent::Auger,
+            MotorIdent::DumpL,
+            MotorIdent::DepthL,
             MotorIdent::LocomotionL,
             MotorIdent::LocomotionR,
-            // MotorIdent::DepthR,
-            // MotorIdent::DumpR,
+            MotorIdent::DepthR,
+            MotorIdent::DumpR,
         },
         0);
 
@@ -114,14 +114,14 @@ static AxisCommand axis_control_scheme(Pro2Axis axis) {
   // leftThumbY -> left locomotion
   // rightThumbY -> right locomotion
   switch (axis) {
-  // case Pro2Axis::dpadY:
-  //   return AxisCommand({MotorIdent::DepthL, MotorIdent::DepthR}, 0, 30);
+  case Pro2Axis::dpadY:
+    return AxisCommand({MotorIdent::DepthL, MotorIdent::DepthR}, 0, 30);
 
-  // case Pro2Axis::rightTrigger:
-  //   return AxisCommand({MotorIdent::Auger}, -32767, 1000);
+  case Pro2Axis::rightTrigger:
+    return AxisCommand({MotorIdent::Auger}, -32767, 1000);
 
-  // case Pro2Axis::leftTrigger:
-  //   return AxisCommand({MotorIdent::Auger}, -32767, -1000);
+  case Pro2Axis::leftTrigger:
+    return AxisCommand({MotorIdent::Auger}, -32767, -1000);
 
   case Pro2Axis::leftThumbY:
     return AxisCommand({MotorIdent::LocomotionL}, 0, -10);
