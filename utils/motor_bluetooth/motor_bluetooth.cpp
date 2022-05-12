@@ -22,6 +22,9 @@ int main(int argc, char *argv[]) {
   } catch (string err) {
     cerr << "Motor controller error: " << err << endl;
     return EXIT_FAILURE;
+  } catch (sFnd::_mnErr err) {
+    cout << (char*)err.ErrorMsg << endl;
+    return EXIT_FAILURE;
   }
 }
 
