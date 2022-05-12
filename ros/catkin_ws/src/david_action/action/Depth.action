@@ -1,0 +1,17 @@
+# Depth action messages.
+
+# Goal definition.
+
+# True if the goal is to lower the depth motors into the ground; false
+# if the goal is to raise them.
+bool lower
+
+---
+# Result definition.
+
+---
+# Feedback definition.
+
+# The progress towards being fully lowered; approaches 1 if `lower` =
+# true, or 0 if `lower` = false.
+float64 progress

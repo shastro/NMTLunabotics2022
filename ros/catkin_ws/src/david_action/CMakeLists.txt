@@ -13,6 +13,7 @@ add_action_files(
   DIRECTORY action FILES
   Navigation.action
   Pitch.action
+  Depth.action
 )
 
 generate_messages(
@@ -33,6 +34,7 @@ include_directories(
 
 add_executable(navigation src/navigation.cpp)
 add_executable(pitch src/pitch.cpp)
+add_executable(depth src/depth.cpp)
 
 target_link_libraries(
   navigation
@@ -51,5 +53,15 @@ target_link_libraries(
 
 add_dependencies(
   pitch
+  ${david_action_EXPORTED_TARGETS}
+)
+
+target_link_libraries(
+  depth
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  depth
   ${david_action_EXPORTED_TARGETS}
 )
