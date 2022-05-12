@@ -50,6 +50,15 @@ string SimpleNode::model() { return _node->Info.Model.Value(); }
 
 INode *SimpleNode::getNode() { return _node; }
 
+// Get motor position (returns encoder count)
+double SimpleNode::position() {return _node->Motion.PosnMeasured.Value();}
+
+// Get motor velocity (returns RPM by default)
+double SimpleNode::velocity() {return _node->Motion.VelMeasured.Value();}
+
+// Get measured torque (returns percentage of maximum by default)
+double SimpleNode::torque() {return _node->Motion.TrqMeasured.Value();}
+
 void SimpleNode::_enableNode() {
   _node->EnableReq(false);
 
@@ -132,3 +141,4 @@ size_t SimplePort::nodeCount() { return _port->NodeCount(); }
 vector<SimpleNode> &SimplePort::getNodes() { return _nodes; }
 
 IPort *SimplePort::getPort() { return _port; }
+
