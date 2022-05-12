@@ -16,7 +16,11 @@ local_costmap:
   # `true` here means the map stays centered around the robot. Might
   # impact reliability one way or the other; not sure, though.
   rolling_window: true
-  
+
+  # -
+  #   name: static_layer
+  #   type: "costmap_2d::StaticLayer"
+
 
   # In meters.
   width: 2
