@@ -16,6 +16,8 @@ static ButtonCommand button_control_scheme(Pro2Button button);
 static AxisCommand axis_control_scheme(Pro2Axis axis);
 static Joystick joystick_connect();
 
+class EStopException {};
+
 int main(int argc, char *argv[]) {
   try {
     joystick_sample_loop();
@@ -24,6 +26,9 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   } catch (sFnd::_mnErr err) {
     cout << (char*)err.ErrorMsg << endl;
+    return EXIT_FAILURE;
+  } catch (EStopException err) {
+    cout << "Emergency stop button pressed, exiting." << endl;
     return EXIT_FAILURE;
   }
 }
@@ -96,18 +101,12 @@ static ButtonCommand button_control_scheme(Pro2Button button) {
   //   return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, -30);
 
   case Pro2Button::start:
-    // Stop every motor.
-    return ButtonCommand(
-        {
-            MotorIdent::Auger,
-            // MotorIdent::DumpL,
-            MotorIdent::DepthL,
-            MotorIdent::LocomotionL,
-            MotorIdent::LocomotionR,
-            MotorIdent::DepthR,
-            // MotorIdent::DumpR,
-        },
-        0);
+    // Stop every motor and shut down the system. We specifically
+    // throw an exception here rather than just `exit()`ing because we
+    // absolutely need to shut down all the motors (otherwise they'll
+    // just keep spinning), which is accomplished by the destructor on
+    // `SimplePort`, so we need to call that destructor.
+    throw EStopException {};
 
   default:
     return ButtonCommand({}, 0);
