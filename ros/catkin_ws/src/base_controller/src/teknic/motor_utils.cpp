@@ -15,8 +15,13 @@ SimpleNode::SimpleNode(SysManager *mgr, INode *node) {
   _mgr = mgr;
   _node = node;
 
+  cout << "Enabling node " << node << "..." << endl;
   _enableNode();
+  cout << "Enable finished." << endl;
+
+  cout << "Setting standard units..." << endl;
   _setStandardUnits();
+  cout << "Set standard units." << endl;
 }
 
 SimpleNode::~SimpleNode() {
@@ -32,9 +37,23 @@ SimpleNode::SimpleNode(SimpleNode &&src) {
   src._node = nullptr;
 }
 
-void SimpleNode::setVel(double vel) { _node->Motion.MoveVelStart(vel); }
+void SimpleNode::setVel(double vel) {
+  try {
+    _node->Motion.MoveVelStart(vel);
+  } catch (mnErr err) {
+    cout << "Velocity set error: " << err.ErrorMsg << endl;
+    // ignore error
+  }
+}
 
-void SimpleNode::setPos(double pos) { _node->Motion.MovePosnStart(pos, true); }
+void SimpleNode::setPos(double pos) {
+  try {
+    _node->Motion.MovePosnStart(pos, true);
+  } catch (mnErr err) {
+    cout << "Position set error: " << err.ErrorMsg << endl;
+    // ignore error
+  }
+}
 
 int SimpleNode::type() { return _node->Info.NodeType(); }
 
@@ -59,26 +78,32 @@ double SimpleNode::rms() { return _node->Status.RMSlevel.Value(); }
 INode *SimpleNode::getNode() { return _node; }
 
 void SimpleNode::_enableNode() {
+  cout << "EnableReq(false)" << endl;
   _node->EnableReq(false);
 
   // I have no idea why this is here, but it's in the example code.
   // ~~Alex
+  cout << "Delaying" << endl;
   _mgr->Delay(200);
 
   // Clean up node commands, status, &c. to prepare to enable the
   // node.
+  cout << "Clearing commands" << endl;
   _node->Status.AlertsClear();
   _node->Motion.NodeStopClear();
 
+  cout << "EnableReq(true)" << endl;
   _node->EnableReq(true);
 
   // Node should be enabled; wait around in case it takes time.
   double timeout = _mgr->TimeStampMsec() + TIME_TILL_TIMEOUT;
+  cout << "Spinning for node to be ready" << endl;
   while (!_node->Motion.IsReady()) {
     if (_mgr->TimeStampMsec() > timeout) {
-      throw "Failed to enable node";
+      throw string("Failed to enable node");
     }
   }
+  cout << "Spinning finished" << endl;
 }
 
 void SimpleNode::_setStandardUnits() {
@@ -91,8 +116,10 @@ void SimpleNode::_setStandardUnits() {
 }
 
 SimplePort::SimplePort(SysManager *mgr, IPort *port) : _mgr(mgr), _port(port) {
+  cout << "Setting up port with " << nodeCount() << " nodes..." << endl;
   for (size_t i = 0; i < nodeCount(); i++)
     _nodes.push_back(SimpleNode(_mgr, &_port->Nodes(i)));
+  cout << "Finished setting up port." << endl;
 }
 
 SimplePort::~SimplePort() {

@@ -67,6 +67,14 @@ int SimpleNode::serial() { return _node->Info.SerialNumber.Value(); }
 
 string SimpleNode::model() { return _node->Info.Model.Value(); }
 
+double SimpleNode::position() { return _node->Motion.PosnMeasured.Value(); }
+
+double SimpleNode::velocity() { return _node->Motion.VelMeasured.Value(); }
+
+double SimpleNode::torque() { return _node->Motion.TrqMeasured.Value(); }
+
+double SimpleNode::rms() { return _node->Status.RMSlevel.Value(); }
+
 INode *SimpleNode::getNode() { return _node; }
 
 void SimpleNode::_enableNode() {
