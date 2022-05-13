@@ -40,7 +40,7 @@ SimpleNode::SimpleNode(SimpleNode &&src) {
 void SimpleNode::setVel(double vel) {
   try {
     _node->Motion.MoveVelStart(vel);
-  } catch (_mnErr err) {
+  } catch (mnErr err) {
     cout << "Velocity set error: " << err.ErrorMsg << endl;
     // ignore error
   }
@@ -49,7 +49,7 @@ void SimpleNode::setVel(double vel) {
 void SimpleNode::setPos(double pos) {
   try {
     _node->Motion.MovePosnStart(pos, true);
-  } catch (_mnErr err) {
+  } catch (mnErr err) {
     cout << "Position set error: " << err.ErrorMsg << endl;
     // ignore error
   }
