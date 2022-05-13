@@ -1,0 +1,46 @@
+* Base-link
+
+  x :: from the back to the front of the robot.
+  y :: from the right to the left of the robot.
+  z :: from the bottom of the bottom plate to the top of the robot.
+
+  base link 28cm in x, 18cm in y from baseplate corner. (28, 18, 0) =
+  (0, 0, 0) relative.
+
+* Dump component
+
+  dump right (DUR) base y = 5cm, x = 56cm, z = 5cm. (56, 5, 5) = (28,
+  -13, 5)
+
+  dump left (DUR) base y = 5cm, x = 56cm, z = 5cm. (56, ~, 5) = (28,
+  13, 5)
+
+  dump right base -> dump right block: 7cm - (5cm from other end,
+  where total len = 80cm) 75cm.
+
+  dump rise = 25cm, run = 41cm. angle = 59°.
+
+* Pitch component
+
+  forward pitch hinge : z = 16.5cm, x = 61.5cm. y = 18cm. (61.5, 18,
+  16.5) = ()
+
+  Rear pitch pivot motor: x = -10cm, z = 28cm, y = 18cm.
+
+  Minimum pitch length from pivot = 36cm. Pitch pivot attachment ->
+  forward pitch hinge = 37cm.
+
+*** Augur component
+
+    forward pitch hinge -> depth motor axle = 8.5 in Y.
+
+    Depth motor axle = 52 cm. Travel = 48 cm.
+
+    Augur tip -> augur hole = 71 cm. Augur hole -> depth motor top =
+    16 cm x, 11 y.
+
+* Locomotion component
+
+  Right: y = 9cm, x = 6.5cm, z = 7cm.
+
+  Left: y = ~, x = 6.5cm, z = 21cm.
