@@ -74,7 +74,7 @@ void SimpleNode::_enableNode() {
   _node->Status.AlertsClear();
   _node->Motion.NodeStopClear();
 
-  _node->EnableReq(false);
+  _node->EnableReq(true);
 
   // Node should be enabled; wait around in case it takes time.
   double timeout = _mgr->TimeStampMsec() + TIME_TILL_TIMEOUT;

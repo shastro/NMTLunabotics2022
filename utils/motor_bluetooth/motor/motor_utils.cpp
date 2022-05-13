@@ -37,9 +37,23 @@ SimpleNode::SimpleNode(SimpleNode &&src) {
   src._node = nullptr;
 }
 
-void SimpleNode::setVel(double vel) { _node->Motion.MoveVelStart(vel); }
+void SimpleNode::setVel(double vel) {
+  try {
+    _node->Motion.MoveVelStart(vel);
+  } catch (_mnErr err) {
+    cout << "Velocity set error: " << err.ErrorMsg << endl;
+    // ignore error
+  }
+}
 
-void SimpleNode::setPos(double pos) { _node->Motion.MovePosnStart(pos, true); }
+void SimpleNode::setPos(double pos) {
+  try {
+    _node->Motion.MovePosnStart(pos, true);
+  } catch (_mnErr err) {
+    cout << "Position set error: " << err.ErrorMsg << endl;
+    // ignore error
+  }
+}
 
 int SimpleNode::type() { return _node->Info.NodeType(); }
 
