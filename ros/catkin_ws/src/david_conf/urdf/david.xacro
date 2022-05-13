@@ -10,11 +10,19 @@
   <!-- Basic setup -->
   <link name="base_link" />
   <link name="laser" />
+  <!-- For testing only -->
+  <link name="map" />
+  <joint name="maptestingjoint" type="fixed">
+    <origin xyz="0 0 0" rpy = "0 0 0" />
+    <child link="base_link" />
+    <parent link="map" />
+    <axis xyz="0 0 0"/>
+  </joint>
   <!-- Dump motors -->
-  <!-- <link name="DUL_motor" /> -->
-  <!-- <link name="DUL_block" /> -->
-  <!-- <link name="DUR_motor" /> -->
-  <!-- <link name="DUR_block" /> -->
+  <link name="DUL_motor" />
+  <link name="DUL_block" />
+  <link name="DUR_motor" />
+  <link name="DUR_block" />
   <!-- <!-\- Depth motors -\-> -->
   <!-- <link name="DEL_motor" /> -->
   <!-- <link name="DEL_block" /> -->
@@ -27,6 +35,7 @@
   <!-- <link name="left_pitch_hinge" /> -->
   <!-- <link name="right_pitch_hinge" /> -->
   <!-- <link name="right_rear_pitch_pivot" /> -->
+  <!-- <link name="right_pitch_attachment" /> -->
   <!-- <link name="left_rear_pitch_pivot" /> -->
   <!-- Auger components -->
   <xacro:property name="auger_length" value="0.71" />
@@ -52,13 +61,49 @@
     <parent link="base_link" />
     <child link="right_loco_axle"/>
     <xacro:origin_rel xraw="-0.065" yraw="-0.09" zraw="0.07" rx="0" ry="0" rz="0" />
-    <axis xyz="0 0 0" />
+    <axis xyz="0 1 0" />
   </joint>
 
   <joint name="loco_left" type="continuous">
     <parent link="base_link" />
     <child link="left_loco_axle"/>
-    <xacro:origin_rel xraw="-0.065" yraw="0.09" zraw="0.07" rx="0" ry="0" rz="0" />
-    <axis xyz="0 0 0" />
+    <xacro:origin_rel xraw="-0.065" yraw="0.45" zraw="0.07" rx="0" ry="0" rz="0" />
+    <axis xyz="0 1 0" />
   </joint>
+
+  <!-- Dump joints -->
+
+  <joint name="R_base_link_2_block_base" type="fixed">
+    <parent link="base_link" />
+    <child link="DUR_motor"/>
+    <xacro:origin_rel xraw="0.56" yraw="0.05" zraw="0.05" rx="0" ry="-2.600540585471551" rz="0" />
+    <axis xyz="1 0 0" />
+  </joint>
+
+  <joint name="R_dump_base_2_block" type="prismatic">
+    <limit lower="0.0" upper="0.75" effort="95" velocity="400" />
+    <parent link="DUR_motor" />
+    <child link="DUR_block"/>
+    <origin xyz="0.07 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0" />
+  </joint>
+
+  <joint name="L_base_link_2_block_base" type="fixed">
+    <parent link="base_link" />
+    <child link="DUL_motor"/>
+    <xacro:origin_rel xraw="0.56" yraw="${0.05 + 0.195}" zraw="0.05" rx="0" ry="-2.600540585471551" rz="0" />
+    <axis xyz="1 0 0" />
+  </joint>
+
+  <joint name="L_dump_base_2_block" type="prismatic">
+    <limit lower="0.0" upper="0.75" effort="95" velocity="400" />
+    <parent link="DUL_motor" />
+    <child link="DUL_block"/>
+    <origin xyz="0.07 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0" />
+  </joint>
+
+
+
+
 </robot>

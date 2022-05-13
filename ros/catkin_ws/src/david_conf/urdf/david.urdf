@@ -7,6 +7,19 @@
   <!-- Basic setup -->
   <link name="base_link"/>
   <link name="laser"/>
+  <!-- For testing only -->
+  <link name="map"/>
+  <joint name="maptestingjoint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <child link="base_link"/>
+    <parent link="map"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <!-- Dump motors -->
+  <link name="DUL_motor"/>
+  <link name="DUL_block"/>
+  <link name="DUR_motor"/>
+  <link name="DUR_block"/>
   <!-- <link name="depth_motor_axle" /> -->
   <!-- <link name="auger_tip" /> -->
   <!-- <link name="auger_hole"/> -->
@@ -25,13 +38,40 @@
     <parent link="base_link"/>
     <child link="right_loco_axle"/>
     <origin rpy="0 0 0" xyz="-0.34500000000000003 -0.27 0.07"/>
-    <axis xyz="0 0 0"/>
+    <axis xyz="0 1 0"/>
   </joint>
   <joint name="loco_left" type="continuous">
     <parent link="base_link"/>
     <child link="left_loco_axle"/>
-    <origin rpy="0 0 0" xyz="-0.34500000000000003 -0.09 0.07"/>
-    <axis xyz="0 0 0"/>
+    <origin rpy="0 0 0" xyz="-0.34500000000000003 0.27 0.07"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <!-- Dump joints -->
+  <joint name="R_base_link_2_block_base" type="fixed">
+    <parent link="base_link"/>
+    <child link="DUR_motor"/>
+    <origin rpy="0 -2.600540585471551 0" xyz="0.28 -0.13 0.05"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+  <joint name="R_dump_base_2_block" type="prismatic">
+    <limit effort="95" lower="0.0" upper="0.75" velocity="400"/>
+    <parent link="DUR_motor"/>
+    <child link="DUR_block"/>
+    <origin rpy="0 0 0" xyz="0.07 0 0"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+  <joint name="L_base_link_2_block_base" type="fixed">
+    <parent link="base_link"/>
+    <child link="DUL_motor"/>
+    <origin rpy="0 -2.600540585471551 0" xyz="0.28 0.065 0.05"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+  <joint name="L_dump_base_2_block" type="prismatic">
+    <limit effort="95" lower="0.0" upper="0.75" velocity="400"/>
+    <parent link="DUL_motor"/>
+    <child link="DUL_block"/>
+    <origin rpy="0 0 0" xyz="0.07 0 0"/>
+    <axis xyz="1 0 0"/>
   </joint>
 </robot>
 
