@@ -40,7 +40,7 @@ SimpleNode::SimpleNode(SimpleNode &&src) {
 void SimpleNode::setVel(double vel) {
   try {
     _node->Motion.MoveVelStart(vel);
-  } catch (_mnErr err) {
+  } catch (mnErr err) {
     cout << "Velocity set error: " << err.ErrorMsg << endl;
     // ignore error
   }
@@ -49,7 +49,7 @@ void SimpleNode::setVel(double vel) {
 void SimpleNode::setPos(double pos) {
   try {
     _node->Motion.MovePosnStart(pos, true);
-  } catch (_mnErr err) {
+  } catch (mnErr err) {
     cout << "Position set error: " << err.ErrorMsg << endl;
     // ignore error
   }
@@ -66,6 +66,14 @@ string SimpleNode::firmwareVersion() {
 int SimpleNode::serial() { return _node->Info.SerialNumber.Value(); }
 
 string SimpleNode::model() { return _node->Info.Model.Value(); }
+
+double SimpleNode::position() { return _node->Motion.PosnMeasured.Value(); }
+
+double SimpleNode::velocity() { return _node->Motion.VelMeasured.Value(); }
+
+double SimpleNode::torque() { return _node->Motion.TrqMeasured.Value(); }
+
+double SimpleNode::rms() { return _node->Status.RMSlevel.Value(); }
 
 INode *SimpleNode::getNode() { return _node; }
 

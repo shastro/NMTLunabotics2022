@@ -47,5 +47,3 @@ vector<NavMotor> init_motors(string path) {
 
   return motors;
 }
-
-

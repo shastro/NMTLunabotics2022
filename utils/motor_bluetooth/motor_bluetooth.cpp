@@ -2,9 +2,9 @@
 //
 // Copyright (c) 2022 by NMT Lunabotics. All rights reserved.
 
-#include "motor/motor_utils.hpp"
-#include "joystick/joystick.hpp"
 #include "joystick/8Bitdoh.hpp"
+#include "joystick/joystick.hpp"
+#include "motor/motor_utils.hpp"
 #include <unistd.h>
 #include <vector>
 
@@ -16,15 +16,20 @@ static ButtonCommand button_control_scheme(Pro2Button button);
 static AxisCommand axis_control_scheme(Pro2Axis axis);
 static Joystick joystick_connect();
 
+class EStopException {};
+
 int main(int argc, char *argv[]) {
-  try {
-    joystick_sample_loop();
-  } catch (string err) {
-    cerr << "Motor controller error: " << err << endl;
-    return EXIT_FAILURE;
-  } catch (sFnd::_mnErr err) {
-    cout << (char*)err.ErrorMsg << endl;
-    return EXIT_FAILURE;
+  while (true) {
+    try {
+      joystick_sample_loop();
+    } catch (string err) {
+      cerr << "Motor controller error: " << err << endl;
+    } catch (sFnd::mnErr err) {
+      cout << (char *)err.ErrorMsg << endl;
+    } catch (EStopException err) {
+      cout << "Emergency stop button pressed, exiting." << endl;
+      return EXIT_FAILURE;
+    }
   }
 }
 
@@ -89,25 +94,19 @@ static ButtonCommand button_control_scheme(Pro2Button button) {
   // leftBumper -> lower
   // rightBumper -> raise
   switch (button) {
-  // case Pro2Button::X:
-  //   return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, 30);
+    // case Pro2Button::X:
+    //   return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, 30);
 
-  // case Pro2Button::B:
-  //   return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, -30);
+    // case Pro2Button::B:
+    //   return ButtonCommand({MotorIdent::DumpR, MotorIdent::DumpL}, -30);
 
   case Pro2Button::start:
-    // Stop every motor.
-    return ButtonCommand(
-        {
-            MotorIdent::Auger,
-            // MotorIdent::DumpL,
-            MotorIdent::DepthL,
-            MotorIdent::LocomotionL,
-            MotorIdent::LocomotionR,
-            MotorIdent::DepthR,
-            // MotorIdent::DumpR,
-        },
-        0);
+    // Stop every motor and shut down the system. We specifically
+    // throw an exception here rather than just `exit()`ing because we
+    // absolutely need to shut down all the motors (otherwise they'll
+    // just keep spinning), which is accomplished by the destructor on
+    // `SimplePort`, so we need to call that destructor.
+    throw EStopException{};
 
   default:
     return ButtonCommand({}, 0);
