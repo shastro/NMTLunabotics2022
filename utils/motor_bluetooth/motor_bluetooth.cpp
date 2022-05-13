@@ -24,10 +24,8 @@ int main(int argc, char *argv[]) {
       joystick_sample_loop();
     } catch (string err) {
       cerr << "Motor controller error: " << err << endl;
-      return EXIT_FAILURE;
     } catch (sFnd::mnErr err) {
       cout << (char *)err.ErrorMsg << endl;
-      return EXIT_FAILURE;
     } catch (EStopException err) {
       cout << "Emergency stop button pressed, exiting." << endl;
       return EXIT_FAILURE;
