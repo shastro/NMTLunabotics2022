@@ -5,6 +5,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
   geometry_msgs
+  image_transport
 )
 
 include_directories(
@@ -17,4 +18,5 @@ add_executable(waypoints src/waypoints.cpp)
 target_link_libraries(
   waypoints
   ${catkin_LIBRARIES}
+  image_transport
 )
