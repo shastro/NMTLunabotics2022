@@ -93,22 +93,21 @@ public:
   // Gets the motor's model number.
   std::string model();
 
+  // Get motor position (returns encoder count).
+  double position();
+
+  // Get motor velocity (returns RPM).
+  double velocity();
+
+  // Get measured torque (returns percentage of maximum by default).
+  double torque();
+
+  // Get measured rms_level (returns percentage of maximum).
+  double rms();
+
   // Gets the raw underlying node object, for more advanced
   // operations.
   sFnd::INode *getNode();
-
-
-  // Get motor position (returns encoder count)
-  double position();
-
-  // Get motor velocity (returns RPM by default)
-  double velocity();
-
-  // Get measured torque (returns percentage of maximum by default)
-  double torque();
-
-  // Get measured rms_level (returns percentage of maximum
-  double rms(); 
 
 private:
   // Attempts to turn on the motor; throws an exception if this fails.
