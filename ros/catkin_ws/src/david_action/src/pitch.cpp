@@ -3,12 +3,14 @@
 #include <functional>
 #include <iostream>
 #include <thread>
+#include <math.h>
 
 #include <actionlib/server/simple_action_server.h>
 #include <david_action/PitchAction.h>
 #include <move_base_msgs/MoveBaseGoal.h>
 #include <ros/node_handle.h>
 #include <ros/ros.h>
+#include <sensor_msgs/JointState.h>
 
 #include "gpio_lib/rpi_gpio.hpp"
 
@@ -27,6 +29,8 @@ class PitchAction {
   ros::NodeHandle _nh;
 
   actionlib::SimpleActionServer<david_action::PitchAction> _as;
+
+  ros::Publisher _joint_publisher;
   string _action_name;
 
   GPIOOut _home;
@@ -64,7 +68,49 @@ class PitchAction {
     // Wait for motors
     std::this_thread::sleep_for(std::chrono::seconds(10));
 
-    // TODO: Publish joint states
+    // Publish joint states
+    // Extension lengths in meters
+    float extend_close = 0.46;
+    float extend_half = 0.51;
+    float extend_full = 0.675;
+    float extend_length = -1;
+
+    // Measured fixed sides
+    float rear_pivot_2_fwd_hinge = 0.71;
+    float fwd_hinge_2_mount_bracket = 0.39;
+
+
+    switch ((Goal)goal->goal_state) {
+    case Goal::HOME:
+      extend_length = extend_close;
+      break;
+    case Goal::EXTEND:
+      extend_length = extend_full;
+      break;
+    case Goal::RETRACT:
+      extend_length = extend_close;
+      break;
+    case Goal::HALF_EXTEND:
+      extend_length = extend_half;
+      break;
+    default:
+      cerr << "Warning: PitchAction: ignoring invalid goal state "
+           << goal->goal_state << endl;
+      return;
+    }
+
+    float a = fwd_hinge_2_mount_bracket;
+    float b = extend_length;
+    float c = rear_pivot_2_fwd_hinge;
+
+    float angle = acos((pow(a,2) + pow(c,2) - pow(b,2))/(2*a*c));
+    sensor_msgs::JointState msg;
+    msg.name = {"R_pitch"};
+    msg.position = {angle};
+    msg.velocity = {0};
+    msg.effort = {0};
+
+    _joint_publisher.publish(msg);
 
     // Report success.
     david_action::PitchResult result;
@@ -77,6 +123,8 @@ public:
         _action_name(name),
         // Pin numbers
         _home(21), _extend(20), _retract(12), _half_extend(16) {
+    _joint_publisher = _nh.advertise<sensor_msgs::JointState>("/joints/pitch", 1000);
+
     _as.start();
   }
 };
