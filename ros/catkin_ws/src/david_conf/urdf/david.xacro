@@ -33,10 +33,11 @@
   <xacro:property name="min_pitch_length" value="0.36" />
   <xacro:property name="pitch_pivot_attachment_length" value="0.37" />
   <!-- <link name="left_pitch_hinge" /> -->
-  <!-- <link name="right_pitch_hinge" /> -->
-  <!-- <link name="right_rear_pitch_pivot" /> -->
-  <!-- <link name="right_pitch_attachment" /> -->
   <!-- <link name="left_rear_pitch_pivot" /> -->
+  <!-- <link nameright="left_pitch_attachment" /> -->
+  <link name="right_pitch_hinge" />
+  <link name="right_rear_pitch_pivot" />
+  <link name="right_pitch_attachment" />
   <!-- Auger components -->
   <xacro:property name="auger_length" value="0.71" />
   <!-- <link name="depth_motor_axle" /> -->
@@ -91,7 +92,7 @@
   <joint name="L_base_link_2_block_base" type="fixed">
     <parent link="base_link" />
     <child link="DUL_motor"/>
-    <xacro:origin_rel xraw="0.56" yraw="${0.05 + 0.195}" zraw="0.05" rx="0" ry="-2.600540585471551" rz="0" />
+    <xacro:origin_rel xraw="0.56" yraw="${0.05 + 0.265}" zraw="0.05" rx="0" ry="-2.600540585471551" rz="0" />
     <axis xyz="1 0 0" />
   </joint>
 
@@ -104,6 +105,29 @@
   </joint>
 
 
+  <!-- Pitch links -->
 
+  <joint name="R_base_2_rear_pivot" type="fixed">
+    <parent link="base_link" />
+    <child link="right_rear_pitch_pivot"/>
+    <xacro:origin_rel xraw="-0.10" yraw="-0.02" zraw="0.28" rx="0" ry="0" rz="0" />
+    <axis xyz="0 0 0" />
+  </joint>
 
+  <joint name="R_base_2_front_hinge" type="revolute">
+    <limit lower="0.0" upper="0.75" effort="95" velocity="400" />
+    <parent link="base_link" />
+    <child link="right_pitch_hinge"/>
+    <xacro:origin_rel xraw="0.615" yraw="-0.02" zraw="0.165" rx="0" ry="0" rz="0" />
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <joint name="R_hinge_2_attachment" type="fixed">
+    <parent link="right_pitch_hinge" />
+    <child link="right_pitch_attachment"/>
+    <origin xyz="0.38 0 0"  rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+  </joint>
+
+  
 </robot>

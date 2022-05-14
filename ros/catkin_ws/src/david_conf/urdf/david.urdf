@@ -20,6 +20,12 @@
   <link name="DUL_block"/>
   <link name="DUR_motor"/>
   <link name="DUR_block"/>
+  <!-- <link name="left_pitch_hinge" /> -->
+  <!-- <link name="left_rear_pitch_pivot" /> -->
+  <!-- <link nameright="left_pitch_attachment" /> -->
+  <link name="right_pitch_hinge"/>
+  <link name="right_rear_pitch_pivot"/>
+  <link name="right_pitch_attachment"/>
   <!-- <link name="depth_motor_axle" /> -->
   <!-- <link name="auger_tip" /> -->
   <!-- <link name="auger_hole"/> -->
@@ -63,7 +69,7 @@
   <joint name="L_base_link_2_block_base" type="fixed">
     <parent link="base_link"/>
     <child link="DUL_motor"/>
-    <origin rpy="0 -2.600540585471551 0" xyz="0.28 0.065 0.05"/>
+    <origin rpy="0 -2.600540585471551 0" xyz="0.28 0.135 0.05"/>
     <axis xyz="1 0 0"/>
   </joint>
   <joint name="L_dump_base_2_block" type="prismatic">
@@ -72,6 +78,26 @@
     <child link="DUL_block"/>
     <origin rpy="0 0 0" xyz="0.07 0 0"/>
     <axis xyz="1 0 0"/>
+  </joint>
+  <!-- Pitch links -->
+  <joint name="R_base_2_rear_pivot" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_rear_pitch_pivot"/>
+    <origin rpy="0 0 0" xyz="-0.38 -0.19999999999999998 0.28"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <joint name="R_base_2_front_hinge" type="revolute">
+    <limit effort="95" lower="0.0" upper="0.75" velocity="400"/>
+    <parent link="base_link"/>
+    <child link="right_pitch_hinge"/>
+    <origin rpy="0 0 0" xyz="0.33499999999999996 -0.19999999999999998 0.165"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <joint name="R_hinge_2_attachment" type="fixed">
+    <parent link="right_pitch_hinge"/>
+    <child link="right_pitch_attachment"/>
+    <origin rpy="0 0 0" xyz="0.38 0 0"/>
+    <axis xyz="0 1 0"/>
   </joint>
 </robot>
 
