@@ -14,6 +14,10 @@
 
 using namespace std;
 
+// Delay to wait for Linux filesystem race conditions, in
+// microseconds.
+#define DUMB_RACE_CONDITION_DELAY 0.05 * 1000000
+
 // Initialize communications with the numbered GPIO pin.
 GPIOPin::GPIOPin(unsigned int num) {
   _num = num;
@@ -25,19 +29,21 @@ GPIOPin::~GPIOPin() { unexport_gpio(); }
 
 // Set the direction of communication.
 void GPIOPin::setdir_gpio(GPIODirection dir) {
-  stringstream filename;
-  filename << "/sys/class/gpio/gpio" << _num << "/direction";
-  ofstream file(filename.str());
-  file.exceptions(ofstream::failbit | ofstream::badbit);
+  {
+    stringstream filename;
+    filename << "/sys/class/gpio/gpio" << _num << "/direction";
+    ofstream file(filename.str());
+    file.exceptions(ofstream::failbit | ofstream::badbit);
 
-  switch (dir) {
-  case GPIODirection::Input:
-    file << "in";
-  case GPIODirection::Output:
-    file << "out";
+    switch (dir) {
+    case GPIODirection::Input:
+      file << "in";
+    case GPIODirection::Output:
+      file << "out";
+    }
   }
 
-  usleep(500000);
+  usleep(DUMB_RACE_CONDITION_DELAY);
   cout << "dir ok" << endl;
 }
 
@@ -66,23 +72,27 @@ bool GPIOPin::getval_gpio() {
 
 // Enables software control of the GPIO pin.
 void GPIOPin::export_gpio() {
-  string filename = "/sys/class/gpio/export";
-  ofstream file(filename);
-  file.exceptions(ofstream::failbit | ofstream::badbit);
+  {
+    string filename = "/sys/class/gpio/export";
+    ofstream file(filename);
+    file.exceptions(ofstream::failbit | ofstream::badbit);
 
-  file << _num;
-  usleep(500000);
+    file << _num;
+  }
+  usleep(DUMB_RACE_CONDITION_DELAY);
   cout << "export ok" << endl;
 }
 
 // Unexports the GPIO pin.
 void GPIOPin::unexport_gpio() {
-  string filename = "/sys/class/gpio/unexport";
-  ofstream file(filename);
-  file.exceptions(ofstream::failbit | ofstream::badbit);
+  {
+    string filename = "/sys/class/gpio/unexport";
+    ofstream file(filename);
+    file.exceptions(ofstream::failbit | ofstream::badbit);
 
-  file << _num;
-  usleep(500000);
+    file << _num;
+  }
+  usleep(DUMB_RACE_CONDITION_DELAY);
   cout << "unexport ok" << endl;
 }
 
