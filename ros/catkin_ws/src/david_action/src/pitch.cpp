@@ -64,7 +64,11 @@ class PitchAction {
     // Wait for motors
     std::this_thread::sleep_for(std::chrono::seconds(10));
 
-    // Publish joint states
+    // TODO: Publish joint states
+
+    // Report success.
+    david_action::PitchResult result;
+    _as.setSucceeded(result);
   }
 
 public:
