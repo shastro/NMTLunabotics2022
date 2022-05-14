@@ -13,8 +13,8 @@ int main(int argc, char **argv) {
 
   GPIOOut home(21);
   GPIOOut extend(20);
-  GPIOOut retract(16);
-  GPIOOut half_extend(12);
+  GPIOOut retract(12);
+  GPIOOut half_extend(16);
 
   if (args.at(1) == "home") {
     cout << "Homing" << endl;
