@@ -19,22 +19,22 @@ int main(int argc, char **argv) {
   if (args.at(1) == "home") {
     cout << "Homing" << endl;
     home.set(true);
-    sleep(0.1);
+    getchar();
     home.set(false);
   } else if (args.at(1) == "extend") {
     cout << "Extending" << endl;
     extend.set(true);
-    sleep(0.1);
+    getchar();
     extend.set(false);
   } else if (args.at(1) == "retract") {
     cout << "Retracting" << endl;
     retract.set(true);
-    sleep(0.1);
+    getchar();
     retract.set(false);
   } else if (args.at(1) == "hextend") {
     cout << "Half-extending" << endl;
     half_extend.set(true);
-    sleep(0.1);
+    getchar();
     half_extend.set(false);
   } else {
     cout << "Unknown command " << args.at(1) << endl;
@@ -42,4 +42,6 @@ int main(int argc, char **argv) {
   }
 
   cout << "Done" << endl;
+
+  getchar();
 }
