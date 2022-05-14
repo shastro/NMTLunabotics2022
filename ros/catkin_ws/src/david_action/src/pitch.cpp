@@ -51,7 +51,7 @@ class PitchAction {
       pin = &_half_extend;
       break;
     default:
-      cerr << "Warning: PitchAction: ignoring invalid goal state"
+      cerr << "Warning: PitchAction: ignoring invalid goal state "
            << goal->goal_state << endl;
       return;
     }
