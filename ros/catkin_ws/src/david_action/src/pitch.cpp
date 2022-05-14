@@ -7,8 +7,20 @@
 #include <move_base_msgs/MoveBaseGoal.h>
 #include <ros/node_handle.h>
 #include <ros/ros.h>
+#include <chrono>
+#include <thread>
 
 using namespace std;
+enum goal {
+  HOME = 0,
+  EXTEND = 1,
+  RETRACT = 2,
+  HALF_EXTEND = 3,
+};
+
+// Robot constants
+
+
 
 class PitchAction {
   ros::NodeHandle _nh;
@@ -17,6 +29,12 @@ class PitchAction {
   string _action_name;
 
   void executeCB(const david_action::PitchGoalConstPtr &goal) {
+    // Do motor stuff
+
+    // Wait for motors
+    std::this_thread::sleep_for(std::chrono::seconds(10));
+
+    // Publish joint states
   }
 
 public:
