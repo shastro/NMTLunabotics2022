@@ -25,7 +25,7 @@
   <!-- <link name="DEL_block" /> -->
   <link name="DER_motor"/>
   <link name="DER_block"/>
-  <!-- <link name="left_pitch_hinge" /> -->
+  <link name="left_pitch_hinge"/>
   <!-- <link name="left_rear_pitch_pivot" /> -->
   <!-- <link nameright="left_pitch_attachment" /> -->
   <link name="right_pitch_hinge"/>
@@ -92,11 +92,19 @@
     <origin rpy="0 0 0" xyz="-0.38 -0.19999999999999998 0.28"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <joint name="pitch" type="revolute">
+  <joint name="R_pitch" type="revolute">
     <limit effort="95" lower="-2.600540585471551" upper="-1.7126933813990604" velocity="400"/>
     <parent link="base_link"/>
     <child link="right_pitch_hinge"/>
     <origin rpy="0 0 0" xyz="0.33499999999999996 -0.19999999999999998 0.165"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <joint name="L_pitch" type="revolute">
+    <mimic joint="R_pitch"/>
+    <limit effort="95" lower="-2.600540585471551" upper="-1.7126933813990604" velocity="400"/>
+    <parent link="base_link"/>
+    <child link="left_pitch_hinge"/>
+    <origin rpy="0 0 0" xyz="0.33499999999999996 0.18 0.165"/>
     <axis xyz="0 1 0"/>
   </joint>
   <joint name="R_hinge_2_attachment" type="fixed">
@@ -124,7 +132,7 @@
     <limit effort="0.95" velocity="4000"/>
     <parent link="DER_block"/>
     <child link="auger_hole"/>
-    <origin rpy="0 0 0" xyz="0.09 0.11 0"/>
+    <origin rpy="0 0 0" xyz="-0.11 0.11 0"/>
     <axis xyz="1 0 0"/>
   </joint>
   <joint name="R_auger_hole_2_auger_tip" type="fixed">

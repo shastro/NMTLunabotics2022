@@ -32,7 +32,7 @@
   <xacro:property name="pitch_pivot_attachment_length" value="0.37" />
   <xacro:property name="min_pitch_length" value="0.36" />
   <xacro:property name="pitch_pivot_attachment_length" value="0.37" />
-  <!-- <link name="left_pitch_hinge" /> -->
+  <link name="left_pitch_hinge" />
   <!-- <link name="left_rear_pitch_pivot" /> -->
   <!-- <link nameright="left_pitch_attachment" /> -->
   <link name="right_pitch_hinge" />
@@ -117,11 +117,21 @@
 
   <xacro:property name="hinge_max" value="-1.7126933813990604" />
   <xacro:property name="hinge_min" value="-2.600540585471551" />
-  <joint name="pitch" type="revolute">
+  <joint name="R_pitch" type="revolute">
     <limit lower="${hinge_min}" upper="${hinge_max}" effort="95" velocity="400" />
     <parent link="base_link" />
     <child link="right_pitch_hinge"/>
     <xacro:origin_rel xraw="0.615" yraw="-0.02" zraw="0.165" rx="0" ry="0" rz="0" />
+    <axis xyz="0 1 0" />
+  </joint>
+
+  <!-- If you change the pitch lengths please adjust the action server as well -->
+  <joint name="L_pitch" type="revolute">
+    <mimic joint="R_pitch" />
+    <limit lower="${hinge_min}" upper="${hinge_max}" effort="95" velocity="400" />
+    <parent link="base_link" />
+    <child link="left_pitch_hinge"/>
+    <xacro:origin_rel xraw="0.615" yraw="0.36" zraw="0.165" rx="0" ry="0" rz="0" />
     <axis xyz="0 1 0" />
   </joint>
 
@@ -153,7 +163,7 @@
     <limit effort="0.95" velocity="4000" />
     <parent link="DER_block" />
     <child link="auger_hole"/>
-    <origin xyz="0.09 0.11 0"  rpy="0 0 0" />
+    <origin xyz="-0.11 0.11 0"  rpy="0 0 0" />
     <axis xyz="1 0 0" />
   </joint>
 
