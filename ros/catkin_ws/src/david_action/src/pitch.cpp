@@ -73,6 +73,7 @@ class PitchAction {
     std::this_thread::sleep_for(std::chrono::seconds(50));
 
     // Publish joint states
+
     // Extension lengths in meters
     float extend_close = 0.46;
     float extend_half = 0.51;
@@ -83,7 +84,7 @@ class PitchAction {
     float rear_pivot_2_fwd_hinge = 0.71;
     float fwd_hinge_2_mount_bracket = 0.39;
 
-
+    // Set the appropriate extension length
     switch ((Goal)goal->goal_state) {
     case Goal::HOME:
       extend_length = extend_close;
@@ -103,17 +104,21 @@ class PitchAction {
       return;
     }
 
+    // Abbreviate variable names
     float a = fwd_hinge_2_mount_bracket;
     float b = extend_length;
     float c = rear_pivot_2_fwd_hinge;
 
+    // Compute angle of joint
     float angle = acos((pow(a,2) + pow(c,2) - pow(b,2))/(2*a*c));
+    // Construct a message
     sensor_msgs::JointState msg;
     msg.name = {"R_pitch"};
     msg.position = {angle};
     msg.velocity = {0};
     msg.effort = {0};
 
+    // Publish the joint state
     _joint_publisher.publish(msg);
 
     // Report success.
