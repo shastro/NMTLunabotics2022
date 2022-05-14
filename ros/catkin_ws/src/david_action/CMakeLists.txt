@@ -33,7 +33,7 @@ include_directories(
 )
 
 add_executable(navigation src/navigation.cpp)
-add_executable(pitch src/pitch.cpp)
+add_executable(pitch src/pitch.cpp src/gpio_lib/rpi_gpio.cpp)
 add_executable(depth src/depth.cpp)
 
 target_link_libraries(
