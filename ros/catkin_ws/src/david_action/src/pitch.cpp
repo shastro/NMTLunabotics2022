@@ -61,8 +61,12 @@ class PitchAction {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     pin->set(false);
 
-    // Wait for motors
-    std::this_thread::sleep_for(std::chrono::seconds(10));
+    // Wait for motors. On 2022-05-14 we measured that homing takes
+    // 47.79 seconds and extending takes 48.17 seconds, on 11.49
+    // volts. The power system uses 12 volts, therefore everything
+    // should be slightly faster, so we should surely be done by 50
+    // seconds.
+    std::this_thread::sleep_for(std::chrono::seconds(50));
 
     // TODO: Publish joint states
 
