@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
     cerr << "todo" << endl;
   } else if (args.at(1) == "pitch") {
     actionlib::SimpleActionClient<PitchAction> ac("pitch", true);
+    ac.waitForServer();
     PitchGoal goal;
 
     if (args.at(2) == "home") {
