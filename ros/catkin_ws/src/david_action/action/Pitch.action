@@ -4,11 +4,11 @@
 
 # True if the goal is to raise the pitch motors, such that the robot
 # is prepared for digging; false if the goal is to lower them.
-bool raised
+# 0 for home 1 for extend 3 for retract 4 for half
+uint32 goal_state
 
 ---
 # Result definition.
-
 ---
 # Feedback definition.
 

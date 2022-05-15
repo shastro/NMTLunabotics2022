@@ -20,15 +20,19 @@
   <link name="DUL_block"/>
   <link name="DUR_motor"/>
   <link name="DUR_block"/>
-  <!-- <link name="left_pitch_hinge" /> -->
+  <!-- <!-\- Depth motors -\-> -->
+  <!-- <link name="DEL_motor" /> -->
+  <!-- <link name="DEL_block" /> -->
+  <link name="DER_motor"/>
+  <link name="DER_block"/>
+  <link name="left_pitch_hinge"/>
   <!-- <link name="left_rear_pitch_pivot" /> -->
   <!-- <link nameright="left_pitch_attachment" /> -->
   <link name="right_pitch_hinge"/>
   <link name="right_rear_pitch_pivot"/>
   <link name="right_pitch_attachment"/>
-  <!-- <link name="depth_motor_axle" /> -->
-  <!-- <link name="auger_tip" /> -->
-  <!-- <link name="auger_hole"/> -->
+  <link name="auger_tip"/>
+  <link name="auger_hole"/>
   <!-- Locomotion component -->
   <link name="left_loco_axle"/>
   <link name="right_loco_axle"/>
@@ -41,12 +45,14 @@
   </joint>
   <!-- Locomotion joints -->
   <joint name="loco_right" type="continuous">
+    <limit effort="0.95" velocity="1000"/>
     <parent link="base_link"/>
     <child link="right_loco_axle"/>
     <origin rpy="0 0 0" xyz="-0.34500000000000003 -0.27 0.07"/>
     <axis xyz="0 1 0"/>
   </joint>
   <joint name="loco_left" type="continuous">
+    <limit effort="0.95" velocity="1000"/>
     <parent link="base_link"/>
     <child link="left_loco_axle"/>
     <origin rpy="0 0 0" xyz="-0.34500000000000003 0.27 0.07"/>
@@ -59,7 +65,7 @@
     <origin rpy="0 -2.600540585471551 0" xyz="0.28 -0.13 0.05"/>
     <axis xyz="1 0 0"/>
   </joint>
-  <joint name="R_dump_base_2_block" type="prismatic">
+  <joint name="right_dump" type="prismatic">
     <limit effort="95" lower="0.0" upper="0.75" velocity="400"/>
     <parent link="DUR_motor"/>
     <child link="DUR_block"/>
@@ -72,7 +78,7 @@
     <origin rpy="0 -2.600540585471551 0" xyz="0.28 0.135 0.05"/>
     <axis xyz="1 0 0"/>
   </joint>
-  <joint name="L_dump_base_2_block" type="prismatic">
+  <joint name="left_dump" type="prismatic">
     <limit effort="95" lower="0.0" upper="0.75" velocity="400"/>
     <parent link="DUL_motor"/>
     <child link="DUL_block"/>
@@ -86,11 +92,20 @@
     <origin rpy="0 0 0" xyz="-0.38 -0.19999999999999998 0.28"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <joint name="R_base_2_front_hinge" type="revolute">
-    <limit effort="95" lower="0.0" upper="0.75" velocity="400"/>
+  <joint name="R_pitch" type="revolute">
+    <limit effort="95" lower="-2.600540585471551" upper="-1.7126933813990604" velocity="400"/>
     <parent link="base_link"/>
     <child link="right_pitch_hinge"/>
     <origin rpy="0 0 0" xyz="0.33499999999999996 -0.19999999999999998 0.165"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  <!-- If you change the pitch lengths please adjust the action server as well -->
+  <joint name="L_pitch" type="revolute">
+    <mimic joint="R_pitch"/>
+    <limit effort="95" lower="-2.600540585471551" upper="-1.7126933813990604" velocity="400"/>
+    <parent link="base_link"/>
+    <child link="left_pitch_hinge"/>
+    <origin rpy="0 0 0" xyz="0.33499999999999996 0.18 0.165"/>
     <axis xyz="0 1 0"/>
   </joint>
   <joint name="R_hinge_2_attachment" type="fixed">
@@ -98,6 +113,34 @@
     <child link="right_pitch_attachment"/>
     <origin rpy="0 0 0" xyz="0.38 0 0"/>
     <axis xyz="0 1 0"/>
+  </joint>
+  <!-- Depth joints -->
+  <joint name="R_hinge_2_DEL_motor" type="fixed">
+    <parent link="right_pitch_hinge"/>
+    <child link="DER_motor"/>
+    <origin rpy="0 0 0" xyz="0 0.085 0"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <joint name="depth" type="prismatic">
+    <limit effort="95" lower="0.0" upper="0.48" velocity="400"/>
+    <parent link="DER_motor"/>
+    <child link="DER_block"/>
+    <origin rpy="0 0 0" xyz="0.07 0 0"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+  <!-- Auger joints -->
+  <joint name="auger_rotation" type="continuous">
+    <limit effort="0.95" velocity="4000"/>
+    <parent link="DER_block"/>
+    <child link="auger_hole"/>
+    <origin rpy="0 0 0" xyz="-0.11 0.11 0"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+  <joint name="R_auger_hole_2_auger_tip" type="fixed">
+    <parent link="auger_hole"/>
+    <child link="auger_tip"/>
+    <origin rpy="0 0 0" xyz="-0.71 0 0"/>
+    <axis xyz="0 0 0"/>
   </joint>
 </robot>
 

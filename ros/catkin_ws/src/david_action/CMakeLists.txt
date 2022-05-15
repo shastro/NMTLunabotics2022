@@ -33,8 +33,9 @@ include_directories(
 )
 
 add_executable(navigation src/navigation.cpp)
-add_executable(pitch src/pitch.cpp)
+add_executable(pitch src/pitch.cpp src/gpio_lib/rpi_gpio.cpp)
 add_executable(depth src/depth.cpp)
+add_executable(action_tests src/action_tests.cpp)
 
 target_link_libraries(
   navigation
@@ -63,5 +64,15 @@ target_link_libraries(
 
 add_dependencies(
   depth
+  ${david_action_EXPORTED_TARGETS}
+)
+
+target_link_libraries(
+  action_tests
+  ${catkin_LIBRARIES}
+)
+
+add_dependencies(
+  action_tests
   ${david_action_EXPORTED_TARGETS}
 )
