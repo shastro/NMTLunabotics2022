@@ -111,7 +111,7 @@ class PitchAction {
 
     // Closure for angle computation
     auto compute_angle = [a, c](double b) {
-      return 3.14159 - acos((pow(a, 2) + pow(c, 2) - pow(b, 2)) / (float)(2 * a * c));
+      return - ( 3.14159 - acos((pow(a, 2) + pow(c, 2) - pow(b, 2)) / (float)(2 * a * c)) );
     };
 
     // Joint angle
