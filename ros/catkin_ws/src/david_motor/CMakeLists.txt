@@ -15,6 +15,13 @@ else()
   target_link_libraries(david_motor ${catkin_LIBRARIES})
 endif()
 
+add_message_files(
+  DIRECTORY msg
+  FILES
+  AugerCmd.msg
+  DumperCmd.msg
+)
+generate_messages(DEPENDENCIES std_msgs)
 
 link_directories(${catkin_LIBRARY_DIRS})
 
