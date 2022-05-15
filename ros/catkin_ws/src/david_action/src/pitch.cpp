@@ -3,8 +3,8 @@
 #include <ctime>
 #include <functional>
 #include <iostream>
-#include <thread>
 #include <math.h>
+#include <thread>
 
 #include <actionlib/server/simple_action_server.h>
 #include <david_action/PitchAction.h>
@@ -69,26 +69,6 @@ class PitchAction {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     pin->set(false);
 
-    // Wait for motors. On 2022-05-14 we measured that homing takes
-    // 47.79 seconds and extending takes 48.17 seconds, on 11.49
-    // volts. The power system uses 12 volts, therefore everything
-    // should be slightly faster, so we should surely be done by 50
-    // seconds.
-
-    // Publish feedback and wait
-    david_action::PitchFeedback feedback;
-    int time_wait = 50;
-    clock_t start = clock();
-    clock_t current = clock();
-    while ( (current - start) < time_wait) {
-      current = clock();
-      feedback.progress = (current-start)/time_wait;
-      _as.publishFeedback(feedback);
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-
-
-    // Publish joint states
     // Extension lengths in meters
     float extend_close = 0.46;
     float extend_half = 0.51;
@@ -119,19 +99,42 @@ class PitchAction {
       return;
     }
 
+    // Publish joint states
     // Abbreviate variable names
     float a = fwd_hinge_2_mount_bracket;
-    float b = extend_length;
     float c = rear_pivot_2_fwd_hinge;
 
-    // Compute angle of joint
-    float angle = 3.14159 - acos((pow(a,2) + pow(c,2) - pow(b,2))/(2*a*c));
+    // Closure for angle computation
+    auto compute_angle = [a, c](double b) {
+      return 3.14159 - acos((pow(a, 2) + pow(c, 2) - pow(b, 2)) / (2 * a * c));
+    };
+
+    // Joint angle
+    float angle = compute_angle(extend_length);
+
     // Construct a message
     sensor_msgs::JointState msg;
     msg.name = {"R_pitch"};
     msg.position = {angle};
     msg.velocity = {0};
     msg.effort = {0};
+
+    // Wait for motors. On 2022-05-14 we measured that homing takes 47.79
+    // seconds and extending takes 48.17 seconds, on 11.49 volts. The power
+    // system uses 12 volts, therefore everything should be slightly faster, so
+    // we should surely be done by 50 seconds.
+
+    // Publish feedback and wait
+    david_action::PitchFeedback feedback;
+    int time_wait = 50;
+    clock_t start = clock();
+    clock_t current = clock();
+    while ((current - start) < time_wait) {
+      current = clock();
+      feedback.progress = (current - start) / (float)time_wait;
+      _as.publishFeedback(feedback);
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 
     // Publish the joint state
     _joint_publisher.publish(msg);
@@ -148,7 +151,8 @@ public:
         _action_name(name),
         // Pin numbers
         _home(21), _extend(20), _retract(12), _half_extend(16) {
-    _joint_publisher = _nh.advertise<sensor_msgs::JointState>("/joints/pitch", 1000);
+    _joint_publisher =
+        _nh.advertise<sensor_msgs::JointState>("/joints/pitch", 1000);
 
     _as.start();
   }
