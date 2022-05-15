@@ -10,3 +10,4 @@ blender/*.blend1
 *.wbproj
 .#*
 *.o
+*.vscode
