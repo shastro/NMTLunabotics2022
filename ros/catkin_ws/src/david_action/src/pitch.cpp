@@ -129,7 +129,7 @@ class PitchAction {
     // seconds and extending takes 48.17 seconds, on 11.49 volts. The power
     // system uses 12 volts, therefore everything should be slightly faster, so
     // we should surely be done by 50 seconds.
-    auto time_wait = seconds(50);
+    auto time_wait = milliseconds(50000);
 
     // Publish feedback and wait
     david_action::PitchFeedback feedback;
