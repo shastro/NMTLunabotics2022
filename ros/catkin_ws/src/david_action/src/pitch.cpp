@@ -126,7 +126,7 @@ class PitchAction {
 
     // Publish feedback and wait
     david_action::PitchFeedback feedback;
-    clock_t time_wait = 50 * CLOCKS_PER_SEC;
+    clock_t time_wait = 50 * ( CLOCKS_PER_SEC / 100 ); // Uuuhh wtf?
     clock_t start = clock();
     clock_t current = clock();
     while ((current - start) < time_wait) {
