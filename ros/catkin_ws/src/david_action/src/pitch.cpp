@@ -116,6 +116,7 @@ class PitchAction {
 
     // Joint angle
     float angle = compute_angle(extend_length);
+    cout << extend_length << endl;
 
     // Construct a message
     sensor_msgs::JointState msg;
