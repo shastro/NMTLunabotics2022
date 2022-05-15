@@ -35,14 +35,12 @@ int main(int argc, char **argv) {
   }
 
   // Run publish loop
-  ros::Rate loop_rate(5);
   while(cap.isOpened()){
     cap >> frame;
     // Create image message
     sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "rgb8", frame).toImageMsg();
     pub.publish(msg);
     ros::spinOnce();
-    loop_rate.sleep();
   }
   cap.release();
 
