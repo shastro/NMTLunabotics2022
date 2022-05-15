@@ -1,0 +1,48 @@
+#include <iostream>
+#include <ros/ros.h>
+#include<image_transport/image_transport.h>
+#include<opencv2/highgui/highgui.hpp>
+#include<cv_bridge/cv_bridge.h>
+#include <sstream>
+
+int main(int argc, char **argv) {
+
+  if ( argc != 3 ){
+    std::cout << "Usage: camera_node <topic_name> <device_id>" << std::endl;
+  }
+  // Initialize node
+  ros::init(argc, argv, "camera_pub");
+  ros::NodeHandle nh;
+  image_transport::ImageTransport it(nh);
+
+  // Create topic
+  std::stringstream topic_name;
+  topic_name << argv[1];
+  image_transport::Publisher pub = it.advertise(topic_name.str(), 1);
+
+  // Open UDP camera stream
+  cv::VideoCapture cap("udp://127.0.0.1:5000", cv::CAP_FFMPEG);
+
+  // Setup loop vars
+  cv::Mat frame;
+
+  // Check if camera can be opened
+  if (cap.isOpened() == false){
+    std::cout << "VideoCapture failed to open" << std::endl;
+  }
+
+  // Run publish loop
+  ros::Rate loop_rate(5);
+  while(cap.isOpened()){
+    cap >> frame;
+    // Create image message
+    sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "BG10", frame).toImageMsg();
+    pub.publish(msg);
+    ros::spinOnce();
+    loop_rate.sleep();
+  }
+  cap.release();
+
+
+  return 0;
+}
