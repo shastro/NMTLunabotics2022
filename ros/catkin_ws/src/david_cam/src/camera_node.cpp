@@ -8,7 +8,8 @@
 int main(int argc, char **argv) {
 
   if ( argc != 3 ){
-    std::cout << "Usage: camera_node <topic_name> <device_id>" << std::endl;
+    std::cout << "Usage: camera_node <topic_name> <port>" << std::endl;
+    abort();
   }
   // Initialize node
   ros::init(argc, argv, "camera_pub");
@@ -21,7 +22,9 @@ int main(int argc, char **argv) {
   image_transport::Publisher pub = it.advertise(topic_name.str(), 1);
 
   // Open UDP camera stream
-  cv::VideoCapture cap("udp://127.0.0.1:5000", cv::CAP_FFMPEG);
+  std::stringstream udp_str;
+  udp_str << "udp://127.0.0.1:" << argv[2];
+  cv::VideoCapture cap(udp_str, cv::CAP_FFMPEG);
 
   // Setup loop vars
   cv::Mat frame;
