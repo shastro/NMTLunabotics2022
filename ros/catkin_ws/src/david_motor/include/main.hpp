@@ -1,4 +1,4 @@
-// Base control.
+// Motor controller.
 
 // Copyright (c) 2021, 2022 NMT Lunabotics. All rights reserved.
 

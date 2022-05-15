@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>base_controller</name>
+  <name>david_motor</name>
   <version>0.1.0</version>
   <description>
     Conversion node from navigation stack commands to motor commands.

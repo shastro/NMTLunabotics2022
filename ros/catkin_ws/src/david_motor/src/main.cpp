@@ -51,7 +51,7 @@ private:
 };
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "base_controller");
+  ros::init(argc, argv, "david_motor");
 
   if (argc != 3) {
     cout << "Usage: " << argv[0] << " <robot-path> <cmd-vel-path>" << endl
