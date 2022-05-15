@@ -39,6 +39,8 @@ class PitchAction {
   GPIOOut _half_extend;
 
   void executeCB(const david_action::PitchGoalConstPtr &goal) {
+    cout << "Entered ExecuteCB" << endl;
+
     // Do motor stuff
     GPIOOut *pin;
     switch ((Goal)goal->goal_state) {
