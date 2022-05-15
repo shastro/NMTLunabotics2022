@@ -112,7 +112,7 @@ class PitchAction {
     float c = rear_pivot_2_fwd_hinge;
 
     // Compute angle of joint
-    float angle = acos((pow(a,2) + pow(c,2) - pow(b,2))/(2*a*c));
+    float angle = 3.14159 - acos((pow(a,2) + pow(c,2) - pow(b,2))/(2*a*c));
     // Construct a message
     sensor_msgs::JointState msg;
     msg.name = {"R_pitch"};
@@ -123,6 +123,7 @@ class PitchAction {
     // Publish the joint state
     _joint_publisher.publish(msg);
 
+    cout << "Message published" << endl;
     // Report success.
     david_action::PitchResult result;
     _as.setSucceeded(result);
