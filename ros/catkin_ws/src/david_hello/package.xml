@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>david_hello</name>
+  <version>0.0.0</version>
+  <description>
+    The david_hello package prints out "hello" repeatedly, until
+    control-C'ed.
+
+    I'm using this dummy package to test the behavior of using ROS
+    between multiple systems.
+  </description>
+
+  <maintainer email="skyler.hughes@student.nmt.edu">shastro</maintainer>
+  <maintainer email="alexander.bethel@student.nmt.edu">shastro</maintainer>
+
+  <license>GPLv3</license>
+
+  <build_depend>roscpp</build_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>roscpp</exec_depend>
+</package>
