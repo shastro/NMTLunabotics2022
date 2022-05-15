@@ -24,8 +24,8 @@
   <link name="DUR_motor" />
   <link name="DUR_block" />
   <!-- <!-\- Depth motors -\-> -->
-  <!-- <link name="DEL_motor" /> -->
-  <!-- <link name="DEL_block" /> -->
+  <link name="DEL_motor" />
+  <link name="DEL_block" />
   <link name="DER_motor" />
   <link name="DER_block" />
   <!-- Pitch components -->
@@ -34,7 +34,7 @@
   <xacro:property name="pitch_pivot_attachment_length" value="0.37" />
   <link name="left_pitch_hinge" />
   <!-- <link name="left_rear_pitch_pivot" /> -->
-  <!-- <link nameright="left_pitch_attachment" /> -->
+ <!-- <link nameright="left_pitch_attachment" /> -->
   <link name="right_pitch_hinge" />
   <link name="right_rear_pitch_pivot" />
   <link name="right_pitch_attachment" />
@@ -107,7 +107,6 @@
 
 
   <!-- Pitch links -->
-
   <joint name="R_base_2_rear_pivot" type="fixed">
     <parent link="base_link" />
     <child link="right_rear_pitch_pivot"/>
@@ -135,6 +134,21 @@
     <axis xyz="0 1 0" />
   </joint>
 
+  <joint name="L_hinge_2_DEL_motor" type="fixed" >
+    <parent link="left_pitch_hinge" />
+    <child link="DEL_motor"/>
+    <origin xyz="0 -0.085 0"  rpy="0 0 0" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <joint name="L_depth" type="prismatic" >
+    <limit lower="0.0" upper="0.48" effort="95" velocity="400" />
+    <parent link="DEL_motor" />
+    <child link="DEL_block"/>
+    <origin xyz="0.07 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0" />
+  </joint>
+
   <joint name="R_hinge_2_attachment" type="fixed">
     <parent link="right_pitch_hinge" />
     <child link="right_pitch_attachment"/>
@@ -143,14 +157,14 @@
   </joint>
 
   <!-- Depth joints -->
-  <joint name="R_hinge_2_DEL_motor" type="fixed" >
+  <joint name="R_hinge_2_DER_motor" type="fixed" >
     <parent link="right_pitch_hinge" />
     <child link="DER_motor"/>
     <origin xyz="0 0.085 0"  rpy="0 0 0" />
     <axis xyz="0 0 0" />
   </joint>
 
-  <joint name="depth" type="prismatic" >
+  <joint name="R_depth" type="prismatic" >
     <limit lower="0.0" upper="0.48" effort="95" velocity="400" />
     <parent link="DER_motor" />
     <child link="DER_block"/>
