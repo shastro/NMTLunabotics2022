@@ -130,6 +130,7 @@ class PitchAction {
     clock_t start = clock();
     clock_t current = clock();
     while ((current - start) < time_wait) {
+      cout << current - start << "/" << time_wait << endl;
       current = clock();
       feedback.progress = (current - start) / (float)time_wait;
       _as.publishFeedback(feedback);
