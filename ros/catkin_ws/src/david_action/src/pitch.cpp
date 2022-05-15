@@ -1,5 +1,6 @@
 #include <chrono>
 #include <cstdio>
+#include <ctime>
 #include <functional>
 #include <iostream>
 #include <thread>
@@ -12,6 +13,7 @@
 #include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
 
+#include "david_action/PitchFeedback.h"
 #include "gpio_lib/rpi_gpio.hpp"
 
 using namespace std;
@@ -72,10 +74,21 @@ class PitchAction {
     // volts. The power system uses 12 volts, therefore everything
     // should be slightly faster, so we should surely be done by 50
     // seconds.
-    std::this_thread::sleep_for(std::chrono::seconds(50));
+
+    // Publish feedback and wait
+    david_action::PitchFeedback feedback;
+    int time_wait = 50;
+    clock_t start = clock();
+    clock_t current = clock();
+    while ( (current - start) < time_wait) {
+      current = clock();
+      feedback.progress = (current-start)/time_wait;
+      _as.publishFeedback(feedback);
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
 
     // Publish joint states
-
     // Extension lengths in meters
     float extend_close = 0.46;
     float extend_half = 0.51;
