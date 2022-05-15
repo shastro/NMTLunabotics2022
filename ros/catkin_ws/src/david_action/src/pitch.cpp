@@ -130,7 +130,7 @@ class PitchAction {
     clock_t start = clock() / (float)CLOCKS_PER_SEC;
     clock_t current = clock() / (float)CLOCKS_PER_SEC;
     while ((current - start) < time_wait) {
-      current = (float)clock();
+      current = clock();
       feedback.progress = (current - start) / (float)time_wait;
       _as.publishFeedback(feedback);
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
