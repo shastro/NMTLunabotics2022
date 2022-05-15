@@ -111,12 +111,13 @@ class PitchAction {
 
     // Closure for angle computation
     auto compute_angle = [a, c](double b) {
-      return 3.14159 - acos((pow(a, 2) + pow(c, 2) - pow(b, 2)) / (2 * a * c));
+      return 3.14159 - acos((pow(a, 2) + pow(c, 2) - pow(b, 2)) / (float)(2 * a * c));
     };
 
     // Joint angle
     float angle = compute_angle(extend_length);
     cout << extend_length << endl;
+    cout << angle << endl;
 
     // Construct a message
     sensor_msgs::JointState msg;
@@ -129,7 +130,7 @@ class PitchAction {
     // seconds and extending takes 48.17 seconds, on 11.49 volts. The power
     // system uses 12 volts, therefore everything should be slightly faster, so
     // we should surely be done by 50 seconds.
-    auto time_wait = milliseconds(50000);
+    auto time_wait = chrono::duration<double>(50.0);
 
     // Publish feedback and wait
     david_action::PitchFeedback feedback;
