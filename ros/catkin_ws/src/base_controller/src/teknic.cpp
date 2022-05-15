@@ -3,11 +3,13 @@
 // Copyright (c) 2022 NMT Lunabotics. All rights reserved.
 
 #include <algorithm>
+#include <chrono>
 #include <cstdlib>
 #include <iostream>
 #include <pubSysCls.h>
 #include <ros/ros.h>
 #include <string>
+#include <thread>
 #include <unistd.h>
 #include <vector>
 
@@ -20,11 +22,18 @@ using namespace std;
 
 // Construct a motor controller at the given path, and initialize it
 // to zero velocity.
-TeknicMotor::TeknicMotor(SimpleNode &node) : _node(node) {}
+TeknicMotor::TeknicMotor(SimpleNode &node) : _node(node) {
+  _manager = thread([this]() { this->motor_manager(); });
+}
 
-void TeknicMotor::setVelocity(double vel) { _node.setVel(vel); }
+void TeknicMotor::setVelocity(double vel) { _vel_target = vel; }
 
-void TeknicMotor::setPosition(double pos) { _node.setPos(pos); }
+void TeknicMotor::setPosition(double pos) {
+  // _node.setPos(pos);
+  // That might RMS out.
+  cerr << "TeknicMotor::setPosition unimplemented" << endl;
+  abort();
+}
 
 // Initializes the navigation motors for the robot.
 vector<NavMotor> init_motors(string path) {
@@ -46,4 +55,23 @@ vector<NavMotor> init_motors(string path) {
       NavMotor(new TeknicMotor(nodes.at(MotorIdent::LocomotionR)), 1));
 
   return motors;
+}
+
+void TeknicMotor::motor_manager() {
+  while (true) {
+    double rms = _node.rms();
+    double max_rms = 1;
+
+    // Use epsilon ratios of 1000 rpm to serve as the assumed maximum
+    // RPM, if we're not moving (i.e., _vel_current and rms are both
+    // zero).
+    double rpm_per_rms = (_vel_current + 0.001) / (rms + 0.000001);
+    double max_rpm = max_rms * rpm_per_rms;
+
+    _vel_current = min((double)_vel_target, max_rpm);
+    _node.setVel(_vel_current);
+
+    std::this_thread::sleep_for(
+        std::chrono::microseconds(1000000 / MANAGER_RESOLUTION));
+  }
 }
