@@ -99,6 +99,7 @@
     <origin rpy="0 0 0" xyz="0.33499999999999996 -0.19999999999999998 0.165"/>
     <axis xyz="0 1 0"/>
   </joint>
+  <!-- If you change the pitch lengths please adjust the action server as well -->
   <joint name="L_pitch" type="revolute">
     <mimic joint="R_pitch"/>
     <limit effort="95" lower="-2.600540585471551" upper="-1.7126933813990604" velocity="400"/>
