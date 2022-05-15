@@ -16,6 +16,11 @@
 #include "david_action/PitchFeedback.h"
 #include "gpio_lib/rpi_gpio.hpp"
 
+using std::chrono::milliseconds;
+using std::chrono::seconds;
+using std::chrono::steady_clock;
+using std::this_thread::sleep_for;
+
 using namespace std;
 
 enum class Goal {
@@ -123,18 +128,17 @@ class PitchAction {
     // seconds and extending takes 48.17 seconds, on 11.49 volts. The power
     // system uses 12 volts, therefore everything should be slightly faster, so
     // we should surely be done by 50 seconds.
+    auto time_wait = seconds(50);
 
     // Publish feedback and wait
     david_action::PitchFeedback feedback;
-    clock_t time_wait = 50 * ( CLOCKS_PER_SEC / 100 ); // Uuuhh wtf?
-    clock_t start = clock();
-    clock_t current = clock();
+    auto start = steady_clock::now();
+    auto current = steady_clock::now();
     while ((current - start) < time_wait) {
-      cout << current - start << "/" << time_wait << endl;
-      current = clock();
-      feedback.progress = (current - start) / (float)time_wait;
+      current = steady_clock::now();
+      feedback.progress = (current - start) / time_wait;
       _as.publishFeedback(feedback);
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      sleep_for(milliseconds(100));
     }
 
     // Publish the joint state
