@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
   while(cap.isOpened()){
     cap >> frame;
     // Create image message
-    sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "BG10", frame).toImageMsg();
+    sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "rgb8", frame).toImageMsg();
     pub.publish(msg);
     ros::spinOnce();
     loop_rate.sleep();
