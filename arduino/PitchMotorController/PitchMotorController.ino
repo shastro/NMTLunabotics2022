@@ -22,6 +22,8 @@
 #define modeSelect1 5
 #define enablePin 6
 
+#define debounceCount 50 // number of timer ticks to wait before changing debounced button states
+
 #define pitchL 2
 #define pitchR 3
 // #define bPin    A2 // this may be illegal due to interrupt, later...
@@ -33,8 +35,10 @@ int state = 0; // Colapsed = 0, extend half = 1, extend full = 2
 int eStop = LOW;
 int statusLEDcounter = 0;
 
-int mode = 0; // determined by mode pins in void loop
-bool enable = LOW;
+int mode = 0;           // determined by mode pins in void loop
+bool enable = LOW;      // pulled high to enable system; lupped low for system standby
+bool enableNew = LOW;   // used for devouncing the enable state
+int enableDebounce = 0; // used to avoid enable floating/bouncing
 
 enum modes
 {
@@ -47,6 +51,7 @@ enum modes
 void setup()
 {
   Serial.begin(9600);
+  Serial.print("Controller Starting...\n");
   pinMode(HBridge_in1, OUTPUT);
   pinMode(HBridge_in2, OUTPUT);
   pinMode(HBridge_in3, OUTPUT);
@@ -73,7 +78,7 @@ void setup()
 
 /**
  * @brief Set the Timer Interrupts at the hardware level
- * 
+ *
  */
 void setTimerInterrupts()
 {
@@ -95,29 +100,48 @@ void setTimerInterrupts()
   TCCR1B |= (1 << CS12) | (1 << CS10); // bits for 1024 prescaler
   TIMSK1 |= (1 << OCIE1A);             // enable interrupt
 }
-
+/**
+ * @brief timer0 interrupt 2kHz
+ */
 ISR(TIMER0_COMPA_vect)
-{ // timer0 interrupt 2kHz toggles pin 13 (LED)
-  if (statusLEDcounter < 100)
-  {
+{
+  // flash the status LED once every second
+  if (statusLEDcounter < 100 && !enable)
     digitalWrite(statusLED, HIGH);
-  }
-  else
-  {
-    digitalWrite(statusLED, LOW);
-  }
+  else // flash the LED on for the first 100 counts each 2000-count cycle (1 sec) if not enabled
+    digitalWrite(statusLED, enable);
   if (statusLEDcounter == 2000)
     statusLEDcounter = 0;
-  else
+  else // increment the status LED counter every timer tick, resetting at 2000 (after 1 sec)
     statusLEDcounter++;
+
+  // detect enable state
+  enableNew = digitalRead(enablePin); // get the new enable pin state
+  if (enable != enableNew)
+  {                   // if the new state is not the old state
+    enableDebounce++; // increment the debounce counter
+    if (enableDebounce > debounceCount)
+    {                     // if the new state has been stable long enough
+      enable = enableNew; // update the  enable state
+      if (enable)
+        Serial.print("Enabled: ");
+      else
+        Serial.println("Disabled: standby mode");
+      enableDebounce = 0; // and reset the debounce counter
+    }
+  }
+  else
+  { // if state returns to old state, reset the debounce counter
+    enableDebounce = 0;
+  }
 }
 
 void loop()
 {
-  enable = digitalRead(enablePin);
   if (enable)
   { // only hit the switch statement
-    mode = digitalRead(modeSelect0) & (digitalRead(modeSelect1) << 1);
+    // mode = digitalRead(modeSelect0) + (digitalRead(modeSelect1) * 2);
+    mode = digitalRead(modeSelect0) | (digitalRead(modeSelect1) << 1);
     digitalWrite(statusLED, HIGH); // light status LED when enable pulled high
     switch (mode)
     {
@@ -158,7 +182,7 @@ void Home()
 {
   // if (digitalRead(homePin) == HIGH)
   // { // Home
-  Serial.println("Home");
+  Serial.println("Homing Mode");
   digitalWrite(HBridge_in1, LOW);
   digitalWrite(HBridge_in2, HIGH);
   digitalWrite(HBridge_in3, LOW);
@@ -191,8 +215,8 @@ void Extend()
 {
   // if (digitalRead(extendPin) == HIGH)
   // { // Extend
-  Serial.println("Extend");
-  while (encoderR <= 500 && eStop == LOW)
+  Serial.println("Extend Mode");
+  while (encoderR <= 500 && enable)
   {
     Serial.print(encoderR);
     Serial.print(",  ");
@@ -216,8 +240,8 @@ void HalfExtend()
 {
   // if (digitalRead(halfExtPin) == HIGH)
   // { // Extend
-  Serial.println("Half Extend");
-  while (encoderR <= 320 && eStop == LOW)
+  Serial.println("Half Extend Mode");
+  while (encoderR <= 320 && enable)
   {
     Serial.print(encoderR);
     Serial.print(",  ");
@@ -243,8 +267,8 @@ void Retract()
   // { // Retract
   if (state == 2)
   { // Retract
-    Serial.println("Retract");
-    while (encoderR <= 500 && eStop == LOW)
+    Serial.println("Retract Mode\n");
+    while (encoderR <= 500 && enable)
     {
       Serial.print(encoderR);
       Serial.print(",  ");
@@ -261,7 +285,7 @@ void Retract()
   // { // Retract
   else if (state == 1)
   { // Retract
-    while (encoderR <= 250 && eStop == LOW)
+    while (encoderR <= 250 && enable)
     {
       Serial.print(encoderR);
       Serial.print(",  ");
