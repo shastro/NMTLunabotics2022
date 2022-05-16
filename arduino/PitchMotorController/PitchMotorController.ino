@@ -51,6 +51,7 @@ enum modes
 void setup()
 {
   Serial.begin(9600);
+  Serial.print("Controller Starting...\n");
   pinMode(HBridge_in1, OUTPUT);
   pinMode(HBridge_in2, OUTPUT);
   pinMode(HBridge_in3, OUTPUT);
@@ -122,6 +123,10 @@ ISR(TIMER0_COMPA_vect)
     if (enableDebounce > debounceCount)
     {                     // if the new state has been stable long enough
       enable = enableNew; // update the  enable state
+      if (enable)
+        Serial.print("Enabled: ");
+      else
+        Serial.println("Disabled: standby mode");
       enableDebounce = 0; // and reset the debounce counter
     }
   }
@@ -158,10 +163,10 @@ void loop()
       break;
     }
   }
-  // else
-  // {
-  //   // digitalWrite(statusLED, LOW); // disable status LED if not enabled
-  // }
+  else
+  {
+    // digitalWrite(statusLED, LOW); // disable status LED if not enabled
+  }
 }
 
 /* encoder count incrementers (triggered on pin rising interrupt) */
@@ -177,7 +182,7 @@ void Home()
 {
   // if (digitalRead(homePin) == HIGH)
   // { // Home
-  Serial.println("Home");
+  Serial.println("Homing Mode");
   digitalWrite(HBridge_in1, LOW);
   digitalWrite(HBridge_in2, HIGH);
   digitalWrite(HBridge_in3, LOW);
@@ -210,7 +215,7 @@ void Extend()
 {
   // if (digitalRead(extendPin) == HIGH)
   // { // Extend
-  Serial.println("Extend");
+  Serial.println("Extend Mode");
   while (encoderR <= 500 && enable)
   {
     Serial.print(encoderR);
@@ -235,7 +240,7 @@ void HalfExtend()
 {
   // if (digitalRead(halfExtPin) == HIGH)
   // { // Extend
-  Serial.println("Half Extend");
+  Serial.println("Half Extend Mode");
   while (encoderR <= 320 && enable)
   {
     Serial.print(encoderR);
@@ -262,7 +267,7 @@ void Retract()
   // { // Retract
   if (state == 2)
   { // Retract
-    Serial.println("Retract");
+    Serial.println("Retract Mode\n");
     while (encoderR <= 500 && enable)
     {
       Serial.print(encoderR);
