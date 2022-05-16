@@ -16,6 +16,8 @@
 #define retractPin 6
 #define halfExtPin 12
 
+#define statusLED 13 // the pin connected to the blue SMD LED on the board
+
 #define modeSelect0 4
 #define modeSelect1 5
 #define enablePin 6
@@ -29,6 +31,7 @@ int encoderL = 0;
 int encoderlast = 1;
 int state = 0; // Colapsed = 0, extend half = 1, extend full = 2
 int eStop = LOW;
+int statusLEDcounter = 0;
 
 int mode = 0; // determined by mode pins in void loop
 bool enable = LOW;
@@ -48,6 +51,7 @@ void setup()
   pinMode(HBridge_in2, OUTPUT);
   pinMode(HBridge_in3, OUTPUT);
   pinMode(HBridge_in4, OUTPUT);
+  pinMode(statusLED, OUTPUT);
   // pinMode(bPin, INPUT_PULLUP);
 
   // pinMode(homePin, INPUT);    // Home
@@ -62,13 +66,59 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(pitchR), EncoderCountL, RISING);
   // attachInterrupt(digitalPinToInterrupt(bPin), button, HIGH); // Cannot assign interrupt to pin A2 on ATMega32U4 series Arduinos...
   // Inturrupt for encoder A used to detect changes in revolutions
+
+  // set timer1 interrupt at 1Hz
+  setTimerInterrupts();
+}
+
+/**
+ * @brief Set the Timer Interrupts at the hardware level
+ * 
+ */
+void setTimerInterrupts()
+{
+  // set timer0 interrupt at 2kHz
+  TCCR0A = 0;
+  TCCR0B = 0;                          // set timer0 counter registers to 0
+  TCNT0 = 0;                           // counter value to 0
+  OCR0A = 124;                         // for 2khz increments must be <65536
+  TCCR0A |= (1 << WGM01);              // CTC mode
+  TCCR0B |= (1 << CS01) | (1 << CS00); // bits for 1024 prescaler
+  TIMSK0 |= (1 << OCIE0A);             // enable interrupt
+
+  // set timer1 interrupt at 1Hz
+  TCCR1A = 0;
+  TCCR1B = 0;                          // set timer1 counter registers to 0
+  TCNT1 = 0;                           // counter value to 0
+  OCR1A = 15624;                       // for 1hz increments must be <65536
+  TCCR1B |= (1 << WGM12);              // CTC mode
+  TCCR1B |= (1 << CS12) | (1 << CS10); // bits for 1024 prescaler
+  TIMSK1 |= (1 << OCIE1A);             // enable interrupt
+}
+
+ISR(TIMER0_COMPA_vect)
+{ // timer0 interrupt 2kHz toggles pin 13 (LED)
+  if (statusLEDcounter < 100)
+  {
+    digitalWrite(statusLED, HIGH);
+  }
+  else
+  {
+    digitalWrite(statusLED, LOW);
+  }
+  if (statusLEDcounter == 2000)
+    statusLEDcounter = 0;
+  else
+    statusLEDcounter++;
 }
 
 void loop()
 {
-  mode = digitalRead(modeSelect0) & (digitalRead(modeSelect1) << 1);
   enable = digitalRead(enablePin);
-  if (enable) // only hit the switch statement
+  if (enable)
+  { // only hit the switch statement
+    mode = digitalRead(modeSelect0) & (digitalRead(modeSelect1) << 1);
+    digitalWrite(statusLED, HIGH); // light status LED when enable pulled high
     switch (mode)
     {
     case modeHome:
@@ -88,6 +138,11 @@ void loop()
       // do nothing if invalid mode
       break;
     }
+  }
+  else
+  {
+    // digitalWrite(statusLED, LOW); // disable status LED if not enabled
+  }
 }
 
 /* encoder count incrementers (triggered on pin rising interrupt) */
@@ -108,7 +163,7 @@ void Home()
   digitalWrite(HBridge_in2, HIGH);
   digitalWrite(HBridge_in3, LOW);
   digitalWrite(HBridge_in4, HIGH);
-  while (encoderlast != encoderR)
+  while (encoderlast != encoderR && enable)
   { //&& eStop == LOW){
     Serial.println("Home2");
     Serial.print(encoderR);
