@@ -21,8 +21,8 @@
   <link name="DUR_motor"/>
   <link name="DUR_block"/>
   <!-- <!-\- Depth motors -\-> -->
-  <!-- <link name="DEL_motor" /> -->
-  <!-- <link name="DEL_block" /> -->
+  <link name="DEL_motor"/>
+  <link name="DEL_block"/>
   <link name="DER_motor"/>
   <link name="DER_block"/>
   <link name="left_pitch_hinge"/>
@@ -108,6 +108,19 @@
     <origin rpy="0 0 0" xyz="0.33499999999999996 0.18 0.165"/>
     <axis xyz="0 1 0"/>
   </joint>
+  <joint name="L_hinge_2_DEL_motor" type="fixed">
+    <parent link="left_pitch_hinge"/>
+    <child link="DEL_motor"/>
+    <origin rpy="0 0 0" xyz="0 -0.085 0"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <joint name="L_depth" type="prismatic">
+    <limit effort="95" lower="0.0" upper="0.48" velocity="400"/>
+    <parent link="DEL_motor"/>
+    <child link="DEL_block"/>
+    <origin rpy="0 0 0" xyz="0.07 0 0"/>
+    <axis xyz="1 0 0"/>
+  </joint>
   <joint name="R_hinge_2_attachment" type="fixed">
     <parent link="right_pitch_hinge"/>
     <child link="right_pitch_attachment"/>
@@ -115,13 +128,13 @@
     <axis xyz="0 1 0"/>
   </joint>
   <!-- Depth joints -->
-  <joint name="R_hinge_2_DEL_motor" type="fixed">
+  <joint name="R_hinge_2_DER_motor" type="fixed">
     <parent link="right_pitch_hinge"/>
     <child link="DER_motor"/>
     <origin rpy="0 0 0" xyz="0 0.085 0"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <joint name="depth" type="prismatic">
+  <joint name="R_depth" type="prismatic">
     <limit effort="95" lower="0.0" upper="0.48" velocity="400"/>
     <parent link="DER_motor"/>
     <child link="DER_block"/>

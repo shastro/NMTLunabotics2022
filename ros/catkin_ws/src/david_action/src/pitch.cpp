@@ -16,6 +16,11 @@
 #include "david_action/PitchFeedback.h"
 #include "gpio_lib/rpi_gpio.hpp"
 
+using std::chrono::milliseconds;
+using std::chrono::seconds;
+using std::chrono::steady_clock;
+using std::this_thread::sleep_for;
+
 using namespace std;
 
 enum class Goal {
@@ -106,11 +111,13 @@ class PitchAction {
 
     // Closure for angle computation
     auto compute_angle = [a, c](double b) {
-      return 3.14159 - acos((pow(a, 2) + pow(c, 2) - pow(b, 2)) / (2 * a * c));
+      return - ( 3.14159 - acos((pow(a, 2) + pow(c, 2) - pow(b, 2)) / (float)(2 * a * c)) );
     };
 
     // Joint angle
     float angle = compute_angle(extend_length);
+    cout << extend_length << endl;
+    cout << angle << endl;
 
     // Construct a message
     sensor_msgs::JointState msg;
@@ -123,17 +130,17 @@ class PitchAction {
     // seconds and extending takes 48.17 seconds, on 11.49 volts. The power
     // system uses 12 volts, therefore everything should be slightly faster, so
     // we should surely be done by 50 seconds.
+    auto time_wait = chrono::duration<double>(50.0);
 
     // Publish feedback and wait
     david_action::PitchFeedback feedback;
-    int time_wait = 50;
-    clock_t start = clock() / (float)CLOCKS_PER_SEC;
-    clock_t current = clock() / (float)CLOCKS_PER_SEC;
+    auto start = steady_clock::now();
+    auto current = steady_clock::now();
     while ((current - start) < time_wait) {
-      current = clock();
-      feedback.progress = (current - start) / (float)time_wait;
+      current = steady_clock::now();
+      feedback.progress = (current - start) / time_wait;
       _as.publishFeedback(feedback);
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      sleep_for(milliseconds(100));
     }
 
     // Publish the joint state
