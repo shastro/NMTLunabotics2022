@@ -13,6 +13,8 @@ The node controls each motor differently and independently:
   component (left-right rotation) are interpreted; other components
   are ignored.
 - (TODO) Dispatches `david_motor.msg.AugerCmd` commands sent on
-  `/cmd_auger` into motor commands for the auger and the depth motors.
+  `/cmd_auger` into motor commands for the auger motor.
+- (TODO) Dispatches `david_motor.msg.DepthCmd` commands sent on
+  `/cmd_depth` into motor commands for the depth motors.
 - (TODO) Dispatches `david_motor.msg.DumperCmd` commands sent on
-  `/cmd_auger` into motor commands for the dumper motors.
+  `/cmd_dumper` into motor commands for the dumper motors.
