@@ -23,9 +23,10 @@ int main(int argc, char **argv) {
 
   // Open UDP camera stream
   std::stringstream udp_str;
-  udp_str << "udp://127.0.0.1:" << argv[2] << "?overrun_nonfata=1";
+  udp_str << "udp://127.0.0.1:" << argv[2] << "?overrun_nonfatal=1";
   cv::VideoCapture cap(udp_str.str(), cv::CAP_FFMPEG);
-  cap.set(cv::CAP_PROP_BUFFERSIZE,0);
+  cap.set(cv::CAP_PROP_BUFFERSIZE,1);
+  cap.set(cv::CAP_PROP_FPS, 30);
 
   // Setup loop vars
   cv::Mat frame;
