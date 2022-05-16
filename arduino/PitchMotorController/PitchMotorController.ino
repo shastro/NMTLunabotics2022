@@ -135,7 +135,8 @@ void loop()
 {
   if (enable)
   { // only hit the switch statement
-    mode = digitalRead(modeSelect0) & (digitalRead(modeSelect1) << 1);
+    // mode = digitalRead(modeSelect0) + (digitalRead(modeSelect1) * 2);
+    mode = digitalRead(modeSelect0) | (digitalRead(modeSelect1) << 1);
     digitalWrite(statusLED, HIGH); // light status LED when enable pulled high
     switch (mode)
     {
