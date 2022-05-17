@@ -11,10 +11,11 @@
 #define HBridge_in3 10
 #define HBridge_in4 11
 
-#define homePin 4
-#define extendPin 5
-#define retractPin 6
-#define halfExtPin 12
+// deprecated pin usage:
+// #define homePin 4
+// #define extendPin 5
+// #define retractPin 6
+// #define halfExtPin 12
 
 #define statusLED 13 // the pin connected to the blue SMD LED on the board
 
@@ -40,12 +41,27 @@ bool enable = LOW;      // pulled high to enable system; lupped low for system s
 bool enableNew = LOW;   // used for devouncing the enable state
 int enableDebounce = 0; // used to avoid enable floating/bouncing
 
+/**
+ * @brief operational modes set by modeSelect pins
+ *
+ */
 enum modes
 {
   modeHome,
   modeExtend,
   modeRetract,
   modeHalfExt
+};
+
+/**
+ * @brief directions valid for actuator actuation
+ *
+ */
+enum directions
+{
+  reverse = -1,
+  stop,
+  forward
 };
 
 void setup()
@@ -173,20 +189,10 @@ void loop()
 void EncoderCountR() { encoderR++; }
 void EncoderCountL() { encoderL++; }
 
-// void button()
-// {
-//   eStop = !eStop;
-// }
-
 void Home()
 {
-  // if (digitalRead(homePin) == HIGH)
-  // { // Home
   Serial.println("Homing Mode");
-  digitalWrite(HBridge_in1, LOW);
-  digitalWrite(HBridge_in2, HIGH);
-  digitalWrite(HBridge_in3, LOW);
-  digitalWrite(HBridge_in4, HIGH);
+  actuate(reverse); // begin actuation towards home
   while (encoderlast != encoderR && enable)
   { //&& eStop == LOW){
     Serial.println("Home2");
@@ -194,77 +200,46 @@ void Home()
     Serial.print(",  ");
     Serial.println(encoderlast);
     encoderlast = encoderR; // this will be the same once actuators reach home (stop moving at limit switch)
-    digitalWrite(HBridge_in1, LOW);
-    digitalWrite(HBridge_in2, HIGH);
-    digitalWrite(HBridge_in3, LOW);
-    digitalWrite(HBridge_in4, HIGH);
-    Serial.println(eStop);
+    actuate(reverse);
     delay(500);
   }
-  digitalWrite(HBridge_in1, LOW);
-  digitalWrite(HBridge_in2, LOW);
-  digitalWrite(HBridge_in3, LOW);
-  digitalWrite(HBridge_in4, LOW);
+  actuate(stop);
   encoderR = 0;
   state = 0;
-  // eStop == LOW;
-  // }
 }
 
 void Extend()
 {
-  // if (digitalRead(extendPin) == HIGH)
-  // { // Extend
   Serial.println("Extend Mode");
   while (encoderR <= 500 && enable)
   {
     Serial.print(encoderR);
     Serial.print(",  ");
     Serial.println(encoderlast);
-    digitalWrite(HBridge_in1, HIGH);
-    digitalWrite(HBridge_in2, 0);
-    digitalWrite(HBridge_in3, HIGH);
-    digitalWrite(HBridge_in4, LOW);
+    actuate(forward);
   }
-  digitalWrite(HBridge_in1, LOW);
-  digitalWrite(HBridge_in2, LOW);
-  digitalWrite(HBridge_in3, LOW);
-  digitalWrite(HBridge_in4, LOW);
+  actuate(stop);
   encoderR = 0;
   state = 2;
-  // eStop == LOW;
-  // }
 }
 
 void HalfExtend()
 {
-  // if (digitalRead(halfExtPin) == HIGH)
-  // { // Extend
   Serial.println("Half Extend Mode");
   while (encoderR <= 320 && enable)
   {
     Serial.print(encoderR);
     Serial.print(",  ");
     Serial.println(encoderlast);
-    digitalWrite(HBridge_in1, HIGH);
-    digitalWrite(HBridge_in2, LOW);
-    digitalWrite(HBridge_in3, HIGH);
-    digitalWrite(HBridge_in4, LOW);
+    actuate(forward);
   }
-  digitalWrite(HBridge_in1, LOW);
-  digitalWrite(HBridge_in2, LOW);
-  digitalWrite(HBridge_in3, LOW);
-  digitalWrite(HBridge_in4, LOW);
+  actuate(stop);
   encoderR = 0;
   state = 1;
-  // eStop == LOW;
-  // }
 }
 
 void Retract()
 {
-  // if (digitalRead(retractPin) == HIGH && state == 2)
-  // { // Retract
   if (state == 2)
   { // Retract
     Serial.println("Retract Mode\n");
@@ -273,16 +248,9 @@ void Retract()
       Serial.print(encoderR);
       Serial.print(",  ");
       Serial.println(encoderlast);
-      digitalWrite(HBridge_in1, LOW);
-      digitalWrite(HBridge_in2, HIGH);
-      digitalWrite(HBridge_in3, LOW);
-      digitalWrite(HBridge_in4, HIGH);
+      actuate(reverse);
     }
-    // eStop == LOW;
-    // Home();
   }
-  // if (digitalRead(retractPin) == HIGH && state == 1)
-  // { // Retract
   else if (state == 1)
   { // Retract
     while (encoderR <= 250 && enable)
@@ -290,27 +258,39 @@ void Retract()
       Serial.print(encoderR);
       Serial.print(",  ");
       Serial.println(encoderlast);
-      digitalWrite(HBridge_in1, LOW);
-      digitalWrite(HBridge_in2, HIGH);
-      digitalWrite(HBridge_in3, LOW);
-      digitalWrite(HBridge_in4, HIGH);
+      actuate(reverse);
     }
-    /* float x = 250;
-     while (encoderlast != encoder){
-         Serial.print(encoder);
-         Serial.print(",  ");
-         Serial.println(encoderlast);
-         encoderlast = encoder;
-         digitalWrite(HBridge_in3, LOW);
-         digitalWrite(HBridge_in4, x);
-         x = x-5;
-         delay(200);
-         }
-       digitalWrite(HBridge_in3,LOW);
-       digitalWrite(HBridge_in4, LOW);
-       encoder = LOW;
-      }*/
-    // eStop == LOW;
-    // Home();
+  }
+}
+
+/**
+ * @brief sets the appropriate H-bridge pins for the specified movement
+ *
+ * @param direction  the direction to move the actuators
+ */
+void actuate(directions direction)
+{
+  switch (direction)
+  {
+  case reverse:
+    digitalWrite(HBridge_in1, LOW);
+    digitalWrite(HBridge_in2, HIGH);
+    digitalWrite(HBridge_in3, LOW);
+    digitalWrite(HBridge_in4, HIGH);
+    break;
+  case forward:
+    digitalWrite(HBridge_in1, HIGH);
+    digitalWrite(HBridge_in2, LOW);
+    digitalWrite(HBridge_in3, HIGH);
+    digitalWrite(HBridge_in4, LOW);
+    break;
+
+  case stop:
+  default:
+    digitalWrite(HBridge_in1, LOW);
+    digitalWrite(HBridge_in2, LOW);
+    digitalWrite(HBridge_in3, LOW);
+    digitalWrite(HBridge_in4, LOW);
+    break;
   }
 }
