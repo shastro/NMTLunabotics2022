@@ -32,7 +32,6 @@
 int encoderR = 0;
 int encoderL = 0;
 int encoderlast = 1;
-int state = 0; // Colapsed = 0, extend half = 1, extend full = 2
 int eStop = LOW;
 int statusLEDcounter = 0;
 
@@ -40,6 +39,21 @@ int mode = 0;           // determined by mode pins in void loop
 bool enable = LOW;      // pulled high to enable system; lupped low for system standby
 bool enableNew = LOW;   // used for devouncing the enable state
 int enableDebounce = 0; // used to avoid enable floating/bouncing
+
+/**
+ * @brief states used to keep track of actuator position
+ *
+ */
+enum states
+{
+  atHome,
+  halfExtend,
+  fullExtend,
+  retracting,
+  extending,
+  unknown
+};
+states state = unknown; // state of actuators cannot be known at startup
 
 /**
  * @brief operational modes set by modeSelect pins
@@ -85,15 +99,14 @@ void setup()
 
   attachInterrupt(digitalPinToInterrupt(pitchL), EncoderCountR, RISING);
   attachInterrupt(digitalPinToInterrupt(pitchR), EncoderCountL, RISING);
-  // attachInterrupt(digitalPinToInterrupt(bPin), button, HIGH); // Cannot assign interrupt to pin A2 on ATMega32U4 series Arduinos...
   // Inturrupt for encoder A used to detect changes in revolutions
 
-  // set timer1 interrupt at 1Hz
+  // Set the Timer Interrupts at the hardware level
   setTimerInterrupts();
 }
 
 /**
- * @brief Set the Timer Interrupts at the hardware level
+ * @brief sets hardware-level interrupts timer0 and timer1 at 2kHz and 1Hz, respectively
  *
  */
 void setTimerInterrupts()
@@ -140,9 +153,14 @@ ISR(TIMER0_COMPA_vect)
     {                     // if the new state has been stable long enough
       enable = enableNew; // update the  enable state
       if (enable)
+      {
         Serial.print("Enabled: ");
+      }
       else
+      {
         Serial.println("Disabled: standby mode");
+        actuate(stop); // stop all actuations when disabled
+      }
       enableDebounce = 0; // and reset the debounce counter
     }
   }
@@ -186,26 +204,27 @@ void loop()
 }
 
 /* encoder count incrementers (triggered on pin rising interrupt) */
-void EncoderCountR() { encoderR++; }
-void EncoderCountL() { encoderL++; }
+void EncoderCountR() { encoderR += (state == extending) ? 1 : (state == retracting) ? -1
+                                                                                    : 0; }
+void EncoderCountL() { encoderL += (state == extending) ? 1 : (state == retracting) ? -1
+                                                                                    : 0; }
 
 void Home()
 {
   Serial.println("Homing Mode");
-  actuate(reverse); // begin actuation towards home
+  if (state != atHome) // only go home if not already homed
+    actuate(reverse);  // begin actuation towards home
   while (encoderlast != encoderR && enable)
-  { //&& eStop == LOW){
+  {
     Serial.println("Home2");
-    Serial.print(encoderR);
-    Serial.print(",  ");
-    Serial.println(encoderlast);
+    printEncoderCounts();
     encoderlast = encoderR; // this will be the same once actuators reach home (stop moving at limit switch)
     actuate(reverse);
     delay(500);
   }
   actuate(stop);
   encoderR = 0;
-  state = 0;
+  state = atHome;
 }
 
 void Extend()
@@ -213,14 +232,12 @@ void Extend()
   Serial.println("Extend Mode");
   while (encoderR <= 500 && enable)
   {
-    Serial.print(encoderR);
-    Serial.print(",  ");
-    Serial.println(encoderlast);
+    printEncoderCounts();
     actuate(forward);
   }
   actuate(stop);
-  encoderR = 0;
-  state = 2;
+  // encoderR = 0;
+  state = fullExtend;
 }
 
 void HalfExtend()
@@ -228,39 +245,46 @@ void HalfExtend()
   Serial.println("Half Extend Mode");
   while (encoderR <= 320 && enable)
   {
-    Serial.print(encoderR);
-    Serial.print(",  ");
-    Serial.println(encoderlast);
+    printEncoderCounts();
     actuate(forward);
   }
   actuate(stop);
-  encoderR = 0;
-  state = 1;
+  // encoderR = 0;
+  state = halfExtend;
 }
 
+// I don't like this function because state information cannot be obtained reliably; it is advisable to use the home() function for retraction, instead
 void Retract()
 {
-  if (state == 2)
+  if (state == fullExtend)
   { // Retract
     Serial.println("Retract Mode\n");
-    while (encoderR <= 500 && enable)
+    while (encoderR >= 0 && enable)
     {
-      Serial.print(encoderR);
-      Serial.print(",  ");
-      Serial.println(encoderlast);
+      printEncoderCounts();
       actuate(reverse);
     }
   }
-  else if (state == 1)
+  else if (state == halfExtend)
   { // Retract
-    while (encoderR <= 250 && enable)
+    while (encoderR >= 0 && enable)
     {
-      Serial.print(encoderR);
-      Serial.print(",  ");
-      Serial.println(encoderlast);
+      printEncoderCounts();
       actuate(reverse);
     }
   }
+  actuate(stop);
+}
+
+/**
+ * @brief prints the encoder countes over the serial debug connection
+ *
+ */
+void printEncoderCounts()
+{
+  Serial.print(encoderR);
+  Serial.print(",  ");
+  Serial.println(encoderlast);
 }
 
 /**
@@ -273,12 +297,14 @@ void actuate(directions direction)
   switch (direction)
   {
   case reverse:
+    state = retracting;
     digitalWrite(HBridge_in1, LOW);
     digitalWrite(HBridge_in2, HIGH);
     digitalWrite(HBridge_in3, LOW);
     digitalWrite(HBridge_in4, HIGH);
     break;
   case forward:
+    state = extending;
     digitalWrite(HBridge_in1, HIGH);
     digitalWrite(HBridge_in2, LOW);
     digitalWrite(HBridge_in3, HIGH);
