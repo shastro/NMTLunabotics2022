@@ -8,12 +8,12 @@
 #include <string>
 #include <utility>
 
+#include <david_motor/AugerCmd.h>
+#include <david_motor/DepthCmd.h>
+#include <david_motor/DumperCmd.h>
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 
-#include "david_motor/AugerCmd.h"
-#include "david_motor/DepthCmd.h"
-#include "david_motor/DumperCmd.h"
 #include "main.hpp"
 
 using david_motor::AugerCmd;
