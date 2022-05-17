@@ -31,7 +31,7 @@ void image_callback(const sensor_msgs::ImageConstPtr& msg){
 
 int main(int argc, char **argv) {
 
-  if ( argc != 3 ){
+  if ( argc != 2 ){
     std::cout << "Usage: camera_service <camera_topic_name>" << std::endl;
     abort();
   }

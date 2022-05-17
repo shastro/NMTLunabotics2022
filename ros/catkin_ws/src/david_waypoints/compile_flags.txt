@@ -5,3 +5,4 @@
 -Iinclude
 -I/opt/ros/noetic/include
 -I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp
+-I./arucolib/src
