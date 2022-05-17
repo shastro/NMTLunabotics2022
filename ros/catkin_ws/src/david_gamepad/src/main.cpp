@@ -6,6 +6,7 @@
 #include "joystick/joystick.hpp"
 #include <david_motor/AugerCmd.h>
 #include <david_motor/DumperCmd.h>
+#include <david_motor/DepthCmd.h>
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 #include <unistd.h>
@@ -13,6 +14,7 @@
 
 using david_motor::AugerCmd;
 using david_motor::DumperCmd;
+using david_motor::DepthCmd;
 using geometry_msgs::Twist;
 using ros::NodeHandle;
 using ros::Publisher;
@@ -38,10 +40,13 @@ static void joystick_sample_loop() {
 
   cout << "Connecting to ROS..." << endl;
   NodeHandle node;
+  cout << "Connected to ROS." << endl;
 
   Publisher augerPublisher = node.advertise<AugerCmd>("/cmd_auger", 16);
   Publisher dumperPublisher = node.advertise<DumperCmd>("/cmd_dumper", 16);
   Publisher velPublisher = node.advertise<Twist>("/cmd_vel", 16);
+  Publisher depthPublisher = node.advertise<DepthCmd>("/cmd_depth", 16);
+  cout << "Publishers set up." << endl;
 
   // Current position of right thumb joystick, because I'm too lazy to
   // come up with a better way of doing this.
@@ -200,9 +205,9 @@ static void joystick_sample_loop() {
         // Depth motor
         double weight = event.value / (double)65536;
 
-        DumperCmd cmd;
-        cmd.vel = weight * 30;
-        dumperPublisher.publish(cmd);
+        DepthCmd cmd;
+        cmd.depth_vel = weight * 30;
+        depthPublisher.publish(cmd);
         break;
       }
       }
