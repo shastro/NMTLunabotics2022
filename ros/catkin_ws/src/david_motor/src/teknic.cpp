@@ -36,7 +36,9 @@ void TeknicMotor::setPosition(double pos) {
 }
 
 // Initializes the navigation motors for the robot.
-vector<NavMotor> init_motors(string path) {
+vector<NavMotor> init_motors(string path, NavMotor *&augerMotor,
+                             NavMotor *&depthLMotor, NavMotor *&depthRMotor,
+                             NavMotor *&dumperLMotor, NavMotor *&dumperRMotor) {
   vector<SimplePort> ports = SimplePort::getPorts();
 
   // This leaks `ports[0]` on purpose, because the `SimplePort` has to
@@ -53,6 +55,12 @@ vector<NavMotor> init_motors(string path) {
       NavMotor(new TeknicMotor(nodes.at(MotorIdent::LocomotionL)), -1));
   motors.push_back(
       NavMotor(new TeknicMotor(nodes.at(MotorIdent::LocomotionR)), 1));
+
+  augerMotor = new NavMotor(new TeknicMotor(nodes.at(MotorIdent::Auger)), 0);
+  depthLMotor = new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DepthL)), 0);
+  depthRMotor = new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DepthR)), 0);
+  dumperLMotor = new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DumpL)), 0);
+  dumperRMotor = new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DumpR)), 0);
 
   return motors;
 }

@@ -34,7 +34,7 @@ public:
   // radians.
   virtual void setPosition(double pos) = 0;
 
-  virtual ~MotorController() {};
+  virtual ~MotorController(){};
 };
 
 // A Motor used for navigation. Specifically, a motor that contains
@@ -58,6 +58,10 @@ private:
 };
 
 // Initializes the navigation motors for the robot at the given path.
-std::vector<NavMotor> init_motors(std::string path);
+std::vector<NavMotor> init_motors(std::string path, NavMotor *&augerMotor,
+                                  NavMotor *&depthLMotor,
+                                  NavMotor *&depthRMotor,
+                                  NavMotor *&dumperLMotor,
+                                  NavMotor *&dumperRMotor);
 
-#endif  // H_MAIN
+#endif // H_MAIN

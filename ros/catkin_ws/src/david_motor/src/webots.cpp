@@ -57,7 +57,9 @@ void WebotsMotor::update() {
 }
 
 // Initializes the navigation motors for the robot.
-std::vector<NavMotor> init_motors(string path) {
+vector<NavMotor> init_motors(string path, NavMotor *&augerMotor,
+                             NavMotor *&depthLMotor, NavMotor *&depthRMotor,
+                             NavMotor *&dumperLMotor, NavMotor *&dumperRMotor) {
   // This is specific to the current Webots demo robot.
   vector<NavMotor> motors;
   motors.push_back(NavMotor(new WebotsMotor(path + "/left_motor"), -0.264));
