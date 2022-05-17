@@ -12,7 +12,7 @@ include_directories(
 add_executable(take_picture take_pic.cpp)
 
 target_link_libraries(
-  calibrate_cam
+  take_picture
   ${OpenCV_LIBRARIES}
 )
 

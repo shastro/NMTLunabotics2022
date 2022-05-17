@@ -8,6 +8,8 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   image_transport
   cv_bridge
+  tf2
+  tf2_ros
 )
 
 generate_messages(
@@ -16,13 +18,14 @@ generate_messages(
   sensor_msgs
 )
 catkin_package(
-  CATKIN_DEPENDS sensor_msgs image_transport cv_bridge
+  CATKIN_DEPENDS sensor_msgs image_transport cv_bridge tf2 tf2_ros
 )
 
 find_package(OpenCV REQUIRED)
 
 include_directories(
   include
+  arucolib/src
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
 )
@@ -31,6 +34,7 @@ add_executable(waypoints src/waypoints.cpp)
 
 target_link_libraries(
   waypoints
+  aruco
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
 )

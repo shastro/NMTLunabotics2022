@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   image_transport
+  message_generation
   cv_bridge
 )
 
@@ -28,6 +29,7 @@ include_directories(
 )
 
 add_executable(camera_node src/camera_node.cpp)
+add_executable(camera_img_service src/camera_service.cpp)
 
 target_link_libraries(
   camera_node
@@ -35,9 +37,20 @@ target_link_libraries(
   ${OpenCV_LIBRARIES}
 )
 
+target_link_libraries(
+  camera_img_service
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
 
 add_dependencies(
   camera_node
+  ${david_cam_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}
+)
+
+add_dependencies(
+  camera_img_service
   ${david_cam_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}
 )
 
