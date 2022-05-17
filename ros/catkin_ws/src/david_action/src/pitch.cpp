@@ -108,11 +108,8 @@ class PitchAction {
     msg.velocity = {0};
     msg.effort = {0};
 
-    // Wait for motors. On 2022-05-14 we measured that homing takes 47.79
-    // seconds and extending takes 48.17 seconds, on 11.49 volts. The power
-    // system uses 12 volts, therefore everything should be slightly faster, so
-    // we should surely be done by 50 seconds.
-    auto time_wait = chrono::duration<double>(50.0);
+    // Wait for motors.
+    auto time_wait = chrono::duration<double>(20.0);
 
     // Publish feedback and wait
     david_action::PitchFeedback feedback;
