@@ -5,14 +5,17 @@
 #include<cv_bridge/cv_bridge.h>
 #include <sstream>
 
+using namespace std;
 int main(int argc, char **argv) {
 
-  if ( argc != 3 ){
+  // Initialize node
+  ros::init(argc, argv, "camera_pub");
+
+  // Parse private args
+  if (argc != 3) {
     std::cout << "Usage: camera_node <topic_name> <port>" << std::endl;
     abort();
   }
-  // Initialize node
-  ros::init(argc, argv, "camera_pub");
   ros::NodeHandle nh;
   image_transport::ImageTransport it(nh);
 

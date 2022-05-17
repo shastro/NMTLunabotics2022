@@ -34,12 +34,16 @@ private:
   tf2_ros::TransformBroadcaster _br;
 
 public:
-  WaypointCalculator(char *topic_name, char *calibration_file, char *mmap_name,
+  WaypointCalculator(char *topic_1, char *topic_2, char *calibration_file, char *mmap_name,
                      float size) {
-    cout << "Init Waypoint Calculator " << topic_name << endl;
+    cout << "Init Waypoint Calculator " << topic_1 << endl;
+    cout << "Init Waypoint Calculator " << topic_2 << endl;
+
     image_transport::ImageTransport it(_nh);
     new image_transport::Subscriber(it.subscribe(
-        topic_name, 1, &WaypointCalculator::camera_image_callback, this));
+        topic_1, 1, &WaypointCalculator::camera_image_callback, this));
+    new image_transport::Subscriber(it.subscribe(
+        topic_2, 1, &WaypointCalculator::camera_image_callback, this));
     _detector.setDictionary("ARUCO_MIP_36h12");
     _cam_params.readFromXMLFile(calibration_file);
     _mmap.readFromFile(mmap_name);
@@ -99,15 +103,16 @@ public:
 
 int main(int argc, char **argv) {
 
-  if (argc != 5) {
-    cout << "Usage waypoints <image_topic> <camera_params.yml> "
+  ros::init(argc, argv, "waypoints");
+
+  if (argc != 6) {
+    cout << "Usage waypoints <image_topic_1> <image_topic_2> <camera_params.yml> "
             "<marker_map.yml> <marker_size>"
          << endl;
     abort();
   }
-  ros::init(argc, argv, "waypoints");
 
-  WaypointCalculator calc(argv[1], argv[2], argv[3], stof(argv[4]));
+  WaypointCalculator calc(argv[1], argv[2], argv[3], argv[4], stof(argv[4]));
   ros::spin();
 
   ros::shutdown();
