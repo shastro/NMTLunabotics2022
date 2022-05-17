@@ -73,17 +73,17 @@ public:
   void depth(const DepthCmd &cmd) {
     double vel = cmd.depth_vel;
     if (depthLMotor_)
-      depthLMotor_->nav(vel, 0);
+      depthLMotor_->nav(-vel, 0);
     if (depthRMotor_)
-      depthRMotor_->nav(vel, 0);
+      depthRMotor_->nav(-vel, 0);
   }
 
   void dumper(const DumperCmd &cmd) {
     double vel = cmd.vel;
     if (dumperLMotor_)
-      dumperLMotor_->nav(vel, 0);
+      dumperLMotor_->nav(-vel, 0);
     if (dumperRMotor_)
-      dumperRMotor_->nav(vel, 0);
+      dumperRMotor_->nav(-vel, 0);
   }
 
 private:

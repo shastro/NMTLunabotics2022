@@ -62,8 +62,8 @@ vector<NavMotor> init_motors(string path, NavMotor *&augerMotor,
                              NavMotor *&dumperLMotor, NavMotor *&dumperRMotor) {
   // This is specific to the current Webots demo robot.
   vector<NavMotor> motors;
-  motors.push_back(NavMotor(new WebotsMotor(path + "/left_motor"), -0.264));
-  motors.push_back(NavMotor(new WebotsMotor(path + "/right_motor"), 0.264));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/left_motor"), -0.264, 1));
+  motors.push_back(NavMotor(new WebotsMotor(path + "/right_motor"), 0.264, 1));
 
   return motors;
 }

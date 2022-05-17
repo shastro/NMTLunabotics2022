@@ -45,16 +45,24 @@ class NavMotor {
 public:
   // Construct a new NavMotor, taking ownership of the `Motor`.
   // `position` is the horizontal position of the motor on the robot,
-  // from -1 to 1.
-  NavMotor(MotorController *m, double position);
+  // from -1 to 1, and `multiplier` represents whether forward motion
+  // is clockwise (1) or counterclockwise (-1).
+  NavMotor(MotorController *m, double position, double multiplier);
 
   // Rotate the motor to achieve the given linear velocity forward,
   // and angular velocity clockwise.
   void nav(double linear, double angular);
 
 private:
+  // The underlying motor controller.
   std::unique_ptr<MotorController> motor_;
+
+  // The horizontal position of the motor on the robot, for use in
+  // calculating rotations.
   double position_;
+
+  // The direction to spin the motor to move forward.
+  double multiplier_;
 };
 
 // Initializes the navigation motors for the robot at the given path.

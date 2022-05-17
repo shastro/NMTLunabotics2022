@@ -13,7 +13,9 @@
 #include "main.hpp"
 
 // Time resolution, in hertz, at which the motor manager loop runs.
-#define MANAGER_RESOLUTION 10
+// This is needed to prevent the motor from overloading its move
+// queue.
+#define MANAGER_RESOLUTION 2
 
 // Maximum RMS value that the motor is willing to perform at. If the
 // motor tries to spin above this value, we will artificially slow it
