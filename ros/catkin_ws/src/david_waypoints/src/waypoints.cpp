@@ -49,25 +49,30 @@ public:
   }
 
   void camera_image_callback(const sensor_msgs::ImageConstPtr &ros_image) {
+
     cv::Mat img = cv_bridge::toCvShare(ros_image, "bgr8")->image;
     auto markers = _detector.detect(img, _cam_params, _marker_size);
 
     std::vector<double> Rvec;
     std::vector<double> Tvec;
 
+    // Estimate the pose
     _mmtrack.estimatePose(markers);
+
     if (_mmtrack.isValid()) {
       Rvec = _mmtrack.getRvec();
       Tvec = _mmtrack.getTvec();
+
+      // Only print marker detected if we actually have a transform
       if (Rvec.size() != 0) {
         ROS_INFO("Marker Detected");
         cout << _mmtrack.getRvec() << endl;
         cout << _mmtrack.getTvec() << endl;
 
 
-        // Setup transform 
+        // Setup transform
         tf2::Quaternion q_rot;
-        q_rot.setRPY(Rvec[0], Rvec[2], Rvec[1]);
+        q_rot.setRPY(Rvec[0], Rvec[1], Rvec[2]);
         geometry_msgs::Quaternion quat_msg = tf2::toMsg(q_rot);
 
         geometry_msgs::TransformStamped mytf;
