@@ -2,7 +2,8 @@
  * @file PitchMotorController.ino
  * @brief code for the Arduino used to control the linear actuators for auger
  * inclination
- * @version 0.2 - refactored function and variable names
+ * @version 0.3 - drastically simplify
+ *          0.2 - refactored function and variable names
  *          0.1 - created Donovan Caruso
  */
 
@@ -15,15 +16,6 @@
 #define HBridge_in3 10
 // sda of h-bridge 2
 #define HBridge_in4 11
-
-#define fullExtendEncoderTarget 500
-#define halfExtendEncoderTarget 325
-
-// deprecated pin usage:
-// #define homePin 4
-// #define extendPin 5
-// #define retractPin 6
-// #define halfExtPin 12
 
 #define statusLED 13 // the pin connected to the blue SMD LED on the board
 
@@ -146,7 +138,7 @@ ISR(TIMER0_COMPA_vect) {
         Serial.print("Enabled: ");
       } else {
         Serial.println("Disabled: standby mode");
-        actuate(stop); // stop all actuations when disabled
+        /* actuate(stop); // stop all actuations when disabled */
       }
       enableDebounce = 0; // and reset the debounce counter
     }
@@ -158,7 +150,8 @@ ISR(TIMER0_COMPA_vect) {
 void loop() {
   if (enable) { // only hit the switch statement
     // mode = digitalRead(modeSelect0) + (digitalRead(modeSelect1) * 2);
-    mode = digitalRead(modeSelect0) | (digitalRead(modeSelect1) << 1);
+    // mode = digitalRead(modeSelect0) | (digitalRead(modeSelect1) << 1);
+    mode = digitalRead(modeSelect0);
     digitalWrite(statusLED, HIGH); // light status LED when enable pulled high
     switch (mode) {
     case modeHome:
@@ -166,12 +159,6 @@ void loop() {
       break;
     case modeExtend:
       Extend();
-      break;
-    case modeRetract:
-      Retract();
-      break;
-    case modeHalfExt:
-      HalfExtend();
       break;
 
     default:
@@ -200,69 +187,24 @@ int encoderAvg() { return (encoderL + encoderR) / 2; }
 
 void Home() {
   Serial.println("Homing Mode");
-  if (state != atHome) // only go home if not already homed
-    actuate(reverse);  // begin actuation towards home
-  while (encoderlast != encoderAvg() && enable) {
-    Serial.println("Home2");
+  while (enable) {
     printEncoderCounts();
-    encoderlast = encoderAvg(); // this will be the same once actuators reach
-                                // home (stop moving at limit switch)
     actuate(reverse);
-    delay(500);
-  }
-  actuate(stop);
-  encoderR = 0;
-  encoderL = 0;
-  state = atHome;
-}
-
-void Extend() {
-  Serial.println("Extend Mode");
-  while (encoderAvg() <= fullExtendEncoderTarget && enable) {
-    printEncoderCounts();
-    actuate(forward);
   }
   actuate(stop);
   // encoderR = 0;
   state = fullExtend;
 }
 
-void HalfExtend() {
-  Serial.println("Half Extend Mode");
-  if (state == atHome) { // transition to 1/2-extended from home position
-    while (encoderAvg() <= halfExtendEncoderTarget - 5 && enable) {
-      printEncoderCounts();
-      actuate(forward);
-    }
-    state = halfExtend;
-  } else if (state == fullExtend) { // transition to 1/2-extended from
-                                    // full-extended position
-    while (encoderAvg() >= halfExtendEncoderTarget + 5 && enable) {
-      printEncoderCounts();
-      actuate(reverse);
-    }
-    state = halfExtend;
+void Extend() {
+  Serial.println("Extend Mode");
+  while (enable) {
+    printEncoderCounts();
+    actuate(forward);
   }
   actuate(stop);
   // encoderR = 0;
-}
-
-// I don't like this function because state information cannot be obtained
-// reliably; it is advisable to use the home() function for retraction, instead
-void Retract() {
-  if (state == fullExtend) { // Retract
-    Serial.println("Retract Mode\n");
-    while (encoderAvg() >= 0 && enable) {
-      printEncoderCounts();
-      actuate(reverse);
-    }
-  } else if (state == halfExtend) { // Retract
-    while (encoderAvg() >= 0 && enable) {
-      printEncoderCounts();
-      actuate(reverse);
-    }
-  }
-  actuate(stop);
+  state = fullExtend;
 }
 
 /**
@@ -285,25 +227,25 @@ void actuate(directions direction) {
   case reverse:
     state = retracting;
     digitalWrite(HBridge_in1, 0);  // dir
-    analogWrite(HBridge_in2, 128); // vel
+    digitalWrite(HBridge_in2, 1); // vel
     digitalWrite(HBridge_in3, 0);  // dir
-    analogWrite(HBridge_in4, 128); // vel
+    digitalWrite(HBridge_in4, 1); // vel
     break;
 
   case forward:
     state = extending;
     digitalWrite(HBridge_in1, 1);  // dir
-    analogWrite(HBridge_in2, 255); // vel
+    digitalWrite(HBridge_in2, 1); // vel
     digitalWrite(HBridge_in3, 1);  // dir
-    analogWrite(HBridge_in4, 255); // vel
+    digitalWrite(HBridge_in4, 1); // vel
     break;
 
   case stop:
   default:
     digitalWrite(HBridge_in1, 0); // dir
-    analogWrite(HBridge_in2, 0);  // vel
+    digitalWrite(HBridge_in2, 0);  // vel
     digitalWrite(HBridge_in3, 0); // dir
-    analogWrite(HBridge_in4, 0);  // vel
+    digitalWrite(HBridge_in4, 0);  // vel
     break;
   }
 }
