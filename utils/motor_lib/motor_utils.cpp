@@ -39,10 +39,18 @@ SimpleNode::SimpleNode(SimpleNode &&src) {
 
 void SimpleNode::setVel(double vel) {
   try {
+    // I think this will catch all motion problems.
+    if (!_node->Motion.IsReady()) {
+      // This function blocks; that's OK because we're usually in a
+      // multithreaded environment here.
+      _enableNode();
+    }
     _node->Motion.MoveVelStart(vel);
   } catch (mnErr err) {
     cout << "Velocity set error: " << err.ErrorMsg << endl;
-    // ignore error
+
+    // If that doesn't catch all motion problems, reset here instead.
+    _enableNode();
   }
 }
 
