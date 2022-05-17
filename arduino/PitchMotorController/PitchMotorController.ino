@@ -212,17 +212,23 @@ void EncoderCountR() { encoderR += (state == extending) ? 1 : (state == retracti
 void EncoderCountL() { encoderL += (state == extending) ? 1 : (state == retracting) ? -1
                                                                                     : 0; }
 
+/**
+ * @brief calculates the average encoder count
+ *
+ * @return int the average encoder count
+ */
+int encoderAvg() { return (encoderL + encoderR) / 2; }
 
 void Home()
 {
   Serial.println("Homing Mode");
   if (state != atHome) // only go home if not already homed
     actuate(reverse);  // begin actuation towards home
-  while (encoderlast != encoderR && enable)
+  while (encoderlast != encoderAvg() && enable)
   {
     Serial.println("Home2");
     printEncoderCounts();
-    encoderlast = encoderR; // this will be the same once actuators reach home (stop moving at limit switch)
+    encoderlast = encoderAvg(); // this will be the same once actuators reach home (stop moving at limit switch)
     actuate(reverse);
     delay(500);
   }
@@ -235,7 +241,7 @@ void Home()
 void Extend()
 {
   Serial.println("Extend Mode");
-  while (encoderR <= fullExtendEncoderTarget && enable)
+  while (encoderAvg() <= fullExtendEncoderTarget && enable)
   {
     printEncoderCounts();
     actuate(forward);
@@ -250,7 +256,7 @@ void HalfExtend()
   Serial.println("Half Extend Mode");
   if (state == atHome)
   { // transition to 1/2-extended from home position
-    while (encoderR <= halfExtendEncoderTarget - 5 && enable)
+    while (encoderAvg() <= halfExtendEncoderTarget - 5 && enable)
     {
       printEncoderCounts();
       actuate(forward);
@@ -259,11 +265,12 @@ void HalfExtend()
   }
   else if (state == fullExtend)
   { // transition to 1/2-extended from full-extended position
-    while (encoderR >= halfExtendEncoderTarget + 5 && enable)
+    while (encoderAvg() >= halfExtendEncoderTarget + 5 && enable)
     {
       printEncoderCounts();
       actuate(reverse);
     }
+    state = halfExtend;
   }
   actuate(stop);
   // encoderR = 0;
@@ -275,7 +282,7 @@ void Retract()
   if (state == fullExtend)
   { // Retract
     Serial.println("Retract Mode\n");
-    while (encoderR >= 0 && enable)
+    while (encoderAvg() >= 0 && enable)
     {
       printEncoderCounts();
       actuate(reverse);
@@ -283,7 +290,7 @@ void Retract()
   }
   else if (state == halfExtend)
   { // Retract
-    while (encoderR >= 0 && enable)
+    while (encoderAvg() >= 0 && enable)
     {
       printEncoderCounts();
       actuate(reverse);
@@ -298,8 +305,8 @@ void Retract()
  */
 void printEncoderCounts()
 {
-  Serial.print(encoderR);
-  Serial.print(",  ");
+  Serial.print(encoderAvg());
+  Serial.print(", ");
   Serial.println(encoderlast);
 }
 
