@@ -11,6 +11,9 @@
 #define HBridge_in3 10
 #define HBridge_in4 11
 
+#define fullExtendEncoderTarget 500
+#define halfExtendEncoderTarget 325
+
 // deprecated pin usage:
 // #define homePin 4
 // #define extendPin 5
@@ -209,6 +212,7 @@ void EncoderCountR() { encoderR += (state == extending) ? 1 : (state == retracti
 void EncoderCountL() { encoderL += (state == extending) ? 1 : (state == retracting) ? -1
                                                                                     : 0; }
 
+
 void Home()
 {
   Serial.println("Homing Mode");
@@ -224,13 +228,14 @@ void Home()
   }
   actuate(stop);
   encoderR = 0;
+  encoderL = 0;
   state = atHome;
 }
 
 void Extend()
 {
   Serial.println("Extend Mode");
-  while (encoderR <= 500 && enable)
+  while (encoderR <= fullExtendEncoderTarget && enable)
   {
     printEncoderCounts();
     actuate(forward);
@@ -243,14 +248,25 @@ void Extend()
 void HalfExtend()
 {
   Serial.println("Half Extend Mode");
-  while (encoderR <= 320 && enable)
-  {
-    printEncoderCounts();
-    actuate(forward);
+  if (state == atHome)
+  { // transition to 1/2-extended from home position
+    while (encoderR <= halfExtendEncoderTarget - 5 && enable)
+    {
+      printEncoderCounts();
+      actuate(forward);
+    }
+    state = halfExtend;
+  }
+  else if (state == fullExtend)
+  { // transition to 1/2-extended from full-extended position
+    while (encoderR >= halfExtendEncoderTarget + 5 && enable)
+    {
+      printEncoderCounts();
+      actuate(reverse);
+    }
   }
   actuate(stop);
   // encoderR = 0;
-  state = halfExtend;
 }
 
 // I don't like this function because state information cannot be obtained reliably; it is advisable to use the home() function for retraction, instead
