@@ -1,6 +1,7 @@
 #include "geometry_msgs/Quaternion.h"
 #include "geometry_msgs/Transform.h"
 #include "image_transport/subscriber.h"
+#include <move_base_msgs/MoveBaseActionGoal.h>
 #include "ros/node_handle.h"
 #include "ros/publisher.h"
 #include <aruco.h>
@@ -107,12 +108,12 @@ int main(int argc, char **argv) {
 
   if (argc != 6) {
     cout << "Usage waypoints <image_topic_1> <image_topic_2> <camera_params.yml> "
-            "<marker_map.yml> <marker_size>"
+         << "<marker_map.yml> <marker_size>"
          << endl;
     abort();
   }
 
-  WaypointCalculator calc(argv[1], argv[2], argv[3], argv[4], stof(argv[4]));
+  WaypointCalculator calc(argv[1], argv[2], argv[3], argv[4], stof(argv[5]));
   ros::spin();
 
   ros::shutdown();
