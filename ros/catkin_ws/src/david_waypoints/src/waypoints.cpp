@@ -43,17 +43,20 @@ public:
     image_transport::ImageTransport it(_nh);
     new image_transport::Subscriber(it.subscribe(
         topic_1, 1, &WaypointCalculator::camera_image_callback, this));
+    cout << "Sub1 complete" << endl;
     new image_transport::Subscriber(it.subscribe(
         topic_2, 1, &WaypointCalculator::camera_image_callback, this));
+    cout << "Sub2 complete" << endl;
     _detector.setDictionary("ARUCO_MIP_36h12");
     _cam_params.readFromXMLFile(calibration_file);
     _mmap.readFromFile(mmap_name);
     _mmtrack.setParams(_cam_params, _mmap);
     _marker_size = size;
-    cout << "Testicles" << endl;
+    cout << "Fin init" << endl;
   }
 
   void camera_image_callback(const sensor_msgs::ImageConstPtr &ros_image) {
+    cout << "Reached Callback" << endl;
 
     cv::Mat img = cv_bridge::toCvShare(ros_image, "bgr8")->image;
     auto markers = _detector.detect(img, _cam_params, _marker_size);
