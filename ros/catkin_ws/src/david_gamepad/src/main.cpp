@@ -2,19 +2,21 @@
 //
 // Copyright (c) 2022 by NMT Lunabotics. All rights reserved.
 
+#include "david_pitch/PitchCmd.h"
 #include "joystick/8Bitdoh.hpp"
 #include "joystick/joystick.hpp"
 #include <david_motor/AugerCmd.h>
-#include <david_motor/DumperCmd.h>
 #include <david_motor/DepthCmd.h>
+#include <david_motor/DumperCmd.h>
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 #include <unistd.h>
 #include <vector>
 
 using david_motor::AugerCmd;
-using david_motor::DumperCmd;
 using david_motor::DepthCmd;
+using david_motor::DumperCmd;
+using david_pitch::PitchCmd;
 using geometry_msgs::Twist;
 using ros::NodeHandle;
 using ros::Publisher;
@@ -46,6 +48,7 @@ static void joystick_sample_loop() {
   Publisher dumperPublisher = node.advertise<DumperCmd>("/cmd_dumper", 16);
   Publisher velPublisher = node.advertise<Twist>("/cmd_vel", 16);
   Publisher depthPublisher = node.advertise<DepthCmd>("/cmd_depth", 16);
+  Publisher pitchPublisher = node.advertise<PitchCmd>("/cmd_pitch", 16);
   cout << "Publishers set up." << endl;
 
   // Current position of right thumb joystick, because I'm too lazy to
@@ -91,12 +94,22 @@ static void joystick_sample_loop() {
       }
       case Pro2Button::leftBumper: {
         // Pitch down
-        // TODO.
+        PitchCmd cmd;
+        if (pressed)
+          cmd.spin = -1;
+        else
+          cmd.spin = 0;
+        pitchPublisher.publish(cmd);
         break;
       }
       case Pro2Button::rightBumper: {
         // Pitch up
-        // TODO.
+        PitchCmd cmd;
+        if (pressed)
+          cmd.spin = 1;
+        else
+          cmd.spin = 0;
+        pitchPublisher.publish(cmd);
         break;
       }
       case Pro2Button::select: {

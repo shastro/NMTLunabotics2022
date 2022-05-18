@@ -60,6 +60,9 @@ public:
   // Set the value on the pin.
   void set(bool val);
 
+  // Alias for `set`.
+  void operator=(bool value);
+
 private:
   // The underlying pin object, which should be in output mode.
   GPIOPin _pin;
@@ -77,6 +80,9 @@ public:
 
   // Get the value from the pin.
   bool get();
+
+  // Alias for `get`.
+  operator bool();
 
 private:
   // The underlying pin object, which should be in input mode.

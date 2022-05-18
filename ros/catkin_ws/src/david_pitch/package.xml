@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package>
+  <name>david_pitch</name>
+  <version>0.1.0</version>
+  <description>
+    Conversion node from navigation stack commands to pitch commands.
+  </description>
+  <maintainer email="alexander.bethel@student.nmt.edu">Alexander Bethel</maintainer>
+  <license>GPLv3</license>
+
+  <url type="website">https://www.nmtlunabotics.com/</url>
+  <url type="repository">https://github.com/shastro/NMTLunabotics2022</url>
+  <author email="alexander.bethel@student.nmt.edu">Alex Bethel</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+</package>

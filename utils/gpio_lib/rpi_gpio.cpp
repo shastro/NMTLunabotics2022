@@ -27,7 +27,7 @@ GPIOPin::GPIOPin(GPIOPin &&source) {
   source._num = -1;
 }
 
-  // Disconnect from the GPIO pin.
+// Disconnect from the GPIO pin.
 GPIOPin::~GPIOPin() {
   if (_num != -1)
     unexport_gpio();
@@ -114,6 +114,9 @@ GPIOOut::GPIOOut(unsigned int num) : _pin(num) {
 // Set the value on the pin.
 void GPIOOut::set(bool val) { _pin.setval_gpio(val); }
 
+// Alias for `set`.
+void GPIOOut::operator=(bool value) { set(value); }
+
 // Initialize communications with the numbered GPIO pin.
 GPIOIn::GPIOIn(unsigned int num) : _pin(num) {
   _pin.setdir_gpio(GPIODirection::Input);
@@ -121,3 +124,6 @@ GPIOIn::GPIOIn(unsigned int num) : _pin(num) {
 
 // Get the value from the pin.
 bool GPIOIn::get() { return _pin.getval_gpio(); }
+
+// Alias for `get`.
+GPIOIn::operator bool() { return get(); }
