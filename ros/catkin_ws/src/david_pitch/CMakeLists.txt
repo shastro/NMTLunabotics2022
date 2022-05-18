@@ -26,6 +26,7 @@ include_directories(
 )
 
 add_executable(pitch src/main.cpp src/gpio_lib/rpi_gpio.cpp)
+add_dependencies(pitch ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(
   pitch
