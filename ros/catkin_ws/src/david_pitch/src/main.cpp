@@ -56,8 +56,8 @@ private:
 public:
   PitchHandler()
       : handle_(), modeSelect0_(21), modeSelect1_(20), enablePin_(12),
-        pitchSubscriber_(
-            handle_.subscribe("/pitch", 1, &PitchHandler::handleMsg, this)) {}
+        pitchSubscriber_(handle_.subscribe("/cmd_pitch", 1,
+                                           &PitchHandler::handleMsg, this)) {}
 };
 
 int main(int argc, char **argv) {
