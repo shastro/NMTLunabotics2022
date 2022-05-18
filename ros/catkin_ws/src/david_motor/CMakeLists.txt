@@ -24,6 +24,8 @@ add_message_files(
 )
 generate_messages(DEPENDENCIES std_msgs)
 
+add_dependencies(david_motor ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
 link_directories(${catkin_LIBRARY_DIRS})
 
 catkin_package(CATKIN_DEPENDS geometry_msgs message_runtime std_msgs std_srvs)
