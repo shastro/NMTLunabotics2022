@@ -219,7 +219,7 @@ static void joystick_sample_loop() {
         double weight = event.value / (double)65536;
 
         DepthCmd cmd;
-        cmd.depth_vel = weight * 30;
+        cmd.depth_vel = weight * 100;
         depthPublisher.publish(cmd);
         break;
       }
