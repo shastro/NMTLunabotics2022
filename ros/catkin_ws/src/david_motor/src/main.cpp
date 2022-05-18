@@ -81,9 +81,9 @@ public:
   void dumper(const DumperCmd &cmd) {
     double vel = cmd.vel;
     if (dumperLMotor_)
-      dumperLMotor_->nav(-vel, 0);
+      dumperLMotor_->nav(vel, 0);
     if (dumperRMotor_)
-      dumperRMotor_->nav(-vel, 0);
+      dumperRMotor_->nav(vel, 0);
   }
 
 private:
