@@ -3,30 +3,30 @@
   <arg name="calibration_path" default="../../../../../cameras/calibration/rear_cam/fwd_calib.yml"/>
   <arg name="marker_calibration_path" default="../../../../../cameras/marker_map_comp_meters.yml"/>
   <!-- Launch Rear Camera -->
-  <include file="$(find david_waypoints)/launch/run_camera.launch">
-      <!-- all vars that included.launch requires must be set -->
-      <arg name="cam_topic" value="/cameras/rear" />
-      <arg name="cam_ident" value="rear" />
-      <arg name="calibration_path"
-          value="$(arg calibration_path)"/>
-      <arg name="marker_calibration_path"
-          value="$(arg marker_calibration_path)"/>
-      <arg name="marker_size" value="$(arg marker_size)" />
+  <!-- <include file="$(find david_waypoints)/launch/run_camera.launch"> -->
+  <!--     <!-\- all vars that included.launch requires must be set -\-> -->
+  <!--     <arg name="cam_topic" value="/cameras/rear" /> -->
+  <!--     <arg name="cam_ident" value="rear" /> -->
+  <!--     <arg name="calibration_path" -->
+  <!--         value="$(arg calibration_path)"/> -->
+  <!--     <arg name="marker_calibration_path" -->
+  <!--         value="$(arg marker_calibration_path)"/> -->
+  <!--     <arg name="marker_size" value="$(arg marker_size)" /> -->
 
-  </include>
+  <!-- </include> -->
 
-  <!-- Launch fwd camera -->
-  <include file="$(find david_waypoints)/launch/run_camera.launch">
-    <!-- all vars that included.launch requires must be set -->
-    <arg name="cam_topic" value="/cameras/fwd" />
-    <arg name="cam_ident" value="fwd" />
-    <arg name="calibration_path"
-        value="$(arg calibration_path)"/>
-    <arg name="marker_calibration_path"
-        value="$(arg marker_calibration_path)"/>
-    <arg name="marker_size" value="$(arg marker_size)" />
+  <!-- <!-\- Launch fwd camera -\-> -->
+  <!-- <include file="$(find david_waypoints)/launch/run_camera.launch"> -->
+  <!--   <!-\- all vars that included.launch requires must be set -\-> -->
+  <!--   <arg name="cam_topic" value="/cameras/fwd" /> -->
+  <!--   <arg name="cam_ident" value="fwd" /> -->
+  <!--   <arg name="calibration_path" -->
+  <!--       value="$(arg calibration_path)"/> -->
+  <!--   <arg name="marker_calibration_path" -->
+  <!--       value="$(arg marker_calibration_path)"/> -->
+  <!--   <arg name="marker_size" value="$(arg marker_size)" /> -->
 
-  </include>
+  <!-- </include> -->
 
   <node name="waypoints"
         pkg="david_waypoints"
