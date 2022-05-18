@@ -1,3 +1,4 @@
+#include "ros/init.h"
 #include <iostream>
 #include <ros/ros.h>
 #include<image_transport/image_transport.h>
@@ -9,7 +10,7 @@ using namespace std;
 int main(int argc, char **argv) {
 
   // Initialize node
-  ros::init(argc, argv, "camera_pub");
+  ros::init(argc, argv, "camera_pub", ros::init_options::AnonymousName);
 
   // Parse private args
   if (argc != 3) {
