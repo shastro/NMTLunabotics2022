@@ -49,8 +49,11 @@ public:
     cout << "Sub2 complete" << endl;
     _detector.setDictionary("ARUCO_MIP_36h12");
     _cam_params.readFromXMLFile(calibration_file);
+    cout << "Got Calib" << endl;
     _mmap.readFromFile(mmap_name);
+    cout << "Got Mmap" << endl;
     _mmtrack.setParams(_cam_params, _mmap);
+    cout << "Got Params" << endl;
     _marker_size = size;
     cout << "Fin init" << endl;
   }
