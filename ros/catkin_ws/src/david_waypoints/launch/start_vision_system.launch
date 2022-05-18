@@ -1,7 +1,7 @@
 <launch>
   <arg name="marker_size" default="0.07794" />
-  <arg name="calibration_path" default="../../../../../cameras/calibration/rear_cam/fwd_calib.yml"/>
-  <arg name="marker_calibration_path" default="../../../../../cameras/marker_map_comp_meters.yml"/>
+  <arg name="calibration_path" default="$(find david_conf)/camera_configs/calibration/rear_cam/rear_calib.yml"/>
+  <arg name="marker_calibration_path" default="$(find david_conf)/camera_configs/marker_map_comp_meters.yml"/>
   <!-- Launch Rear Camera -->
   <!-- <include file="$(find david_waypoints)/launch/run_camera.launch"> -->
   <!--     <!-\- all vars that included.launch requires must be set -\-> -->
