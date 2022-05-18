@@ -9,8 +9,6 @@
 #include <utility>
 
 #include "gpio_lib/rpi_gpio.hpp"
-#include "ros/node_handle.h"
-#include "ros/subscriber.h"
 #include <david_pitch/PitchCmd.h>
 #include <ros/ros.h>
 
