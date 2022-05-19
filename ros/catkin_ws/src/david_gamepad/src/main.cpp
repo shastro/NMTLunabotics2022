@@ -173,7 +173,7 @@ static void joystick_sample_loop() {
         // Motion twist
         rightJoyX = event.value;
 
-        double rot = rightJoyX / 32768.0 * 500;
+        double rot = -rightJoyX / 32768.0 * 500;
         double fwd = rightJoyY / 32768.0 * 500;
 
         Twist msg;
@@ -190,7 +190,7 @@ static void joystick_sample_loop() {
         // Motion linear
         rightJoyY = event.value;
 
-        double rot = rightJoyX / 32768.0 * 500;
+        double rot = -rightJoyX / 32768.0 * 500;
         double fwd = rightJoyY / 32768.0 * 500;
 
         Twist msg;
