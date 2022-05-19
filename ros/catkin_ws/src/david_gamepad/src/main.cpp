@@ -135,8 +135,10 @@ static void joystick_sample_loop() {
         vcmd.linear.z = 0;
         velPublisher.publish(vcmd);
 
-        // TODO: stop the pitch motors.
-        break;
+        PitchCmd pcmd;
+        pcmd.spin = 0;
+        pitchPublisher.publish(pcmd);
+        return;
       }
       case Pro2Button::thumbLeft: {
         // Unassigned
