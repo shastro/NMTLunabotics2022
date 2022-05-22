@@ -68,7 +68,7 @@ static void joystick_sample_loop() {
         // Dump down
         DumperCmd cmd;
         if (pressed)
-          cmd.vel = -30;
+          cmd.vel = 100;
         else
           cmd.vel = 0;
         dumperPublisher.publish(cmd);
@@ -86,7 +86,7 @@ static void joystick_sample_loop() {
         // Dump up
         DumperCmd cmd;
         if (pressed)
-          cmd.vel = 30;
+          cmd.vel = -100;
         else
           cmd.vel = 0;
         dumperPublisher.publish(cmd);
@@ -223,7 +223,7 @@ static void joystick_sample_loop() {
         double weight = event.value / (double)65536;
 
         DepthCmd cmd;
-        cmd.depth_vel = weight * 100;
+        cmd.depth_vel = -weight * 100;
         depthPublisher.publish(cmd);
         break;
       }
