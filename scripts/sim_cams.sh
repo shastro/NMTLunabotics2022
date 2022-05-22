@@ -36,7 +36,8 @@ wait_and_call () {
 
 # Start up ROS.
 . ../ros/catkin_ws/devel/setup.sh
-roslaunch david_conf temp_sim.launch robot_path:=david_sim &
+roscore &
+#roslaunch david_conf temp_sim.launch robot_path:=david_sim &
 
 # Connect the Webots world.
 wait_for_ros

@@ -1,0 +1,2 @@
+#!/bin/bash
+libcamera-vid -n -t 0 --awb indoor --inline -o udp://127.0.0.1:5000 --width 1920 --height 1080
