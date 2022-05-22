@@ -117,28 +117,30 @@ static void joystick_sample_loop() {
         break;
       }
       case Pro2Button::start: {
-        // Emergency stop
-        AugerCmd acmd;
-        acmd.spin = 0;
-        augerPublisher.publish(acmd);
+        if (pressed) {
+          // Emergency stop
+          AugerCmd acmd;
+          acmd.spin = 0;
+          augerPublisher.publish(acmd);
 
-        DumperCmd dcmd;
-        dcmd.vel = 0;
-        dumperPublisher.publish(dcmd);
+          DumperCmd dcmd;
+          dcmd.vel = 0;
+          dumperPublisher.publish(dcmd);
 
-        Twist vcmd;
-        vcmd.angular.x = 0;
-        vcmd.angular.y = 0;
-        vcmd.angular.z = 0;
-        vcmd.linear.x = 0;
-        vcmd.linear.y = 0;
-        vcmd.linear.z = 0;
-        velPublisher.publish(vcmd);
+          Twist vcmd;
+          vcmd.angular.x = 0;
+          vcmd.angular.y = 0;
+          vcmd.angular.z = 0;
+          vcmd.linear.x = 0;
+          vcmd.linear.y = 0;
+          vcmd.linear.z = 0;
+          velPublisher.publish(vcmd);
 
-        PitchCmd pcmd;
-        pcmd.spin = 0;
-        pitchPublisher.publish(pcmd);
-        return;
+          PitchCmd pcmd;
+          pcmd.spin = 0;
+          pitchPublisher.publish(pcmd);
+          return;
+        }
       }
       case Pro2Button::thumbLeft: {
         // Unassigned
