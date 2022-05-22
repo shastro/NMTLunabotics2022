@@ -132,9 +132,9 @@ class PitchAction {
     // Report success.
     david_action::PitchResult result;
     _as.setSucceeded(result);
-
-  public:
   }
+
+public:
   PitchAction(string name)
       : _nh(), _as(_nh, name, bind(&PitchAction::executeCB, this, _1), false),
         _action_name(name),
