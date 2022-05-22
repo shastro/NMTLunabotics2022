@@ -35,6 +35,26 @@ void TeknicMotor::setPosition(double pos) {
   abort();
 }
 
+// Get motor position (returns encoder count).
+double TeknicMotor::position(){
+  return _node.position();
+}
+
+// Get motor velocity (returns RPM).
+double TeknicMotor::velocity(){
+  return _node.velocity();
+}
+
+// Get measured torque (returns percentage of maximum by default).
+double TeknicMotor::torque(){
+  return _node.torque();
+}
+
+// Get measured rms_level (returns percentage of maximum).
+double TeknicMotor::rms(){
+  return _node.rms();
+}
+
 // Initializes the navigation motors for the robot.
 vector<NavMotor> init_motors(string path, NavMotor *&augerMotor,
                              NavMotor *&depthLMotor, NavMotor *&depthRMotor,
@@ -52,19 +72,19 @@ vector<NavMotor> init_motors(string path, NavMotor *&augerMotor,
 
   // And this leaks TeknicMotor objects. Cry about it.
   motors.push_back(
-      NavMotor(new TeknicMotor(nodes.at(MotorIdent::LocomotionL)), -1, -1));
+                   NavMotor(new TeknicMotor(nodes.at(MotorIdent::LocomotionL)), "loco_left", -1, -1));
   motors.push_back(
-      NavMotor(new TeknicMotor(nodes.at(MotorIdent::LocomotionR)), 1, 1));
+                   NavMotor(new TeknicMotor(nodes.at(MotorIdent::LocomotionR)), "loco_right", 1, 1));
 
-  augerMotor = new NavMotor(new TeknicMotor(nodes.at(MotorIdent::Auger)), 0, 1);
+  augerMotor = new NavMotor(new TeknicMotor(nodes.at(MotorIdent::Auger)), "auger_rotation", 0, 1);
   depthLMotor =
-      new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DepthL)), 0, 1);
+    new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DepthL)), "L_depth", 0, 1);
   depthRMotor =
-      new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DepthR)), 0, 1);
+    new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DepthR)),"R_depth" , 0, 1);
   dumperLMotor =
-      new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DumpL)), 0, 1);
+    new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DumpL)), "left_dump" ,0, 1);
   dumperRMotor =
-      new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DumpR)), 0, 1);
+    new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DumpR)),"right_dump", 0, 1);
 
   return motors;
 }

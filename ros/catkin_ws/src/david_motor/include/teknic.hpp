@@ -31,6 +31,18 @@ public:
   void setVelocity(double vel);
   void setPosition(double pos);
 
+  // Get motor position (returns encoder count).
+  double position();
+
+  // Get motor velocity (returns RPM).
+  double velocity();
+
+  // Get measured torque (returns percentage of maximum by default).
+  double torque();
+
+  // Get measured rms_level (returns percentage of maximum).
+  double rms();
+
 private:
   // Thread that runs forever for each teknic motor; this manages the
   // motor's connection and monitors its RMS.

@@ -22,6 +22,18 @@ public:
   void setVelocity(double vel);
   void setPosition(double pos);
 
+  // Get motor position (returns encoder count).
+  double position();
+
+  // Get motor velocity (returns RPM).
+  double velocity();
+
+  // Get measured torque (returns percentage of maximum by default).
+  double torque();
+
+  // Get measured rms_level (returns percentage of maximum).
+  double rms();
+
 private:
   // Send ROS the current value of `pos_` and `vel_`.
   void update();

@@ -13,8 +13,10 @@
 #include <david_motor/DumperCmd.h>
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
+#include <sensor_msgs/JointState.h>
 
 #include "main.hpp"
+#include "ros/node_handle.h"
 
 using david_motor::AugerCmd;
 using david_motor::DepthCmd;
@@ -23,20 +25,38 @@ using geometry_msgs::Vector3;
 using ros::NodeHandle;
 using ros::Subscriber;
 
+
+#define DEPTH_CONVERSION_FACTOR 69
+#define DUMP_CONVERSION_FACTOR 69
+#define DEPTH_CONVERSION_FACTOR_VEL 69
+#define DUMP_CONVERSION_FACTOR_VEL 69
+#define LOCO_CONVERSION_FACTOR 69
+
 using namespace std;
 
 static void quit(int sig);
 
 class Robot {
+private:
+  ros::Publisher _telemetry;
+  ros::NodeHandle _nh;
 public:
   Robot(vector<NavMotor> motors, NavMotor *augerMotor, NavMotor *depthLMotor,
-        NavMotor *depthRMotor, NavMotor *dumperLMotor, NavMotor *dumperRMotor) {
+        NavMotor *depthRMotor, NavMotor *dumperLMotor, NavMotor *dumperRMotor, string cmd_vel_path): _nh(){
     motors_ = move(motors);
     augerMotor_ = augerMotor;
     depthLMotor_ = depthLMotor;
     depthRMotor_ = depthRMotor;
     dumperLMotor_ = dumperLMotor;
     dumperRMotor_ = dumperRMotor;
+
+    Subscriber vel_sub = _nh.subscribe(cmd_vel_path, 1, &Robot::twist, this);
+    Subscriber aug_sub = _nh.subscribe("/cmd_auger", 1, &Robot::auger, this);
+    Subscriber dep_sub = _nh.subscribe("/cmd_depth", 1, &Robot::depth, this);
+    Subscriber dmp_sub = _nh.subscribe("/cmd_dumper", 1, &Robot::dumper, this);
+
+    _telemetry =
+        _nh.advertise<sensor_msgs::JointState>("/joints/motor_joints", 1000);
   }
 
   void twist(const geometry_msgs::Twist &msg) {
@@ -61,29 +81,81 @@ public:
 
     for (NavMotor &motor : motors_) {
       motor.nav(forward, rotation);
+      telemetry_msg tloco = motor.telem();
+      sensor_msgs::JointState msg;
+      msg.name={motor.name()};
+      msg.position = {tloco.position};
+      msg.velocity = {tloco.velocity};
+      msg.effort = {tloco.rms};
+      _telemetry.publish(msg);
     }
   }
 
   void auger(const AugerCmd &cmd) {
     double spin = cmd.spin;
-    if (augerMotor_)
+    if (augerMotor_) {
       augerMotor_->nav(spin, 0);
+      telemetry_msg taug = augerMotor_->telem();
+      sensor_msgs::JointState msg;
+      msg.name = {augerMotor_->name()};
+      msg.position = {taug.position}; // encoder count
+      msg.velocity = {taug.velocity}; // velocity RPM
+      msg.effort = {taug.rms};
+      _telemetry.publish(msg);
+    }
+
   }
 
   void depth(const DepthCmd &cmd) {
     double vel = cmd.depth_vel;
-    if (depthLMotor_)
+    if (depthLMotor_) {
       depthLMotor_->nav(-vel, 0);
-    if (depthRMotor_)
+      telemetry_msg tdepth = depthLMotor_->telem();
+      sensor_msgs::JointState msg;
+      msg.name = {depthLMotor_->name()};
+      msg.position = {tdepth.position * DEPTH_CONVERSION_FACTOR};     // meters
+      msg.velocity = {tdepth.velocity * DEPTH_CONVERSION_FACTOR_VEL}; // m/s
+      msg.effort = {tdepth.rms};
+      _telemetry.publish(msg);
+    }
+
+    if (depthRMotor_) {
       depthRMotor_->nav(-vel, 0);
+      telemetry_msg tdepthR = depthRMotor_->telem();
+      sensor_msgs::JointState msg;
+      msg.name = {depthRMotor_->name()};
+      msg.position = {tdepthR.position *
+                      DEPTH_CONVERSION_FACTOR}; // encoder count
+      msg.velocity = {tdepthR.velocity *
+                      DEPTH_CONVERSION_FACTOR_VEL}; // velocity
+      msg.effort = {tdepthR.rms};
+      _telemetry.publish(msg);
+    }
   }
 
   void dumper(const DumperCmd &cmd) {
     double vel = cmd.vel;
-    if (dumperLMotor_)
+    if (dumperLMotor_) {
       dumperLMotor_->nav(vel, 0);
-    if (dumperRMotor_)
+      telemetry_msg tdump = depthRMotor_->telem();
+      sensor_msgs::JointState msg;
+      msg.name = {depthRMotor_->name()};
+      msg.position = {tdump.position * DUMP_CONVERSION_FACTOR}; // encoder count
+      msg.velocity = {tdump.velocity * DUMP_CONVERSION_FACTOR_VEL}; // velocity
+      msg.effort = {tdump.rms};
+      _telemetry.publish(msg);
+    }
+
+    if (dumperRMotor_) {
       dumperRMotor_->nav(vel, 0);
+      telemetry_msg tdumpR = depthRMotor_->telem();
+      sensor_msgs::JointState msg;
+      msg.name = {depthRMotor_->name()};
+      msg.position = {tdumpR.position * DUMP_CONVERSION_FACTOR}; // encoder count
+      msg.velocity = {tdumpR.velocity * DUMP_CONVERSION_FACTOR_VEL}; // velocity
+      msg.effort = {tdumpR.rms};
+      _telemetry.publish(msg);
+    }
   }
 
 private:
@@ -114,7 +186,6 @@ int main(int argc, char **argv) {
 
   string robot_path = argv[1];
   string cmd_vel_path = argv[2];
-  NodeHandle nh;
 
   // Initialize the navigation motors.
   NavMotor *augerMotor = nullptr;
@@ -125,16 +196,11 @@ int main(int argc, char **argv) {
   vector<NavMotor> motors =
       init_motors(robot_path, augerMotor, depthLMotor, depthRMotor,
                   dumperLMotor, dumperRMotor);
-  Robot robot(move(motors), augerMotor, depthLMotor, depthRMotor, dumperLMotor,
-              dumperRMotor);
+  Robot robot(move(motors), augerMotor, depthLMotor, depthRMotor, dumperLMotor, dumperRMotor, cmd_vel_path);
 
   // Subscribe to the topics. Kinda scuffed because I wrote cmd_vel
   // before anything else so it uses a worse convention, but I don't
   // have time to fix it because competiton is in 2 days.
-  Subscriber vel_sub = nh.subscribe(cmd_vel_path, 1, &Robot::twist, &robot);
-  Subscriber aug_sub = nh.subscribe("/cmd_auger", 1, &Robot::auger, &robot);
-  Subscriber dep_sub = nh.subscribe("/cmd_depth", 1, &Robot::depth, &robot);
-  Subscriber dmp_sub = nh.subscribe("/cmd_dumper", 1, &Robot::dumper, &robot);
 
   ros::spin();
 }

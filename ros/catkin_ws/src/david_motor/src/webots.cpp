@@ -43,6 +43,11 @@ void WebotsMotor::setPosition(double pos) {
   update();
 }
 
+double WebotsMotor::position() {return 0;}
+double WebotsMotor::velocity(){return 0;}
+double WebotsMotor::torque(){return 0;}
+double WebotsMotor::rms(){return 0;}
+
 // Send the motor's `pos_` and `vel_` to Webots.
 void WebotsMotor::update() {
   std::cout << "Debug: updating position & velocity";
@@ -62,8 +67,8 @@ vector<NavMotor> init_motors(string path, NavMotor *&augerMotor,
                              NavMotor *&dumperLMotor, NavMotor *&dumperRMotor) {
   // This is specific to the current Webots demo robot.
   vector<NavMotor> motors;
-  motors.push_back(NavMotor(new WebotsMotor(path + "/left_motor"), -0.264, 1));
-  motors.push_back(NavMotor(new WebotsMotor(path + "/right_motor"), 0.264, 1));
+  // motors.push_back(NavMotor(new WebotsMotor(path + "/left_motor"), -0.264, 1));
+  // motors.push_back(NavMotor(new WebotsMotor(path + "/right_motor"), 0.264, 1)); #Dont care about webots in comp
 
   return motors;
 }

@@ -47,7 +47,7 @@ rosrun david_cam camera_img_service /cameras/rear &
 
 
 # Start motor controller
-rosrun david_motor david_motor &
+rosrun david_motor david_motor / /cmd_vel &
 
 # Start pitch controller
 rosrun david_pitch pitch &
