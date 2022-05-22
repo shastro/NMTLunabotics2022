@@ -29,6 +29,7 @@ private:
     switch (msg->spin) {
     case -1:;
       // Home
+      cout << "Home" << endl;
       modeSelect0_ = false;
       modeSelect1_ = false;
       enablePin_ = true;
@@ -36,6 +37,7 @@ private:
 
     case 0:;
       // Still
+      cout << "Still" << endl;
       modeSelect0_ = false;
       modeSelect1_ = false;
       enablePin_ = false;
@@ -43,6 +45,7 @@ private:
 
     case 1:;
       // Retract
+      cout << "Retract" << endl;
       modeSelect0_ = true;
       modeSelect1_ = true;
       enablePin_ = true;
@@ -57,7 +60,9 @@ public:
   PitchHandler()
       : handle_(), modeSelect0_(21), modeSelect1_(20), enablePin_(12),
         pitchSubscriber_(handle_.subscribe("/cmd_pitch", 1,
-                                           &PitchHandler::handleMsg, this)) {}
+                                           &PitchHandler::handleMsg, this)) {
+    cout << "Pitch handler set up" << endl;
+  }
 };
 
 int main(int argc, char **argv) {
