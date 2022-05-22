@@ -2,7 +2,7 @@
   
   <param name="robot_description" command="cat $(find david_conf)/urdf/david.urdf" />
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-      <rosparam param="source_list">["joints/pitch"]</rosparam>
+      <rosparam param="source_list">["joints/pitch", "joints/motor_joints"]</rosparam>
     </node>
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
