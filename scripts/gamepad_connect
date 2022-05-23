@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# robot_connect: Connects to the robot and starts up david_gamepad.
+
+echo "Waiting for the robot to come online..."
+while true; do
+    if ping -c1 control; then
+        break
+    fi
+done
+
+export ROS_MASTER_URI="http://lunabotics-CONTROL-CPU:11311/"
+echo "Autodetect ROS_MASTER_URI=$ROS_MASTER_URI"
+
+export ROS_IP="$(ifconfig | grep 'inet 192\.168\.1\.' | sed 's/.*inet //;s/ .*//')"
+if [ "$ROS_IP" = "" ]; then
+    echo 'Unable to autodetect ROS_IP, are you on the right network?'
+    exit 1
+else
+    echo "Autodetect ROS_IP=$ROS_IP"
+fi
+
+echo 'Invoking david_gamepad...'
+rosrun david_gamepad david_gamepad
