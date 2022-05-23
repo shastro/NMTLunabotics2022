@@ -27,9 +27,16 @@ using ros::Subscriber;
 
 #define DEPTH_CONVERSION_FACTOR 2.9069767441860463e-06
 #define DUMP_CONVERSION_FACTOR 2.9069767441860463e-06
-#define DEPTH_CONVERSION_FACTOR_VEL 0.02422
-#define DUMP_CONVERSION_FACTOR_VEL 0.02422
-#define LOCO_CONVERSION_FACTOR 69
+#define DEPTH_CONVERSION_FACTOR_VEL 1.593932086646914e-10
+#define DUMP_CONVERSION_FACTOR_VEL 1.593932086646914e-10 // rpm to m/s
+#define LOCO_CONVERSION_FACTOR 1909.859 // enc per rad
+#define LOCO_CONVERSION_FACTOR_VEL 0.10472 // rpm to rad/s
+// Encoder per degree 0.03
+// radians per
+// enc per second * radians per enc 1909.859
+// Want to take RPM and turn to meters/second
+// Have meters per encoder or encoder per meters
+// RPM to radians per second times encoder/radians times meter per encoder
 
 using namespace std;
 
@@ -86,13 +93,13 @@ public:
     for (NavMotor &motor : motors_) {
       motor.nav(forward, rotation);
       telemetry_msg tloco = motor.telem();
-      sensor_msgs::JointState msg;
-      msg.name={motor.name()};
+      sensor_msgs::JointState jmsg;
+      jmsg.name={motor.name()};
       cout << motor.name() << endl;
-      msg.position = {tloco.position};
-      msg.velocity = {tloco.velocity};
-      msg.effort = {tloco.rms};
-      _telemetry.publish(msg);
+      jmsg.position = {tloco.position * LOCO_CONVERSION_FACTOR};
+      jmsg.velocity = {tloco.velocity * LOCO_CONVERSION_FACTOR_VEL};
+      jmsg.effort = {tloco.rms};
+      _telemetry.publish(jmsg);
     }
   }
 
