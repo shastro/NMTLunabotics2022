@@ -210,7 +210,7 @@ static void joystick_sample_loop() {
         double weight = (event.value + 32768) / (double)65535;
 
         AugerCmd cmd;
-        cmd.spin = weight * 2000;
+        cmd.spin = weight * 4000;
         augerPublisher.publish(cmd);
         break;
       }
