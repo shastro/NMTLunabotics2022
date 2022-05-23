@@ -110,8 +110,8 @@ public:
       telemetry_msg taug = augerMotor_->telem();
       sensor_msgs::JointState msg;
       msg.name = {augerMotor_->name()};
-      msg.position = {taug.position * LOCO_CONVERSION_FACTOR}; // encoder count
-      msg.velocity = {taug.velocity * LOCO_CONVERSION_FACTOR_VEL}; // velocity RPM
+      msg.position = {taug.position * LOCO_CONVERSION_FACTOR / (double)50}; // encoder count
+      msg.velocity = {taug.velocity * LOCO_CONVERSION_FACTOR_VEL / (double)50}; // velocity RPM
       msg.effort = {taug.rms};
       _telemetry.publish(msg);
     }
