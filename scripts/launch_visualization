@@ -21,8 +21,8 @@ wait_for_ros () {
 wait_for_ros
 
 # Run rviz
-rviz
+rviz &
 # Run rqt image view
-rosrun rqt_image_view rqt_image_view
+rosrun rqt_image_view rqt_image_view &
 # Run plotter
-rosrun plotjuggler plotjuggler
+rosrun plotjuggler plotjuggler &
