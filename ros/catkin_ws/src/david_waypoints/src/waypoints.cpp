@@ -1,6 +1,7 @@
 #include "geometry_msgs/Quaternion.h"
 #include "geometry_msgs/Transform.h"
 #include "image_transport/subscriber.h"
+#include <move_base_msgs/MoveBaseActionGoal.h>
 #include "ros/node_handle.h"
 #include "ros/publisher.h"
 #include <aruco.h>
@@ -34,21 +35,35 @@ private:
   tf2_ros::TransformBroadcaster _br;
 
 public:
-  WaypointCalculator(char *topic_name, char *calibration_file, char *mmap_name,
+  WaypointCalculator(char *topic_1, char *topic_2, char *calibration_file, char *mmap_name,
                      float size) {
-    cout << "Init Waypoint Calculator " << topic_name << endl;
+    ROS_INFO("Get Dict");
+    cout << "Init Waypoint Calculator " << topic_1 << endl;
+    cout << "Init Waypoint Calculator " << topic_2 << endl;
+
     image_transport::ImageTransport it(_nh);
-    new image_transport::Subscriber(it.subscribe(
-        topic_name, 1, &WaypointCalculator::camera_image_callback, this));
+    new image_transport::Subscriber(
+        it.subscribe(topic_1, 1,
+                     bind(&WaypointCalculator::camera_image_callback, this, _1,
+                          "camera_rear")));
+    cout << "Sub1 complete" << endl;
+    new image_transport::Subscriber(it.subscribe(topic_2, 1,
+        bind(&WaypointCalculator::camera_image_callback, this, _1, "camera_fwd")));
+    cout << "Sub2 complete" << endl;
     _detector.setDictionary("ARUCO_MIP_36h12");
+    ROS_INFO("Get Dict");
     _cam_params.readFromXMLFile(calibration_file);
+    cout << "Got Calib" << endl;
     _mmap.readFromFile(mmap_name);
-    _mmtrack.setParams(_cam_params, _mmap);
+    cout << "Got Mmap" << endl;
+    _mmtrack.setParams(_cam_params, _mmap, _marker_size); // Issue here
+    cout << "Got Params" << endl;
     _marker_size = size;
-    cout << "Testicles" << endl;
+    cout << "Fin init" << endl;
   }
 
-  void camera_image_callback(const sensor_msgs::ImageConstPtr &ros_image) {
+  void camera_image_callback(const sensor_msgs::ImageConstPtr &ros_image, const char *tf_camera) {
+    cout << "Reached Callback" << endl;
 
     cv::Mat img = cv_bridge::toCvShare(ros_image, "bgr8")->image;
     auto markers = _detector.detect(img, _cam_params, _marker_size);
@@ -77,7 +92,7 @@ public:
 
         geometry_msgs::TransformStamped mytf;
         mytf.header.stamp = ros::Time::now();
-        mytf.header.frame_id = "map";
+        mytf.header.frame_id = tf_camera;
         mytf.child_frame_id = "marker_map";
         // Set Translations
         mytf.transform.translation.x = Tvec[0];
@@ -86,8 +101,7 @@ public:
         // Set Rotation
         mytf.transform.rotation.x = q_rot.x();
         mytf.transform.rotation.y = q_rot.y();
-        mytf.transform.rotation.z = q_rot.z();
-        mytf.transform.rotation.w = q_rot.w();
+        mytf.transform.rotation.z = q_rot.z(); mytf.transform.rotation.w = q_rot.w();
 
         _br.sendTransform(mytf);
       } else {
@@ -99,15 +113,16 @@ public:
 
 int main(int argc, char **argv) {
 
-  if (argc != 5) {
-    cout << "Usage waypoints <image_topic> <camera_params.yml> "
-            "<marker_map.yml> <marker_size>"
+  ros::init(argc, argv, "waypoints");
+
+  if (argc != 6) {
+    cout << "Usage waypoints <image_topic_rear_cam> <image_topic_fwd_cam> <camera_params.yml> "
+         << "<marker_map.yml> <marker_size>"
          << endl;
     abort();
   }
-  ros::init(argc, argv, "waypoints");
 
-  WaypointCalculator calc(argv[1], argv[2], argv[3], stof(argv[4]));
+  WaypointCalculator calc(argv[1], argv[2], argv[3], argv[4], stof(argv[5]));
   ros::spin();
 
   ros::shutdown();

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# Sets the network channel.
+if [ "$#" != 1 ]; then
+    echo "Usage: $0 <channel>"
+    exit
+fi
+
+channel="$1"
+
+sshpass -p'@rt3m!$NMT' \
+        ssh admin@192.168.1.99 \
+        iwconfig ath0 channel "$channel"
+
+echo 'ok'

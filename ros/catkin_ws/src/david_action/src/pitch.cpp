@@ -40,39 +40,20 @@ class PitchAction {
   ros::Publisher _joint_publisher;
   string _action_name;
 
-  GPIOOut _home;
-  GPIOOut _extend;
-  GPIOOut _retract;
-  GPIOOut _half_extend;
+  GPIOOut _modeSelect0;
+  GPIOOut _modeSelect1;
+  GPIOOut _enablePin;
 
   void executeCB(const david_action::PitchGoalConstPtr &goal) {
     cout << "Entered ExecuteCB" << endl;
 
-    // Do motor stuff
-    GPIOOut *pin;
-    switch ((Goal)goal->goal_state) {
-    case Goal::HOME:
-      pin = &_home;
-      break;
-    case Goal::EXTEND:
-      pin = &_extend;
-      break;
-    case Goal::RETRACT:
-      pin = &_retract;
-      break;
-    case Goal::HALF_EXTEND:
-      pin = &_half_extend;
-      break;
-    default:
-      cerr << "Warning: PitchAction: ignoring invalid goal state "
-           << goal->goal_state << endl;
-      return;
-    }
+    bool mode0 = (goal->goal_state & 0b01) >> 0;
+    bool mode1 = (goal->goal_state & 0b10) >> 1;
 
-    // Pulse the control pin quickly.
-    pin->set(true);
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    pin->set(false);
+    // Begin moving.
+    _modeSelect0.set(mode0);
+    _modeSelect1.set(mode1);
+    _enablePin.set(true);
 
     // Extension lengths in meters
     float extend_close = 0.46;
@@ -127,11 +108,8 @@ class PitchAction {
     msg.velocity = {0};
     msg.effort = {0};
 
-    // Wait for motors. On 2022-05-14 we measured that homing takes 47.79
-    // seconds and extending takes 48.17 seconds, on 11.49 volts. The power
-    // system uses 12 volts, therefore everything should be slightly faster, so
-    // we should surely be done by 50 seconds.
-    auto time_wait = chrono::duration<double>(50.0);
+    // Wait for motors.
+    auto time_wait = chrono::duration<double>(20.0);
 
     // Publish feedback and wait
     david_action::PitchFeedback feedback;
@@ -144,6 +122,9 @@ class PitchAction {
       sleep_for(milliseconds(100));
     }
 
+    // Stop moving.
+    _enablePin.set(false);
+
     // Publish the joint state
     _joint_publisher.publish(msg);
 
@@ -155,10 +136,10 @@ class PitchAction {
 
 public:
   PitchAction(string name)
-      : _as(_nh, name, bind(&PitchAction::executeCB, this, _1), false),
+      : _nh(), _as(_nh, name, bind(&PitchAction::executeCB, this, _1), false),
         _action_name(name),
         // Pin numbers
-        _home(21), _extend(20), _retract(12), _half_extend(16) {
+        _modeSelect0(21), _modeSelect1(20), _enablePin(12) {
     _joint_publisher =
         _nh.advertise<sensor_msgs::JointState>("/joints/pitch", 1000);
 

@@ -31,12 +31,14 @@ void image_callback(const sensor_msgs::ImageConstPtr& msg){
 
 int main(int argc, char **argv) {
 
-  if ( argc != 2 ){
+  // Initialize node
+  ros::init(argc, argv, "camera_service");
+
+  // Parse private params
+  if (argc != 2) {
     std::cout << "Usage: camera_service <camera_topic_name>" << std::endl;
     abort();
   }
-  // Initialize node
-  ros::init(argc, argv, "camera_service");
   ros::NodeHandle nh;
   image_transport::ImageTransport it(nh);
 

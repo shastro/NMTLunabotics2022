@@ -1,8 +1,6 @@
 #!/bin/sh
 
-# Basic shell script for starting up the simulation. Important: to
-# exit the simulation and clean up resources properly, close RViz, not
-# Webots or the terminal.
+# Script to launch the system for the control CPU
 
 # Exit on error, rather than continuing.
 set -e
@@ -36,20 +34,27 @@ wait_and_call () {
 
 # Start up ROS.
 . ../ros/catkin_ws/devel/setup.sh
-roslaunch david_conf temp_sim.launch robot_path:=david_sim &
-
-# Connect the Webots world.
+roscore &
 wait_for_ros
-webots ../webots/worlds/lunabotics_TEST_FLAT_final.wbt &
 
-# Enable the lidar.
-wait_and_call /david_sim/laser/enable 64
-wait_and_call /david_sim/laser/enable_point_cloud 64
+# Start lidar
+roslaunch rplidar_ros rplidar.launch --wait &
 
-# Start up RVIZ; use `true` because we still need to clean up, even if
-# it fails.
-rviz -d ../ros/catkin_ws/src/david_conf/rviz/sim_hector.rviz || true
+# Start camera
+./start_camera &
+rosrun david_cam camera_node /cameras/rear 5000 &
+sleep 10
+rosrun david_cam camera_img_service /cameras/rear &
 
-# Kill the entire simulation.
-killall webots || true
-killall -SIGINT roslaunch || true
+
+# Start motor controller
+rosrun david_motor david_motor "lol" /cmd_vel &
+
+# Start pitch controller
+rosrun david_pitch pitch &
+
+# Start telemetry
+# Start joint state publisher
+roslaunch david_conf state_publisher.launch --wait
+
+wait

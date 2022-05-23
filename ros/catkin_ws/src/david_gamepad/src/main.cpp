@@ -2,19 +2,21 @@
 //
 // Copyright (c) 2022 by NMT Lunabotics. All rights reserved.
 
+#include "david_pitch/PitchCmd.h"
 #include "joystick/8Bitdoh.hpp"
 #include "joystick/joystick.hpp"
 #include <david_motor/AugerCmd.h>
-#include <david_motor/DumperCmd.h>
 #include <david_motor/DepthCmd.h>
+#include <david_motor/DumperCmd.h>
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 #include <unistd.h>
 #include <vector>
 
 using david_motor::AugerCmd;
-using david_motor::DumperCmd;
 using david_motor::DepthCmd;
+using david_motor::DumperCmd;
+using david_pitch::PitchCmd;
 using geometry_msgs::Twist;
 using ros::NodeHandle;
 using ros::Publisher;
@@ -46,6 +48,7 @@ static void joystick_sample_loop() {
   Publisher dumperPublisher = node.advertise<DumperCmd>("/cmd_dumper", 16);
   Publisher velPublisher = node.advertise<Twist>("/cmd_vel", 16);
   Publisher depthPublisher = node.advertise<DepthCmd>("/cmd_depth", 16);
+  Publisher pitchPublisher = node.advertise<PitchCmd>("/cmd_pitch", 16);
   cout << "Publishers set up." << endl;
 
   // Current position of right thumb joystick, because I'm too lazy to
@@ -65,7 +68,7 @@ static void joystick_sample_loop() {
         // Dump down
         DumperCmd cmd;
         if (pressed)
-          cmd.vel = -30;
+          cmd.vel = 100;
         else
           cmd.vel = 0;
         dumperPublisher.publish(cmd);
@@ -83,7 +86,7 @@ static void joystick_sample_loop() {
         // Dump up
         DumperCmd cmd;
         if (pressed)
-          cmd.vel = 30;
+          cmd.vel = -100;
         else
           cmd.vel = 0;
         dumperPublisher.publish(cmd);
@@ -91,12 +94,22 @@ static void joystick_sample_loop() {
       }
       case Pro2Button::leftBumper: {
         // Pitch down
-        // TODO.
+        PitchCmd cmd;
+        if (pressed)
+          cmd.spin = -1;
+        else
+          cmd.spin = 0;
+        pitchPublisher.publish(cmd);
         break;
       }
       case Pro2Button::rightBumper: {
         // Pitch up
-        // TODO.
+        PitchCmd cmd;
+        if (pressed)
+          cmd.spin = 1;
+        else
+          cmd.spin = 0;
+        pitchPublisher.publish(cmd);
         break;
       }
       case Pro2Button::select: {
@@ -104,26 +117,30 @@ static void joystick_sample_loop() {
         break;
       }
       case Pro2Button::start: {
-        // Emergency stop
-        AugerCmd acmd;
-        acmd.spin = 0;
-        augerPublisher.publish(acmd);
+        if (pressed) {
+          // Emergency stop
+          AugerCmd acmd;
+          acmd.spin = 0;
+          augerPublisher.publish(acmd);
 
-        DumperCmd dcmd;
-        dcmd.vel = 0;
-        dumperPublisher.publish(dcmd);
+          DumperCmd dcmd;
+          dcmd.vel = 0;
+          dumperPublisher.publish(dcmd);
 
-        Twist vcmd;
-        vcmd.angular.x = 0;
-        vcmd.angular.y = 0;
-        vcmd.angular.z = 0;
-        vcmd.linear.x = 0;
-        vcmd.linear.y = 0;
-        vcmd.linear.z = 0;
-        velPublisher.publish(vcmd);
+          Twist vcmd;
+          vcmd.angular.x = 0;
+          vcmd.angular.y = 0;
+          vcmd.angular.z = 0;
+          vcmd.linear.x = 0;
+          vcmd.linear.y = 0;
+          vcmd.linear.z = 0;
+          velPublisher.publish(vcmd);
 
-        // TODO: stop the pitch motors.
-        break;
+          PitchCmd pcmd;
+          pcmd.spin = 0;
+          pitchPublisher.publish(pcmd);
+          return;
+        }
       }
       case Pro2Button::thumbLeft: {
         // Unassigned
@@ -150,7 +167,7 @@ static void joystick_sample_loop() {
         double weight = (event.value + 32768) / (double)65535;
 
         david_motor::AugerCmd cmd;
-        cmd.spin = -weight * 2000;
+        cmd.spin = -weight * 4000;
         augerPublisher.publish(cmd);
         break;
       }
@@ -158,7 +175,7 @@ static void joystick_sample_loop() {
         // Motion twist
         rightJoyX = event.value;
 
-        double rot = rightJoyX / 32768.0;
+        double rot = -rightJoyX / 32768.0 * 500;
         double fwd = rightJoyY / 32768.0 * 500;
 
         Twist msg;
@@ -175,7 +192,7 @@ static void joystick_sample_loop() {
         // Motion linear
         rightJoyY = event.value;
 
-        double rot = rightJoyX / 32768.0;
+        double rot = -rightJoyX / 32768.0 * 500;
         double fwd = rightJoyY / 32768.0 * 500;
 
         Twist msg;
@@ -206,7 +223,7 @@ static void joystick_sample_loop() {
         double weight = event.value / (double)65536;
 
         DepthCmd cmd;
-        cmd.depth_vel = weight * 30;
+        cmd.depth_vel = -weight * 100;
         depthPublisher.publish(cmd);
         break;
       }

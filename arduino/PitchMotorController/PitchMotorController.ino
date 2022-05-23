@@ -1,24 +1,21 @@
 /**
  * @file PitchMotorController.ino
- * @brief code for the Arduino used to control the linear actuators for auger inclination
- * @version 0.2 - refactored function and variable names
+ * @brief code for the Arduino used to control the linear actuators for auger
+ * inclination
+ * @version 0.3 - drastically simplify
+ *          0.2 - refactored function and variable names
  *          0.1 - created Donovan Caruso
  */
 
 // The following define the pins for the lab
+// scl: 0 -> direction backward, 1 -> direction forward.
 #define HBridge_in1 8
+// sda: analog: 0 -> stopped, 255 -> full velocity.
 #define HBridge_in2 9
+// scl of h-bridge 2
 #define HBridge_in3 10
+// sda of h-bridge 2
 #define HBridge_in4 11
-
-#define fullExtendEncoderTarget 500
-#define halfExtendEncoderTarget 325
-
-// deprecated pin usage:
-// #define homePin 4
-// #define extendPin 5
-// #define retractPin 6
-// #define halfExtPin 12
 
 #define statusLED 13 // the pin connected to the blue SMD LED on the board
 
@@ -26,10 +23,11 @@
 #define modeSelect1 5
 #define enablePin 6
 
-#define debounceCount 50 // number of timer ticks to wait before changing debounced button states
+// number of timer ticks to wait before changing debounced button states
+#define debounceCount 50
 
-#define pitchL 2
-#define pitchR 3
+#define pitchL 3
+#define pitchR 2
 // #define bPin    A2 // this may be illegal due to interrupt, later...
 
 int encoderR = 0;
@@ -38,8 +36,9 @@ int encoderlast = 1;
 int eStop = LOW;
 int statusLEDcounter = 0;
 
-int mode = 0;           // determined by mode pins in void loop
-bool enable = LOW;      // pulled high to enable system; lupped low for system standby
+int mode = 0; // determined by mode pins in void loop
+bool enable =
+    LOW; // pulled high to enable system; lupped low for system standby
 bool enableNew = LOW;   // used for devouncing the enable state
 int enableDebounce = 0; // used to avoid enable floating/bouncing
 
@@ -47,42 +46,22 @@ int enableDebounce = 0; // used to avoid enable floating/bouncing
  * @brief states used to keep track of actuator position
  *
  */
-enum states
-{
-  atHome,
-  halfExtend,
-  fullExtend,
-  retracting,
-  extending,
-  unknown
-};
+enum states { atHome, halfExtend, fullExtend, retracting, extending, unknown };
 states state = unknown; // state of actuators cannot be known at startup
 
 /**
  * @brief operational modes set by modeSelect pins
  *
  */
-enum modes
-{
-  modeHome,
-  modeExtend,
-  modeRetract,
-  modeHalfExt
-};
+enum modes { modeHome, modeExtend, modeRetract, modeHalfExt };
 
 /**
  * @brief directions valid for actuator actuation
  *
  */
-enum directions
-{
-  reverse = -1,
-  stop,
-  forward
-};
+enum directions { reverse = -1, stop, forward };
 
-void setup()
-{
+void setup() {
   Serial.begin(9600);
   Serial.print("Controller Starting...\n");
   pinMode(HBridge_in1, OUTPUT);
@@ -109,11 +88,11 @@ void setup()
 }
 
 /**
- * @brief sets hardware-level interrupts timer0 and timer1 at 2kHz and 1Hz, respectively
+ * @brief sets hardware-level interrupts timer0 and timer1 at 2kHz and 1Hz,
+ * respectively
  *
  */
-void setTimerInterrupts()
-{
+void setTimerInterrupts() {
   // set timer0 interrupt at 2kHz
   TCCR0A = 0;
   TCCR0B = 0;                          // set timer0 counter registers to 0
@@ -135,82 +114,69 @@ void setTimerInterrupts()
 /**
  * @brief timer0 interrupt 2kHz
  */
-ISR(TIMER0_COMPA_vect)
-{
+ISR(TIMER0_COMPA_vect) {
   // flash the status LED once every second
   if (statusLEDcounter < 100 && !enable)
     digitalWrite(statusLED, HIGH);
-  else // flash the LED on for the first 100 counts each 2000-count cycle (1 sec) if not enabled
+  else // flash the LED on for the first 100 counts each 2000-count cycle (1
+       // sec) if not enabled
     digitalWrite(statusLED, enable);
   if (statusLEDcounter == 2000)
     statusLEDcounter = 0;
-  else // increment the status LED counter every timer tick, resetting at 2000 (after 1 sec)
+  else // increment the status LED counter every timer tick, resetting at 2000
+       // (after 1 sec)
     statusLEDcounter++;
 
   // detect enable state
   enableNew = digitalRead(enablePin); // get the new enable pin state
-  if (enable != enableNew)
-  {                   // if the new state is not the old state
-    enableDebounce++; // increment the debounce counter
-    if (enableDebounce > debounceCount)
-    {                     // if the new state has been stable long enough
+  if (enable != enableNew) {          // if the new state is not the old state
+    enableDebounce++;                 // increment the debounce counter
+    if (enableDebounce >
+        debounceCount) {  // if the new state has been stable long enough
       enable = enableNew; // update the  enable state
-      if (enable)
-      {
+      if (enable) {
         Serial.print("Enabled: ");
-      }
-      else
-      {
+      } else {
         Serial.println("Disabled: standby mode");
-        actuate(stop); // stop all actuations when disabled
+        /* actuate(stop); // stop all actuations when disabled */
       }
       enableDebounce = 0; // and reset the debounce counter
     }
-  }
-  else
-  { // if state returns to old state, reset the debounce counter
+  } else { // if state returns to old state, reset the debounce counter
     enableDebounce = 0;
   }
 }
 
-void loop()
-{
-  if (enable)
-  { // only hit the switch statement
+void loop() {
+  if (enable) { // only hit the switch statement
     // mode = digitalRead(modeSelect0) + (digitalRead(modeSelect1) * 2);
-    mode = digitalRead(modeSelect0) | (digitalRead(modeSelect1) << 1);
+    // mode = digitalRead(modeSelect0) | (digitalRead(modeSelect1) << 1);
+    mode = digitalRead(modeSelect0);
     digitalWrite(statusLED, HIGH); // light status LED when enable pulled high
-    switch (mode)
-    {
+    switch (mode) {
     case modeHome:
       Home();
       break;
     case modeExtend:
       Extend();
       break;
-    case modeRetract:
-      Retract();
-      break;
-    case modeHalfExt:
-      HalfExtend();
-      break;
 
     default:
       // do nothing if invalid mode
       break;
     }
-  }
-  else
-  {
+  } else {
     // digitalWrite(statusLED, LOW); // disable status LED if not enabled
   }
 }
 
 /* encoder count incrementers (triggered on pin rising interrupt) */
-void EncoderCountR() { encoderR += (state == extending) ? 1 : (state == retracting) ? -1
-                                                                                    : 0; }
-void EncoderCountL() { encoderL += (state == extending) ? 1 : (state == retracting) ? -1
-                                                                                    : 0; }
+void EncoderCountR() {
+  encoderR += (state == extending) ? 1 : (state == retracting) ? -1 : 0;
+}
+void EncoderCountL() {
+  encoderL += (state == extending) ? 1 : (state == retracting) ? -1 : 0;
+}
 
 /**
  * @brief calculates the average encoder count
@@ -219,30 +185,20 @@ void EncoderCountL() { encoderL += (state == extending) ? 1 : (state == retracti
  */
 int encoderAvg() { return (encoderL + encoderR) / 2; }
 
-void Home()
-{
+void Home() {
   Serial.println("Homing Mode");
-  if (state != atHome) // only go home if not already homed
-    actuate(reverse);  // begin actuation towards home
-  while (encoderlast != encoderAvg() && enable)
-  {
-    Serial.println("Home2");
+  while (enable) {
     printEncoderCounts();
-    encoderlast = encoderAvg(); // this will be the same once actuators reach home (stop moving at limit switch)
     actuate(reverse);
-    delay(500);
   }
   actuate(stop);
-  encoderR = 0;
-  encoderL = 0;
-  state = atHome;
+  // encoderR = 0;
+  state = fullExtend;
 }
 
-void Extend()
-{
+void Extend() {
   Serial.println("Extend Mode");
-  while (encoderAvg() <= fullExtendEncoderTarget && enable)
-  {
+  while (enable) {
     printEncoderCounts();
     actuate(forward);
   }
@@ -251,60 +207,11 @@ void Extend()
   state = fullExtend;
 }
 
-void HalfExtend()
-{
-  Serial.println("Half Extend Mode");
-  if (state == atHome)
-  { // transition to 1/2-extended from home position
-    while (encoderAvg() <= halfExtendEncoderTarget - 5 && enable)
-    {
-      printEncoderCounts();
-      actuate(forward);
-    }
-    state = halfExtend;
-  }
-  else if (state == fullExtend)
-  { // transition to 1/2-extended from full-extended position
-    while (encoderAvg() >= halfExtendEncoderTarget + 5 && enable)
-    {
-      printEncoderCounts();
-      actuate(reverse);
-    }
-    state = halfExtend;
-  }
-  actuate(stop);
-  // encoderR = 0;
-}
-
-// I don't like this function because state information cannot be obtained reliably; it is advisable to use the home() function for retraction, instead
-void Retract()
-{
-  if (state == fullExtend)
-  { // Retract
-    Serial.println("Retract Mode\n");
-    while (encoderAvg() >= 0 && enable)
-    {
-      printEncoderCounts();
-      actuate(reverse);
-    }
-  }
-  else if (state == halfExtend)
-  { // Retract
-    while (encoderAvg() >= 0 && enable)
-    {
-      printEncoderCounts();
-      actuate(reverse);
-    }
-  }
-  actuate(stop);
-}
-
 /**
  * @brief prints the encoder countes over the serial debug connection
  *
  */
-void printEncoderCounts()
-{
+void printEncoderCounts() {
   Serial.print(encoderAvg());
   Serial.print(", ");
   Serial.println(encoderlast);
@@ -315,31 +222,30 @@ void printEncoderCounts()
  *
  * @param direction  the direction to move the actuators
  */
-void actuate(directions direction)
-{
-  switch (direction)
-  {
+void actuate(directions direction) {
+  switch (direction) {
   case reverse:
     state = retracting;
-    digitalWrite(HBridge_in1, LOW);
-    digitalWrite(HBridge_in2, HIGH);
-    digitalWrite(HBridge_in3, LOW);
-    digitalWrite(HBridge_in4, HIGH);
+    digitalWrite(HBridge_in1, 0);  // dir
+    digitalWrite(HBridge_in2, 1); // vel
+    digitalWrite(HBridge_in3, 0);  // dir
+    digitalWrite(HBridge_in4, 1); // vel
     break;
+
   case forward:
     state = extending;
-    digitalWrite(HBridge_in1, HIGH);
-    digitalWrite(HBridge_in2, LOW);
-    digitalWrite(HBridge_in3, HIGH);
-    digitalWrite(HBridge_in4, LOW);
+    digitalWrite(HBridge_in1, 1);  // dir
+    digitalWrite(HBridge_in2, 1); // vel
+    digitalWrite(HBridge_in3, 1);  // dir
+    digitalWrite(HBridge_in4, 1); // vel
     break;
 
   case stop:
   default:
-    digitalWrite(HBridge_in1, LOW);
-    digitalWrite(HBridge_in2, LOW);
-    digitalWrite(HBridge_in3, LOW);
-    digitalWrite(HBridge_in4, LOW);
+    digitalWrite(HBridge_in1, 0); // dir
+    digitalWrite(HBridge_in2, 0);  // vel
+    digitalWrite(HBridge_in3, 0); // dir
+    digitalWrite(HBridge_in4, 0);  // vel
     break;
   }
 }

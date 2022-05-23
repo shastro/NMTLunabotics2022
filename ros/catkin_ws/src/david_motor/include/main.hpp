@@ -24,6 +24,14 @@
 // makes no guarantees about its position; whereas in Position mode,
 // the motor moves as quickly as possible to some particular position,
 // and will attempt to hold that position.
+
+struct telemetry_msg {
+  double position;
+  double velocity;
+  double torque;
+  double rms;
+};
+
 class MotorController {
 public:
   // Put the motor in Velocity mode, with the given target velocity in
@@ -33,6 +41,18 @@ public:
   // Put the motor in Position mode, with the given target position in
   // radians.
   virtual void setPosition(double pos) = 0;
+
+  // Get motor position (returns encoder count).
+  virtual double position() = 0;
+
+  // Get motor velocity (returns RPM).
+  virtual double velocity() = 0;
+
+  // Get measured torque (returns percentage of maximum by default).
+  virtual double torque() = 0;
+
+  // Get measured rms_level (returns percentage of maximum).
+  virtual double rms() = 0;
 
   virtual ~MotorController(){};
 };
@@ -47,15 +67,21 @@ public:
   // `position` is the horizontal position of the motor on the robot,
   // from -1 to 1, and `multiplier` represents whether forward motion
   // is clockwise (1) or counterclockwise (-1).
-  NavMotor(MotorController *m, double position, double multiplier);
+  NavMotor(MotorController *m, std::string name, double position, double multiplier);
 
   // Rotate the motor to achieve the given linear velocity forward,
   // and angular velocity clockwise.
   void nav(double linear, double angular);
+  telemetry_msg telem();
+  std::string name();
 
 private:
   // The underlying motor controller.
   std::unique_ptr<MotorController> motor_;
+
+
+  // Joint name
+  std::string name_;
 
   // The horizontal position of the motor on the robot, for use in
   // calculating rotations.
@@ -71,5 +97,6 @@ std::vector<NavMotor> init_motors(std::string path, NavMotor *&augerMotor,
                                   NavMotor *&depthRMotor,
                                   NavMotor *&dumperLMotor,
                                   NavMotor *&dumperRMotor);
+
 
 #endif // H_MAIN
