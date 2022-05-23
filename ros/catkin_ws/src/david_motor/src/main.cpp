@@ -39,6 +39,11 @@ class Robot {
 private:
   ros::Publisher _telemetry;
   ros::NodeHandle _nh;
+
+  Subscriber _vel_sub;
+  Subscriber _aug_sub;
+  Subscriber _dep_sub;
+  Subscriber _dmp_sub;
 public:
   Robot(vector<NavMotor> motors, NavMotor *augerMotor, NavMotor *depthLMotor,
         NavMotor *depthRMotor, NavMotor *dumperLMotor, NavMotor *dumperRMotor, string cmd_vel_path): _nh(){
@@ -49,10 +54,10 @@ public:
     dumperLMotor_ = dumperLMotor;
     dumperRMotor_ = dumperRMotor;
 
-    Subscriber vel_sub = _nh.subscribe(cmd_vel_path, 1, &Robot::twist, this);
-    Subscriber aug_sub = _nh.subscribe("/cmd_auger", 1, &Robot::auger, this);
-    Subscriber dep_sub = _nh.subscribe("/cmd_depth", 1, &Robot::depth, this);
-    Subscriber dmp_sub = _nh.subscribe("/cmd_dumper", 1, &Robot::dumper, this);
+    _vel_sub = _nh.subscribe(cmd_vel_path, 1, &Robot::twist, this);
+    _aug_sub = _nh.subscribe("/cmd_auger", 1, &Robot::auger, this);
+    _dep_sub = _nh.subscribe("/cmd_depth", 1, &Robot::depth, this);
+    _dmp_sub = _nh.subscribe("/cmd_dumper", 1, &Robot::dumper, this);
 
     _telemetry =
         _nh.advertise<sensor_msgs::JointState>("/joints/motor_joints", 1000);
