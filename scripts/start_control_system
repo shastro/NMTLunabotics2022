@@ -54,8 +54,12 @@ rosrun david_motor david_motor "lol" /cmd_vel &
 # Start pitch controller
 rosrun david_pitch pitch &
 
+# Start mapping
+roslaunch david_conf mapping_comp.launch --wait &
+wait_for_ros
+
 # Start telemetry
 # Start joint state publisher
-roslaunch david_conf state_publisher.launch --wait
+roslaunch david_conf state_publisher.launch --wait &
 
 wait
