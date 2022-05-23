@@ -84,6 +84,7 @@ public:
       telemetry_msg tloco = motor.telem();
       sensor_msgs::JointState msg;
       msg.name={motor.name()};
+      cout << motor.name() << endl;
       msg.position = {tloco.position};
       msg.velocity = {tloco.velocity};
       msg.effort = {tloco.rms};

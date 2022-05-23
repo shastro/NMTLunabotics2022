@@ -54,6 +54,10 @@ rosrun david_motor david_motor "lol" /cmd_vel &
 # Start pitch controller
 rosrun david_pitch pitch &
 
+# Start static transform
+# roslaunch david_conf map_static.launch --wait &
+# wait_for_ros
+
 # Start mapping
 roslaunch david_conf mapping_comp.launch --wait &
 wait_for_ros

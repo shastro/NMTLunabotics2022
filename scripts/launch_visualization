@@ -1,0 +1,28 @@
+#!/bin/sh
+
+#!/bin/sh
+
+# Script to launch the system for the control CPU
+
+# Exit on error, rather than continuing.
+set -e
+
+cd $(dirname "$0")
+
+# wait_for_ros : Waits for ROS to launch.
+wait_for_ros () {
+    while ! rosservice list > /dev/null 2>&1; do
+        echo 'waiting for ROS'
+        sleep 1
+    done
+}
+
+./connect_robot
+wait_for_ros
+
+# Run rviz
+rviz
+# Run rqt image view
+rosrun rqt_image_view rqt_image_view
+# Run plotter
+rosrun plotjuggler plotjuggler

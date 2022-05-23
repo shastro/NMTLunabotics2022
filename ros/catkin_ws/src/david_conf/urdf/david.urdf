@@ -38,7 +38,7 @@
   <link name="right_loco_axle"/>
   <!-- Joints -->
   <joint name="base2laser" type="fixed">
-    <origin rpy="0 0 3.14159" xyz="-0.325 -0.0050000000000000044 0.025"/>
+    <origin rpy="0 0 0" xyz="-0.325 -0.0050000000000000044 0.025"/>
     <parent link="base_link"/>
     <child link="laser"/>
     <axis xyz="0 0 0"/>

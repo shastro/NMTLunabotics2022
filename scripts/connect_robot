@@ -1,0 +1,3 @@
+#!/bin/bash
+export ROS_MASTER_URI=http://lunabotics-CONTROL-CPU:11311
+export ROS_IP=192.168.1.48
