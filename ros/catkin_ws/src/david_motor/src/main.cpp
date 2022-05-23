@@ -96,8 +96,8 @@ public:
       sensor_msgs::JointState jmsg;
       jmsg.name={motor.name()};
       cout << motor.name() << endl;
-      jmsg.position = {tloco.position * LOCO_CONVERSION_FACTOR};
-      jmsg.velocity = {tloco.velocity * LOCO_CONVERSION_FACTOR_VEL};
+      jmsg.position = {tloco.position * LOCO_CONVERSION_FACTOR / (double)10};
+      jmsg.velocity = {tloco.velocity * LOCO_CONVERSION_FACTOR_VEL / (double)10};
       jmsg.effort = {tloco.rms};
       _telemetry.publish(jmsg);
     }
