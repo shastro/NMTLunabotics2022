@@ -41,6 +41,7 @@ wait_for_ros
 # Start camera
 ./start_camera &
 rosrun david_cam camera_node /cameras/fwd 5000 &
+sleep 10
 rosrun david_cam camera_img_service /cameras/fwd &
 
 ## If we had our AI up
