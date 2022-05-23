@@ -8,6 +8,7 @@ sshpass -p'@rt3m!$NMT' \
 sshpass -p'@rt3m!$NMT' \
         scp ./ssid_scripts/ath2.cfg admin@192.168.1.99:/etc/hostapd/ath2.cfg
 sshpass -p'@rt3m!$NMT' \
+        ssh admin@192.168.1.99 \
         killall hostapd
 
 echo 'ok'
