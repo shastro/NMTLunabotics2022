@@ -11,6 +11,14 @@ while true; do
     fi
 done
 
+echo "Checking for ROS..."
+if ssh pi@control ps -e | grep roscore; then
+    echo "ROS detected, not starting it."
+else
+    echo "ROS not running, starting it."
+    ssh pi@control "~/git/scripts/start_control_system" 2>/dev/null &
+fi
+
 export ROS_MASTER_URI="http://lunabotics-CONTROL-CPU:11311/"
 echo "Autodetect ROS_MASTER_URI=$ROS_MASTER_URI"
 
@@ -23,4 +31,5 @@ else
 fi
 
 echo 'Invoking david_gamepad...'
+. ../ros/catkin_ws/devel/setup.bash
 rosrun david_gamepad david_gamepad
