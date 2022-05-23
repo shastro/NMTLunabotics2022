@@ -154,11 +154,11 @@ static void joystick_sample_loop() {
       Pro2Axis axis = static_cast<Pro2Axis>(event.number);
 
       switch (axis) {
-      case Pro2Axis::leftThumbX: {
+      case Pro2Axis::rightThumbX: {
         // Unassigned
         break;
       }
-      case Pro2Axis::leftThumbY: {
+      case Pro2Axis::rightThumbY: {
         // Unassigned
         break;
       }
@@ -171,9 +171,10 @@ static void joystick_sample_loop() {
         augerPublisher.publish(cmd);
         break;
       }
-      case Pro2Axis::rightThumbX: {
+      case Pro2Axis::leftThumbX: {
         // Motion twist
         rightJoyX = event.value;
+        cout << rightJoyX << endl;
 
         double rot = -rightJoyX / 32768.0 * 500;
         double fwd = rightJoyY / 32768.0 * 500;
@@ -188,7 +189,7 @@ static void joystick_sample_loop() {
         velPublisher.publish(msg);
         break;
       }
-      case Pro2Axis::rightThumbY: {
+      case Pro2Axis::leftThumbY: {
         // Motion linear
         rightJoyY = event.value;
 
