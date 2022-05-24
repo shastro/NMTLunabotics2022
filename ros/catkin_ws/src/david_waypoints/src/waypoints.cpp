@@ -1,13 +1,13 @@
 #include "geometry_msgs/Quaternion.h"
 #include "geometry_msgs/Transform.h"
 #include "image_transport/subscriber.h"
-#include <move_base_msgs/MoveBaseActionGoal.h>
 #include "ros/node_handle.h"
 #include "ros/publisher.h"
 #include <aruco.h>
 #include <cv_bridge/cv_bridge.h>
 #include <image_transport/image_transport.h>
 #include <iostream>
+#include <move_base_msgs/MoveBaseActionGoal.h>
 #include <opencv2/calib3d/calib3d.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -35,8 +35,8 @@ private:
   tf2_ros::TransformBroadcaster _br;
 
 public:
-  WaypointCalculator(char *topic_1, char *topic_2, char *calibration_file, char *mmap_name,
-                     float size) {
+  WaypointCalculator(char *topic_1, char *topic_2, char *calibration_file,
+                     char *mmap_name, float size) {
     ROS_INFO("Get Dict");
     cout << "Init Waypoint Calculator " << topic_1 << endl;
     cout << "Init Waypoint Calculator " << topic_2 << endl;
@@ -47,8 +47,10 @@ public:
                      bind(&WaypointCalculator::camera_image_callback, this, _1,
                           "camera_rear")));
     cout << "Sub1 complete" << endl;
-    new image_transport::Subscriber(it.subscribe(topic_2, 1,
-        bind(&WaypointCalculator::camera_image_callback, this, _1, "camera_fwd")));
+    new image_transport::Subscriber(
+        it.subscribe(topic_2, 1,
+                     bind(&WaypointCalculator::camera_image_callback, this, _1,
+                          "camera_fwd")));
     cout << "Sub2 complete" << endl;
     _detector.setDictionary("ARUCO_MIP_36h12");
     ROS_INFO("Get Dict");
@@ -62,7 +64,8 @@ public:
     cout << "Fin init" << endl;
   }
 
-  void camera_image_callback(const sensor_msgs::ImageConstPtr &ros_image, const char *tf_camera) {
+  void camera_image_callback(const sensor_msgs::ImageConstPtr &ros_image,
+                             const char *tf_camera) {
     cout << "Reached Callback" << endl;
 
     cv::Mat img = cv_bridge::toCvShare(ros_image, "bgr8")->image;
@@ -84,7 +87,6 @@ public:
         cout << _mmtrack.getRvec() << endl;
         cout << _mmtrack.getTvec() << endl;
 
-
         // Setup transform
         tf2::Quaternion q_rot;
         q_rot.setRPY(Rvec[0], Rvec[1], Rvec[2]);
@@ -101,7 +103,8 @@ public:
         // Set Rotation
         mytf.transform.rotation.x = q_rot.x();
         mytf.transform.rotation.y = q_rot.y();
-        mytf.transform.rotation.z = q_rot.z(); mytf.transform.rotation.w = q_rot.w();
+        mytf.transform.rotation.z = q_rot.z();
+        mytf.transform.rotation.w = q_rot.w();
 
         _br.sendTransform(mytf);
       } else {
@@ -116,9 +119,9 @@ int main(int argc, char **argv) {
   ros::init(argc, argv, "waypoints");
 
   if (argc != 6) {
-    cout << "Usage waypoints <image_topic_rear_cam> <image_topic_fwd_cam> <camera_params.yml> "
-         << "<marker_map.yml> <marker_size>"
-         << endl;
+    cout << "Usage waypoints <image_topic_rear_cam> <image_topic_fwd_cam> "
+            "<camera_params.yml> "
+         << "<marker_map.yml> <marker_size>" << endl;
     abort();
   }
 

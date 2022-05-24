@@ -30,7 +30,7 @@ class NavigationAction {
     }
 
     // Wait for move_base to finish.
-    ros::Rate r = 5;            // hz
+    ros::Rate r = 5; // hz
     while (true) {
       if (_as.isPreemptRequested() || !ros::ok()) {
         cout << _action_name << ": Preempted" << endl;

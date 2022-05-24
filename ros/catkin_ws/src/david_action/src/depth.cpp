@@ -16,8 +16,7 @@ class DepthAction {
   actionlib::SimpleActionServer<david_action::DepthAction> _as;
   string _action_name;
 
-  void executeCB(const david_action::DepthGoalConstPtr &goal) {
-  }
+  void executeCB(const david_action::DepthGoalConstPtr &goal) {}
 
 public:
   DepthAction(string name)

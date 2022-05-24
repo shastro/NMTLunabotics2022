@@ -45,9 +45,12 @@ private:
   Subscriber _aug_sub;
   Subscriber _dep_sub;
   Subscriber _dmp_sub;
+
 public:
   Robot(vector<NavMotor> motors, NavMotor *augerMotor, NavMotor *depthLMotor,
-        NavMotor *depthRMotor, NavMotor *dumperLMotor, NavMotor *dumperRMotor, string cmd_vel_path): _nh(){
+        NavMotor *depthRMotor, NavMotor *dumperLMotor, NavMotor *dumperRMotor,
+        string cmd_vel_path)
+      : _nh() {
     motors_ = move(motors);
     augerMotor_ = augerMotor;
     depthLMotor_ = depthLMotor;
@@ -80,7 +83,6 @@ public:
     double right = linear.y;
     double rotation = angular.z;
 
-
     // We can't do anything with side-to-side motion because our robot
     // has only forward-facing wheels.
     (void)right;
@@ -95,7 +97,6 @@ public:
     if (augerMotor_) {
       augerMotor_->nav(spin, 0);
     }
-
   }
 
   void depth(const DepthCmd &cmd) {
@@ -158,7 +159,8 @@ int main(int argc, char **argv) {
   vector<NavMotor> motors =
       init_motors(robot_path, augerMotor, depthLMotor, depthRMotor,
                   dumperLMotor, dumperRMotor);
-  Robot robot(move(motors), augerMotor, depthLMotor, depthRMotor, dumperLMotor, dumperRMotor, cmd_vel_path);
+  Robot robot(move(motors), augerMotor, depthLMotor, depthRMotor, dumperLMotor,
+              dumperRMotor, cmd_vel_path);
 
   // Subscribe to the topics. Kinda scuffed because I wrote cmd_vel
   // before anything else so it uses a worse convention, but I don't

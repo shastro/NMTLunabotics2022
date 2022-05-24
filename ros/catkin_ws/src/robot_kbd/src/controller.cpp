@@ -138,12 +138,14 @@ Motor::Motor(string path) : pos_(0), vel_(0) {
 void Motor::update() {
   webots_ros::set_float srv_pos;
   srv_pos.request.value = pos_;
-  cout << "Calling " << pos_path_ << " with param " << srv_pos.request.value << endl;
+  cout << "Calling " << pos_path_ << " with param " << srv_pos.request.value
+       << endl;
   ros::service::call(pos_path_, srv_pos);
 
   webots_ros::set_float srv_vel;
   srv_vel.request.value = vel_;
-  cout << "Calling " << vel_path_ << " with param " << srv_vel.request.value << endl;
+  cout << "Calling " << vel_path_ << " with param " << srv_vel.request.value
+       << endl;
   ros::service::call(vel_path_, srv_vel);
 }
 

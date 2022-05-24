@@ -41,6 +41,6 @@ int main(int argc, char **argv) {
     bool finished_before_timeout = ac.waitForResult(ros::Duration(55.0));
     cout << "Finished = " << finished_before_timeout << endl;
   } else {
-    cout << "Unknown test " << args.at(1) << endl;;
+    cout << "Unknown test " << args.at(1) << endl;
   }
 }
