@@ -15,13 +15,13 @@ SimpleNode::SimpleNode(SysManager *mgr, INode *node) {
   _mgr = mgr;
   _node = node;
 
-  cout << "Enabling node " << node << "..." << endl;
-  _enableNode();
-  cout << "Enable finished." << endl;
+  // cout << "Enabling node " << node << "..." << endl;
+  // _enableNode();
+  // cout << "Enable finished." << endl;
 
-  cout << "Setting standard units..." << endl;
-  _setStandardUnits();
-  cout << "Set standard units." << endl;
+  // cout << "Setting standard units..." << endl;
+  // _setStandardUnits();
+  // cout << "Set standard units." << endl;
 }
 
 SimpleNode::~SimpleNode() {
@@ -44,6 +44,7 @@ void SimpleNode::setVel(double vel) {
       // This function blocks; that's OK because we're usually in a
       // multithreaded environment here.
       _enableNode();
+      _setStandardUnits();
     }
     _node->Motion.MoveVelStart(vel);
   } catch (mnErr err) {
@@ -51,6 +52,7 @@ void SimpleNode::setVel(double vel) {
 
     // If that doesn't catch all motion problems, reset here instead.
     _enableNode();
+    _setStandardUnits();
   }
 }
 
