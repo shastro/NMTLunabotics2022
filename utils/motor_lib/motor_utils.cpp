@@ -53,6 +53,18 @@ void SimpleNode::setVel(double vel) {
     // If that doesn't catch all motion problems, reset here instead.
     _enableNode();
     _setStandardUnits();
+  } catch (const char *err) {
+    cout << "Velocity set error: " << err << endl;
+
+    // If that doesn't catch all motion problems, reset here instead.
+    _enableNode();
+    _setStandardUnits();
+  } catch (string err) {
+    cout << "Velocity set error: " << err << endl;
+
+    // If that doesn't catch all motion problems, reset here instead.
+    _enableNode();
+    _setStandardUnits();
   }
 }
 
