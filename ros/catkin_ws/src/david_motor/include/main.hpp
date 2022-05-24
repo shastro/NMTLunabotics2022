@@ -43,7 +43,7 @@ class MotorController {
 private:
 
 public:
-  ros::Publisher _telem;
+  ros::Publisher &_telem;
   std::string _name;
   // Put the motor in Velocity mode, with the given target velocity in
   // radians per second.
@@ -107,7 +107,8 @@ std::vector<NavMotor> init_motors(std::string path, NavMotor *&augerMotor,
                                   NavMotor *&depthLMotor,
                                   NavMotor *&depthRMotor,
                                   NavMotor *&dumperLMotor,
-                                  NavMotor *&dumperRMotor);
+                                  NavMotor *&dumperRMotor,
+                                  ros::Publisher &telemetry_pub);
 
 
 #endif // H_MAIN

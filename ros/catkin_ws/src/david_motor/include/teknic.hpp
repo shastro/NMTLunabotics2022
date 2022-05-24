@@ -28,7 +28,7 @@
 class TeknicMotor : public MotorController {
 public:
   // Initialize a new TeknicMotor.
-  TeknicMotor(SimpleNode &node, ros::Publisher telem, std::string name);
+  TeknicMotor(SimpleNode &node, ros::Publisher &telem, std::string name);
 
   // Motor controller functions.
   void setVelocity(double vel);

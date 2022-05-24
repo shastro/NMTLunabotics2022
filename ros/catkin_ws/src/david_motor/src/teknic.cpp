@@ -23,12 +23,11 @@ using namespace std;
 
 // Construct a motor controller at the given path, and initialize it
 // to zero velocity.
-TeknicMotor::TeknicMotor(SimpleNode &node, ros::Publisher telem, string name)
-    : _node(node) {
+TeknicMotor::TeknicMotor(SimpleNode &node, ros::Publisher &telem, std::string name)
+  : _node(node), _telem(telem) {
   _name = name;
   _manager = thread([this]() { this->motor_manager(); });
 
-  _telem = telem;
 }
 
 void TeknicMotor::setVelocity(double vel) { _vel_target = vel; }
@@ -56,7 +55,7 @@ double TeknicMotor::rms() { return _node.rms(); }
 vector<NavMotor> init_motors(string path, NavMotor *&augerMotor,
                              NavMotor *&depthLMotor, NavMotor *&depthRMotor,
                              NavMotor *&dumperLMotor, NavMotor *&dumperRMotor,
-                             ros::Publisher telemetry_pub) {
+                             ros::Publisher &telemetry_pub) {
   vector<SimplePort> ports = SimplePort::getPorts();
 
   // This leaks `ports[0]` on purpose, because the `SimplePort` has to
@@ -115,65 +114,65 @@ void TeknicMotor::motor_manager() {
     if (_name == "loco_left") {
       sensor_msgs::JointState msg;
       msg.name = {_name};
-      msg.position = {_node.position * LOCO_CONVERSION_FACTOR /
+      msg.position = {_node.position() * LOCO_CONVERSION_FACTOR /
                       (double)10}; // encoder count
-      msg.velocity = {_node.velocity * LOCO_CONVERSION_FACTOR_VEL /
+      msg.velocity = {_node.velocity() * LOCO_CONVERSION_FACTOR_VEL /
                       (double)10}; // velocity
-      msg.effort = {_node.rms};
+      msg.effort = {_node.rms()};
       _telem.publish(msg);
 
     } else if (_name == "loco_right") {
       sensor_msgs::JointState msg;
       msg.name = {_name};
-      msg.position = {_node.position * LOCO_CONVERSION_FACTOR /
+      msg.position = {_node.position() * LOCO_CONVERSION_FACTOR /
                       (double)10}; // encoder count
-      msg.velocity = {_node.velocity * LOCO_CONVERSION_FACTOR_VEL /
+      msg.velocity = {_node.velocity() * LOCO_CONVERSION_FACTOR_VEL /
                       (double)10}; // velocity
-      msg.effort = {_node.rms};
+      msg.effort = {_node.rms()};
       _telem.publish(msg);
 
     } else if (_name == "auger_rotation") {
       sensor_msgs::JointState msg;
       msg.name = {_name};
-      msg.position = {_node.position * LOCO_CONVERSION_FACTOR /
+      msg.position = {_node.position() * LOCO_CONVERSION_FACTOR /
                       (double)50}; // encoder count
-      msg.velocity = {_node.velocity * LOCO_CONVERSION_FACTOR_VEL /
+      msg.velocity = {_node.velocity() * LOCO_CONVERSION_FACTOR_VEL /
                       (double)50}; // velocity
-      msg.effort = {_node.rms};
+      msg.effort = {_node.rms()};
       _telem.publish(msg);
 
     } else if (_name == "L_depth") {
       sensor_msgs::JointState msg;
       msg.name = {_name};
-      msg.position = {_node.position *
+      msg.position = {_node.position() *
                       DEPTH_CONVERSION_FACTOR}; // encoder count
-      msg.velocity = {_node.velocity * DEPTH_CONVERSION_FACTOR_VEL}; // velocity
-      msg.effort = {_node.rms};
+      msg.velocity = {_node.velocity() * DEPTH_CONVERSION_FACTOR_VEL}; // velocity
+      msg.effort = {_node.rms()};
       _telem.publish(msg);
 
     } else if (_name == "R_depth") {
       sensor_msgs::JointState msg;
       msg.name = {_name};
-      msg.position = {_node.position *
+      msg.position = {_node.position() *
                       DEPTH_CONVERSION_FACTOR}; // encoder count
-      msg.velocity = {_node.velocity * DEPTH_CONVERSION_FACTOR_VEL}; // velocity
-      msg.effort = {_node.rms};
+      msg.velocity = {_node.velocity() * DEPTH_CONVERSION_FACTOR_VEL}; // velocity
+      msg.effort = {_node.rms()};
       _telem.publish(msg);
 
     } else if (_name == "left_dump") {
       sensor_msgs::JointState msg;
       msg.name = {_name};
-      msg.position = {_node.position * DUMP_CONVERSION_FACTOR}; // encoder count
-      msg.velocity = {_node.velocity * DUMP_CONVERSION_FACTOR_VEL}; // velocity
-      msg.effort = {_node.rms};
+      msg.position = {_node.position() * DUMP_CONVERSION_FACTOR}; // encoder count
+      msg.velocity = {_node.velocity() * DUMP_CONVERSION_FACTOR_VEL}; // velocity
+      msg.effort = {_node.rms()};
       _telem.publish(msg);
 
     } else if (_name == "right_dump") {
       sensor_msgs::JointState msg;
       msg.name = {_name};
-      msg.position = {_node.position * DUMP_CONVERSION_FACTOR}; // encoder count
-      msg.velocity = {_node.velocity * DUMP_CONVERSION_FACTOR_VEL}; // velocity
-      msg.effort = {_node.rms};
+      msg.position = {_node.position() * DUMP_CONVERSION_FACTOR}; // encoder count
+      msg.velocity = {_node.velocity() * DUMP_CONVERSION_FACTOR_VEL}; // velocity
+      msg.effort = {_node.rms()};
       _telem.publish(msg);
     }
 

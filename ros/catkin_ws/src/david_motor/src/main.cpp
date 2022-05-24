@@ -17,6 +17,7 @@
 
 #include "main.hpp"
 #include "ros/node_handle.h"
+#include "ros/publisher.h"
 
 using david_motor::AugerCmd;
 using david_motor::DepthCmd;
@@ -38,19 +39,18 @@ static void quit(int sig);
 
 class Robot {
 private:
-  ros::Publisher _telemetry;
-  ros::NodeHandle _nh;
-
   Subscriber _vel_sub;
   Subscriber _aug_sub;
   Subscriber _dep_sub;
   Subscriber _dmp_sub;
 
 public:
+  ros::NodeHandle _nh;
+
   Robot(vector<NavMotor> motors, NavMotor *augerMotor, NavMotor *depthLMotor,
         NavMotor *depthRMotor, NavMotor *dumperLMotor, NavMotor *dumperRMotor,
-        string cmd_vel_path)
-      : _nh() {
+        string cmd_vel_path, ros::NodeHandle node_handle)
+    : _nh(node_handle){
     motors_ = move(motors);
     augerMotor_ = augerMotor;
     depthLMotor_ = depthLMotor;
@@ -63,8 +63,6 @@ public:
     _dep_sub = _nh.subscribe("/cmd_depth", 1, &Robot::depth, this);
     _dmp_sub = _nh.subscribe("/cmd_dumper", 1, &Robot::dumper, this);
 
-    _telemetry =
-        _nh.advertise<sensor_msgs::JointState>("/joints/motor_joints", 1000);
   }
 
   void twist(const geometry_msgs::Twist &msg) {
@@ -156,11 +154,15 @@ int main(int argc, char **argv) {
   NavMotor *depthRMotor = nullptr;
   NavMotor *dumperLMotor = nullptr;
   NavMotor *dumperRMotor = nullptr;
+
+  ros::NodeHandle nh;
+  ros::Publisher telemetry =
+      nh.advertise<sensor_msgs::JointState>("/joints/motor_joints", 1000);
   vector<NavMotor> motors =
       init_motors(robot_path, augerMotor, depthLMotor, depthRMotor,
-                  dumperLMotor, dumperRMotor);
+                  dumperLMotor, dumperRMotor, telemetry);
   Robot robot(move(motors), augerMotor, depthLMotor, depthRMotor, dumperLMotor,
-              dumperRMotor, cmd_vel_path);
+              dumperRMotor, cmd_vel_path, nh);
 
   // Subscribe to the topics. Kinda scuffed because I wrote cmd_vel
   // before anything else so it uses a worse convention, but I don't
