@@ -6,11 +6,14 @@
 #define H_TEKNIC
 
 #include <atomic>
+#include <ros/ros.h>
+#include <sensor_msgs/JointState.h>
 #include <string>
 #include <thread>
 
 #include "../src/teknic/motor_utils.hpp" // FIXME
 #include "main.hpp"
+#include "ros/node_handle.h"
 
 // Time resolution, in hertz, at which the motor manager loop runs.
 // This is needed to prevent the motor from overloading its move
@@ -25,7 +28,7 @@
 class TeknicMotor : public MotorController {
 public:
   // Initialize a new TeknicMotor.
-  TeknicMotor(SimpleNode &node);
+  TeknicMotor(SimpleNode &node, ros::Publisher telem, std::string name);
 
   // Motor controller functions.
   void setVelocity(double vel);
@@ -51,10 +54,13 @@ private:
   // The SimpleNode backing this motor.
   SimpleNode &_node;
 
-  // The target velocity we're trying to reach. This is set by
-  // `setVelocity()`, and is multiplied by an appropriate factor so as
-  // not to exceed MAX_RMS and sent to the raw motor controller.
-  std::atomic<double> _vel_target;
+  ros::Publisher _telem;
+
+      // The target velocity we're trying to reach. This is set by
+      // `setVelocity()`, and is multiplied by an appropriate factor so as
+      // not to exceed MAX_RMS and sent to the raw motor controller.
+      std::atomic<double>
+          _vel_target;
 
   // The current velocity of the motor.
   double _vel_current;

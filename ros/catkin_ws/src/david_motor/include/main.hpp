@@ -5,6 +5,7 @@
 #ifndef H_MAIN
 #define H_MAIN
 
+#include "ros/publisher.h"
 #include <memory>
 #include <string>
 #include <termios.h>
@@ -14,6 +15,12 @@
 
 #include <ros/ros.h>
 
+#define DEPTH_CONVERSION_FACTOR 2.9069767441860463e-06
+#define DUMP_CONVERSION_FACTOR 2.9069767441860463e-06
+#define DEPTH_CONVERSION_FACTOR_VEL 1.593932086646914e-10
+#define DUMP_CONVERSION_FACTOR_VEL 1.593932086646914e-10 // rpm to m/s
+#define LOCO_CONVERSION_FACTOR 1909.859                  // enc per rad
+#define LOCO_CONVERSION_FACTOR_VEL 0.10472               // rpm to rad/s
 // Direct connection to a motor of some type. This class is meant to
 // abstract away the difference between a Webots motor and a physical
 // motor.
@@ -33,7 +40,11 @@ struct telemetry_msg {
 };
 
 class MotorController {
+private:
+
 public:
+  ros::Publisher _telem;
+  std::string _name;
   // Put the motor in Velocity mode, with the given target velocity in
   // radians per second.
   virtual void setVelocity(double vel) = 0;

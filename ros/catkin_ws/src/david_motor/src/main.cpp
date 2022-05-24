@@ -25,12 +25,6 @@ using geometry_msgs::Vector3;
 using ros::NodeHandle;
 using ros::Subscriber;
 
-#define DEPTH_CONVERSION_FACTOR 2.9069767441860463e-06
-#define DUMP_CONVERSION_FACTOR 2.9069767441860463e-06
-#define DEPTH_CONVERSION_FACTOR_VEL 1.593932086646914e-10
-#define DUMP_CONVERSION_FACTOR_VEL 1.593932086646914e-10 // rpm to m/s
-#define LOCO_CONVERSION_FACTOR 1909.859 // enc per rad
-#define LOCO_CONVERSION_FACTOR_VEL 0.10472 // rpm to rad/s
 // Encoder per degree 0.03
 // radians per
 // enc per second * radians per enc 1909.859
@@ -86,20 +80,13 @@ public:
     double right = linear.y;
     double rotation = angular.z;
 
+
     // We can't do anything with side-to-side motion because our robot
     // has only forward-facing wheels.
     (void)right;
 
     for (NavMotor &motor : motors_) {
       motor.nav(forward, rotation);
-      telemetry_msg tloco = motor.telem();
-      sensor_msgs::JointState jmsg;
-      jmsg.name={motor.name()};
-      cout << motor.name() << endl;
-      jmsg.position = {tloco.position * LOCO_CONVERSION_FACTOR / (double)10};
-      jmsg.velocity = {tloco.velocity * LOCO_CONVERSION_FACTOR_VEL / (double)10};
-      jmsg.effort = {tloco.rms};
-      _telemetry.publish(jmsg);
     }
   }
 
@@ -107,13 +94,6 @@ public:
     double spin = cmd.spin;
     if (augerMotor_) {
       augerMotor_->nav(spin, 0);
-      telemetry_msg taug = augerMotor_->telem();
-      sensor_msgs::JointState msg;
-      msg.name = {augerMotor_->name()};
-      msg.position = {taug.position * LOCO_CONVERSION_FACTOR / (double)50}; // encoder count
-      msg.velocity = {taug.velocity * LOCO_CONVERSION_FACTOR_VEL / (double)50}; // velocity RPM
-      msg.effort = {taug.rms};
-      _telemetry.publish(msg);
     }
 
   }
@@ -122,26 +102,10 @@ public:
     double vel = cmd.depth_vel;
     if (depthLMotor_) {
       depthLMotor_->nav(-vel, 0);
-      telemetry_msg tdepth = depthLMotor_->telem();
-      sensor_msgs::JointState msg;
-      msg.name = {depthLMotor_->name()};
-      msg.position = {tdepth.position * DEPTH_CONVERSION_FACTOR};     // meters
-      msg.velocity = {tdepth.velocity * DEPTH_CONVERSION_FACTOR_VEL}; // m/s
-      msg.effort = {tdepth.rms};
-      _telemetry.publish(msg);
     }
 
     if (depthRMotor_) {
       depthRMotor_->nav(-vel, 0);
-      telemetry_msg tdepthR = depthRMotor_->telem();
-      sensor_msgs::JointState msg;
-      msg.name = {depthRMotor_->name()};
-      msg.position = {tdepthR.position *
-                      DEPTH_CONVERSION_FACTOR}; // encoder count
-      msg.velocity = {tdepthR.velocity *
-                      DEPTH_CONVERSION_FACTOR_VEL}; // velocity
-      msg.effort = {tdepthR.rms};
-      _telemetry.publish(msg);
     }
   }
 
@@ -149,24 +113,10 @@ public:
     double vel = cmd.vel;
     if (dumperLMotor_) {
       dumperLMotor_->nav(vel, 0);
-      telemetry_msg tdump = depthRMotor_->telem();
-      sensor_msgs::JointState msg;
-      msg.name = {depthRMotor_->name()};
-      msg.position = {tdump.position * DUMP_CONVERSION_FACTOR}; // encoder count
-      msg.velocity = {tdump.velocity * DUMP_CONVERSION_FACTOR_VEL}; // velocity
-      msg.effort = {tdump.rms};
-      _telemetry.publish(msg);
     }
 
     if (dumperRMotor_) {
       dumperRMotor_->nav(vel, 0);
-      telemetry_msg tdumpR = depthRMotor_->telem();
-      sensor_msgs::JointState msg;
-      msg.name = {depthRMotor_->name()};
-      msg.position = {tdumpR.position * DUMP_CONVERSION_FACTOR}; // encoder count
-      msg.velocity = {tdumpR.velocity * DUMP_CONVERSION_FACTOR_VEL}; // velocity
-      msg.effort = {tdumpR.rms};
-      _telemetry.publish(msg);
     }
   }
 
