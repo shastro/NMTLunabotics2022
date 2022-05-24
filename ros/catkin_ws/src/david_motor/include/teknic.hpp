@@ -28,7 +28,7 @@
 class TeknicMotor : public MotorController {
 public:
   // Initialize a new TeknicMotor.
-  TeknicMotor(SimpleNode &node, ros::Publisher &telem, std::string name);
+  TeknicMotor(SimpleNode &node, ros::Publisher *telem, std::string name);
 
   // Motor controller functions.
   void setVelocity(double vel);
@@ -54,13 +54,12 @@ private:
   // The SimpleNode backing this motor.
   SimpleNode &_node;
 
-  ros::Publisher _telem;
+  ros::Publisher *_telem;
 
-      // The target velocity we're trying to reach. This is set by
-      // `setVelocity()`, and is multiplied by an appropriate factor so as
-      // not to exceed MAX_RMS and sent to the raw motor controller.
-      std::atomic<double>
-          _vel_target;
+  // The target velocity we're trying to reach. This is set by
+  // `setVelocity()`, and is multiplied by an appropriate factor so as
+  // not to exceed MAX_RMS and sent to the raw motor controller.
+  std::atomic<double> _vel_target;
 
   // The current velocity of the motor.
   double _vel_current;

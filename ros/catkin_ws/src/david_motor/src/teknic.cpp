@@ -23,11 +23,11 @@ using namespace std;
 
 // Construct a motor controller at the given path, and initialize it
 // to zero velocity.
-TeknicMotor::TeknicMotor(SimpleNode &node, ros::Publisher &telem, std::string name)
-  : _node(node), _telem(telem) {
+TeknicMotor::TeknicMotor(SimpleNode &node, ros::Publisher *telem,
+                         std::string name)
+    : _node(node), _telem(telem) {
   _name = name;
   _manager = thread([this]() { this->motor_manager(); });
-
 }
 
 void TeknicMotor::setVelocity(double vel) { _vel_target = vel; }
@@ -69,27 +69,27 @@ vector<NavMotor> init_motors(string path, NavMotor *&augerMotor,
 
   // And this leaks TeknicMotor objects. Cry about it.
   motors.push_back(NavMotor(new TeknicMotor(nodes.at(MotorIdent::LocomotionL),
-                                            telemetry_pub, "loco_left"),
+                                            &telemetry_pub, "loco_left"),
                             "loco_left", -1, -1));
   motors.push_back(NavMotor(new TeknicMotor(nodes.at(MotorIdent::LocomotionR),
-                                            telemetry_pub, "loco_right"),
+                                            &telemetry_pub, "loco_right"),
                             "loco_right", 1, 1));
 
   augerMotor = new NavMotor(new TeknicMotor(nodes.at(MotorIdent::Auger),
-                                            telemetry_pub, "auger_rotation"),
+                                            &telemetry_pub, "auger_rotation"),
                             "auger_rotation", 0, 1);
   depthLMotor = new NavMotor(
-      new TeknicMotor(nodes.at(MotorIdent::DepthL), telemetry_pub, "L_depth"),
+      new TeknicMotor(nodes.at(MotorIdent::DepthL), &telemetry_pub, "L_depth"),
       "L_depth", 0, 1);
   depthRMotor = new NavMotor(
-      new TeknicMotor(nodes.at(MotorIdent::DepthR), telemetry_pub, "R_depth"),
+      new TeknicMotor(nodes.at(MotorIdent::DepthR), &telemetry_pub, "R_depth"),
       "R_depth", 0, 1);
   dumperLMotor = new NavMotor(
-      new TeknicMotor(nodes.at(MotorIdent::DumpL), telemetry_pub, "left_dump"),
+      new TeknicMotor(nodes.at(MotorIdent::DumpL), &telemetry_pub, "left_dump"),
       "left_dump", 0, 1);
-  dumperRMotor = new NavMotor(
-      new TeknicMotor(nodes.at(MotorIdent::DumpR), telemetry_pub, "right_dump"),
-      "right_dump", 0, 1);
+  dumperRMotor = new NavMotor(new TeknicMotor(nodes.at(MotorIdent::DumpR),
+                                              &telemetry_pub, "right_dump"),
+                              "right_dump", 0, 1);
 
   return motors;
 }
@@ -119,7 +119,7 @@ void TeknicMotor::motor_manager() {
       msg.velocity = {_node.velocity() * LOCO_CONVERSION_FACTOR_VEL /
                       (double)10}; // velocity
       msg.effort = {_node.rms()};
-      _telem.publish(msg);
+      _telem->publish(msg);
 
     } else if (_name == "loco_right") {
       sensor_msgs::JointState msg;
@@ -129,7 +129,7 @@ void TeknicMotor::motor_manager() {
       msg.velocity = {_node.velocity() * LOCO_CONVERSION_FACTOR_VEL /
                       (double)10}; // velocity
       msg.effort = {_node.rms()};
-      _telem.publish(msg);
+      _telem->publish(msg);
 
     } else if (_name == "auger_rotation") {
       sensor_msgs::JointState msg;
@@ -139,41 +139,47 @@ void TeknicMotor::motor_manager() {
       msg.velocity = {_node.velocity() * LOCO_CONVERSION_FACTOR_VEL /
                       (double)50}; // velocity
       msg.effort = {_node.rms()};
-      _telem.publish(msg);
+      _telem->publish(msg);
 
     } else if (_name == "L_depth") {
       sensor_msgs::JointState msg;
       msg.name = {_name};
       msg.position = {_node.position() *
                       DEPTH_CONVERSION_FACTOR}; // encoder count
-      msg.velocity = {_node.velocity() * DEPTH_CONVERSION_FACTOR_VEL}; // velocity
+      msg.velocity = {_node.velocity() *
+                      DEPTH_CONVERSION_FACTOR_VEL}; // velocity
       msg.effort = {_node.rms()};
-      _telem.publish(msg);
+      _telem->publish(msg);
 
     } else if (_name == "R_depth") {
       sensor_msgs::JointState msg;
       msg.name = {_name};
       msg.position = {_node.position() *
                       DEPTH_CONVERSION_FACTOR}; // encoder count
-      msg.velocity = {_node.velocity() * DEPTH_CONVERSION_FACTOR_VEL}; // velocity
+      msg.velocity = {_node.velocity() *
+                      DEPTH_CONVERSION_FACTOR_VEL}; // velocity
       msg.effort = {_node.rms()};
-      _telem.publish(msg);
+      _telem->publish(msg);
 
     } else if (_name == "left_dump") {
       sensor_msgs::JointState msg;
       msg.name = {_name};
-      msg.position = {_node.position() * DUMP_CONVERSION_FACTOR}; // encoder count
-      msg.velocity = {_node.velocity() * DUMP_CONVERSION_FACTOR_VEL}; // velocity
+      msg.position = {_node.position() *
+                      DUMP_CONVERSION_FACTOR}; // encoder count
+      msg.velocity = {_node.velocity() *
+                      DUMP_CONVERSION_FACTOR_VEL}; // velocity
       msg.effort = {_node.rms()};
-      _telem.publish(msg);
+      _telem->publish(msg);
 
     } else if (_name == "right_dump") {
       sensor_msgs::JointState msg;
       msg.name = {_name};
-      msg.position = {_node.position() * DUMP_CONVERSION_FACTOR}; // encoder count
-      msg.velocity = {_node.velocity() * DUMP_CONVERSION_FACTOR_VEL}; // velocity
+      msg.position = {_node.position() *
+                      DUMP_CONVERSION_FACTOR}; // encoder count
+      msg.velocity = {_node.velocity() *
+                      DUMP_CONVERSION_FACTOR_VEL}; // velocity
       msg.effort = {_node.rms()};
-      _telem.publish(msg);
+      _telem->publish(msg);
     }
 
     std::this_thread::sleep_for(

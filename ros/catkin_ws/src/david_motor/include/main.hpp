@@ -43,7 +43,7 @@ class MotorController {
 private:
 
 public:
-  ros::Publisher &_telem;
+  ros::Publisher *_telem;
   std::string _name;
   // Put the motor in Velocity mode, with the given target velocity in
   // radians per second.
