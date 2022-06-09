@@ -176,8 +176,8 @@ static void joystick_sample_loop() {
         rightJoyX = event.value;
         cout << rightJoyX << endl;
 
-        double rot = -rightJoyX / 32768.0 * 125;
-        double fwd = rightJoyY / 32768.0 * 125;
+        double rot = -rightJoyX / 32768.0 * 400;
+        double fwd = rightJoyY / 32768.0 * 400;
 
         Twist msg;
         msg.linear.x = fwd;
@@ -193,8 +193,8 @@ static void joystick_sample_loop() {
         // Motion linear
         rightJoyY = event.value;
 
-        double rot = -rightJoyX / 32768.0 * 125;
-        double fwd = rightJoyY / 32768.0 * 125;
+        double rot = -rightJoyX / 32768.0 * 400;
+        double fwd = rightJoyY / 32768.0 * 400;
 
         Twist msg;
         msg.linear.x = fwd;
