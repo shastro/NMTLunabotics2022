@@ -1,0 +1,213 @@
+#+TITLE: D.A.V.I.D. Gamepad Setup Instructions
+#+EXPORT_FILE_NAME: instructions
+
+:EXPORT-SETTINGS:
+#+OPTIONS: toc:nil
+#+AUTHOR: NMT Lunabotics
+
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \pagestyle{fancy}
+#+LATEX_HEADER: \fancyhf{}
+#+LATEX_HEADER: \lhead{NMT Lunabotics}
+#+LATEX_HEADER: \rhead{\today}
+#+LATEX_HEADER: \lfoot{D.A.V.I.D. Gamepad Setup Instructions}
+#+LATEX_HEADER: \rfoot{\thepage}
+\thispagestyle{empty}
+:END:
+
+* Introduction
+
+  This document outlines the basic procedure for controlling the
+  D.A.V.I.D. NMT Lunabotics robot, specifically revision =3691e83=
+  (which is marked as Git release tag =v_NASA_2022=). Note that this
+  document only covers manual control; autonomy is more complicated to
+  deploy and was not used in the 2022 competition, therefore is not
+  covered here.
+
+* Prerequisites
+
+*** Hardware
+
+    In order to control the robot, the following hardware is required:
+    * The robot itself, obviously;
+    * An Ubuntu Linux computer capable of connecting to either wi-fi
+      or Ethernet;
+    * Joseph Coston's EdgeRouter (a small black box with lights and
+      labels on the top and about four Ethernet connectors on the
+      side);
+    * An EdgeRouter power connector;
+    * Joseph Coston's wireless access point (a long white machine with
+      two optional antennas on the end and an Ethernet cable
+      connecting to the other side);
+    * An 8BitDo game controller;
+    * (Optional) A USB-C connector for plugging the 8BitDo into the
+      computer; and
+    * (Optional) An Ethernet cable for plugging the computer into the
+      router.
+
+*** Software
+
+    The computer should have the following software installed:
+    * The core ROS Noetic distribution;
+    * The ROS =move_base= package;
+    * The =sshpass= program; and
+    * The =net-tools= package.
+
+*** Additional setup
+
+    # TODO: document other setup steps (e.g., compilation on computer).
+
+***** =hosts=
+
+      In order to be able to connect to the robot, the following extra
+      line must be present in the file =/etc/hosts=:
+      #+begin_src conf
+        192.168.1.51 control lunabotics-CONTROL-CPU
+      #+end_src
+
+***** =git=
+
+      To be able to run any of the scripts written for NMT Lunabotics,
+      the computer must have a copy of the Lunabotics git repository
+      present on it. The easiest way to set this up is like so:
+      #+begin_src bash
+        $ git clone https://github.com/shastro/NMTLunabotics2022.git ~/git
+      #+end_src
+
+* Running the gamepad controller
+
+  Once the initial setup of a computer (see section [[Prerequisites]]) is
+  complete, one can use the following steps to gain manual control of
+  the robot:
+
+  1. Boot up the router, with the access point plugged into the
+     Ethernet port labeled ``PoE.'' *Do not under any circumstances
+     plug anything else into this port.* The router will take up to
+     about a minute to boot up, after which it will begin powering the
+     access point, which can take another minute or so.
+
+     Once the process is complete, the router should have several
+     lights on including the PoE light next to the labeled port, and
+     the access point should have its large light on the side steadily
+     on.
+
+  2. Use Ubuntu's desktop GUI to connect the computer to the
+     =lunabotics= network. This is the default network the access point
+     is configured to set up. The password to this network is
+     =artemisNMT=.
+
+     Alternatively, you can plug the computer directly into the router
+     using an Ethernet cable, on any port except the one labeled
+     ``PoE''.
+
+  3. Set the network to the correct SSID:
+     #+begin_src bash
+       $ cd ~/git/scripts
+       $ ./setssid
+     #+end_src
+     If successfully executed, this command should either hang
+     indefinitely or give a network time-out error. The access point
+     should at this point shut down the =lunabotics= network (although
+     the computer may stay connected to the non-existent network for
+     up to a minute if you don't do anything), and begin hosting the
+     =Team_08= network.
+
+  4. Use Ubuntu's desktop GUI to connect the computer to the =Team_08=
+     network. Depending on the circumstances and your configuration,
+     this may happen automatically.
+
+     This step is unnecessary if you connected to the network using an
+     Ethernet cable in step 2.
+
+  5. Turn on the robot by disengaging the emergency stop switch. The
+     control Raspberry Pi on the robot is configured to automatically
+     connect to the =Team_08= network, so it should become accessible to
+     the computer at this point.
+
+  6. Connect the gamepad to the computer. The preferred technique here
+     is to plug the gamepad into the computer using a USB-C connector,
+     but a Bluetooth connection (which can be set up using the Ubuntu
+     Bluetooth GUI) can also be used if no such connector is
+     available.
+
+     Once successfully connected, the command
+     #+begin_src bash
+       $ stat /dev/input/js0
+     #+end_src
+     should print out file information rather than an error message.
+
+  7. Engage the ROS system on the two computers.
+     #+begin_src bash
+       (from ~/git/scripts)
+       $ ./gamepad_connect
+     #+end_src
+     This script performs several tasks:
+     - Wait for the robot control CPU to come online.
+     - Start the ROS system server on the control CPU.
+     - Start the gamepad controller on the local machine, which is
+       instructed to communicate with the ROS server on the control
+       CPU.
+     - Start the lidar spinning on the robot.
+     - Turn on the rear camera on the robot.
+     - Enable the Teknic motor controller (=david_motor=) on the robot
+       to forward received messages from the gamepad to the larger
+       motors.
+     - Enable the pitch motor controller (=david_pitch=) on the robot to
+       forward received messages from the gamepad to the pitch motors.
+     - Start the robot joint telemetry system, which is currently
+       broken.
+
+  8. Maintain the motor controller if necessary.
+
+     The motor controller (=david_motor=) is extremely prone to crashing
+     in this version of the robot controller, due to the several
+     different ways Teknic motors can report errors. At the moment the
+     only way to deal with the situation is to repeatedly restart the
+     motor controller whenever it crashes. If the robot stops
+     responding to Teknic commands (but still responds to pitch
+     commands), do the following steps to regain control of the
+     motors:
+
+     In another terminal, connect to the control CPU:
+     #+begin_src bash
+       $ ssh pi@control
+     #+end_src
+     Verify that the motor controller has crashed:
+     #+begin_src bash
+       $ ps -e | grep 'david_motor'
+     #+end_src
+     If the above command produces any output, then the motor
+     controller is in fact running; otherwise, it has crashed and
+     needs to be restarted. You can prepare your environment for
+     running the motor controller using these commands:
+     #+begin_src bash
+       $ cd ~/git/ros/catkin_ws
+       $ . ./devel/setup.bash
+     #+end_src
+     Once this has been run, use
+     #+begin_src bash
+       $ rosrun david_motor david_motor / /cmd_vel
+     #+end_src
+     to rerun the motor controller whenever it has crashed.
+
+* Control scheme
+
+  The controls on the robot are currently as follows:
+  | /Control/                  | /Action/                                  |
+  |--------------------------+-----------------------------------------|
+  | Left thumbpad up/down    | Move robot forward & backward           |
+  | Left thumbpad right/left | Rotate robot clockwise/counterclockwise |
+  | Right trigger            | Rotate auger clockwise                  |
+  | Left trigger             | Rotate auger counterclockwise           |
+  | D-pad up/down            | Move auger depth up/down                |
+  | Left bumper              | Pitch down (towards robot)              |
+  | Right bumper             | Pitch up (away from robot)              |
+  | X                        | Move dumper up                          |
+  | B                        | Move dumper down                        |
+  | Start                    | Emergency stop*                         |
+  *Emergency stop was not soundly implemented or well-tested, and may
+  have unpredictable effects.
+
+* COMMENT Troubleshooting
+
+  todo
