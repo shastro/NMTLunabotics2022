@@ -18,7 +18,7 @@
 // Time resolution, in hertz, at which the motor manager loop runs.
 // This is needed to prevent the motor from overloading its move
 // queue.
-#define MANAGER_RESOLUTION 2
+#define MANAGER_RESOLUTION 5
 
 // Maximum RMS value that the motor is willing to perform at. If the
 // motor tries to spin above this value, we will artificially slow it
