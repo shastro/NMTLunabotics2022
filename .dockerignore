@@ -1,0 +1,10 @@
+arduino/
+blender/
+can/
+docker-scripts/
+docs/
+lib/
+motortuning/
+user/
+webots/
+.git/
