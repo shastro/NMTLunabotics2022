@@ -4,4 +4,4 @@ IFS=$'\n\t'
 
 cd $(dirname "$0")
 docker build .. -t lunabotics
-yes | docker image prune
+yes | docker image prune || true
