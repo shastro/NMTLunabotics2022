@@ -1,2 +1,12 @@
 #!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
 
+cd $(dirname "$0")
+./build
+docker run \
+       --device=/dev/input/js0:/dev/input/js0 \
+       --net=host \
+       -it \
+       lunabotics \
+       /lunabotics/scripts/gamepad_connect

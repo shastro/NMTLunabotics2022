@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
 
-set -e
-
-cd $(dirname "$0")/..
-docker build . -t lunabotics
+cd $(dirname "$0")
+docker build .. -t lunabotics
+yes | docker image prune

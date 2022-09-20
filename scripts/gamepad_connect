@@ -4,6 +4,8 @@ IFS=$'\n\t'
 
 # robot_connect: Connects to the robot and starts up david_gamepad.
 
+cd $(dirname "$0")
+
 echo "Waiting for the robot to come online..."
 while true; do
     if ping -c1 control; then
