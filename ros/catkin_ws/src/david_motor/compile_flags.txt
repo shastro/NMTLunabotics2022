@@ -4,5 +4,5 @@
 -I../../devel/include
 -I../../../../teknic/inc/inc-pub
 -Iinclude
--I/opt/ros/noetic/include
--I/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp
+-I../../../sys-include
+-I../../../sys-include/xmlrpcpp
