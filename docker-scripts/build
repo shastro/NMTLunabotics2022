@@ -20,5 +20,5 @@ docker_run catkin_make "$@"
 
 # Copy all the include directories out of the container, so that IDEs
 # can work with them.
-docker_run rm -r /lunabotics/ros/sys-include
+docker_run rm -rf /lunabotics/ros/sys-include
 docker_run cp -r /opt/ros/noetic/include /lunabotics/ros/sys-include
