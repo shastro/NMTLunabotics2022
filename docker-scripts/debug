@@ -5,11 +5,10 @@ IFS=$'\n\t'
 cd $(dirname "$0")
 ./build
 docker run \
+       --volume=$PWD/export:/export \
        --volume $PWD/../ros:/lunabotics/ros \
        --volume $PWD/../utils:/lunabotics/utils \
-       --device=/dev/input/js0:/dev/input/js0 \
        --net=host \
        -it \
-       --stop-signal=SIGKILL \
        lunabotics \
-       /lunabotics/scripts/gamepad_connect
+       /bin/bash

@@ -2,8 +2,10 @@ arduino/
 blender/
 can/
 docs/
+.git/
 lib/
 motortuning/
+ros/
 user/
+utils/
 webots/
-.git/

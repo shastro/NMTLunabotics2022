@@ -5,3 +5,8 @@ IFS=$'\n\t'
 cd $(dirname "$0")
 docker build .. -t lunabotics
 yes | docker image prune || true
+docker run \
+       --volume $PWD/../ros:/lunabotics/ros \
+       --volume $PWD/../utils:/lunabotics/utils \
+       lunabotics /ros_entrypoint.sh \
+       catkin_make "$@"
