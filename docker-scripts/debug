@@ -5,7 +5,6 @@ IFS=$'\n\t'
 cd $(dirname "$0")
 ./build
 docker run \
-       --volume=$PWD/export:/export \
        --volume $PWD/../ros:/lunabotics/ros \
        --volume $PWD/../utils:/lunabotics/utils \
        --net=host \
