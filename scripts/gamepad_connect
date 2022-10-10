@@ -4,6 +4,10 @@ IFS=$'\n\t'
 
 # robot_connect: Connects to the robot and starts up david_gamepad.
 
+# FIXME: this definitely should be somewhere else. Not quite sure
+# where though ~~Alex
+echo '192.168.1.51 control lunabotics-CONTROL-CPU' >> /etc/hosts
+
 cd $(dirname "$0")
 
 echo "Waiting for the robot to come online..."
