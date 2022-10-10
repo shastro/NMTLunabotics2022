@@ -24,6 +24,7 @@ COPY scripts /lunabotics/scripts
 COPY docker-scripts/david_key /root/.ssh/id_rsa
 COPY docker-scripts/david_key.pub /root/.ssh/id_rsa.pub
 COPY docker-scripts/david_known_hosts /root/.ssh/known_hosts
+RUN chmod 600 /root/.ssh/id_rsa
 
 # 6. Leave working directory in place to compile Lunabotics code.
 WORKDIR /lunabotics/ros/catkin_ws
