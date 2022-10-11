@@ -9,6 +9,7 @@ IFS=$'\n\t'
 echo '192.168.1.51 control lunabotics-CONTROL-CPU' >> /etc/hosts
 
 cd $(dirname "$0")
+./setssid
 
 echo "Waiting for the robot to come online..."
 while true; do

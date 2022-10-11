@@ -3,7 +3,7 @@ FROM ros:noetic-ros-core
 RUN apt-get update
 
 # 1. Install standard packages from apt.
-RUN apt-get install -y make gcc g++ inetutils-ping net-tools
+RUN apt-get install -y make gcc g++ inetutils-ping net-tools wireless-tools sshpass
 
 # 2. Install ROS packages from apt.
 RUN apt-get install -y ros-noetic-move-base ros-noetic-image-transport ros-noetic-cv-bridge

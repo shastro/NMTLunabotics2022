@@ -2,13 +2,19 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-# Sets the network SSID.
-sshpass -p'@rt3m!$NMT' \
-        scp ./ssid_scripts/ath0.cfg admin@192.168.1.99:/etc/hostapd/ath0.cfg
-sshpass -p'@rt3m!$NMT' \
-        scp ./ssid_scripts/ath2.cfg admin@192.168.1.99:/etc/hostapd/ath2.cfg
-sshpass -p'@rt3m!$NMT' \
-        ssh admin@192.168.1.99 \
-        killall hostapd
+ESSID="$(iwconfig | grep ESSID | sed 's/.*ESSID:"//;s/".*//')"
 
-echo 'ok'
+if [ "$ESSID" = "lunabotics" ]; then
+    # Sets the network SSID.
+    sshpass -p'@rt3m!$NMT' \
+            scp ./ssid_scripts/ath0.cfg admin@192.168.1.99:/etc/hostapd/ath0.cfg
+    sshpass -p'@rt3m!$NMT' \
+            scp ./ssid_scripts/ath2.cfg admin@192.168.1.99:/etc/hostapd/ath2.cfg
+    sshpass -p'@rt3m!$NMT' \
+            ssh admin@192.168.1.99 \
+            killall hostapd
+
+    echo 'ok'
+else
+    echo "not changing SSID, because it is '$ESSID' not 'lunabotics'"
+fi
