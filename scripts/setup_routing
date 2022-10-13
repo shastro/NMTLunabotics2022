@@ -2,8 +2,15 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+if [ "$1" = ""]; then
+    echo "Please specify an interface to set the routes"
+    exit 1
+else
+    echo "Setting interface $1"
+fi
+
 # Add route from computer to AI cpu
-sudo route add -net 169.254.0.0 gw 192.168.1.51 netmask 255.255.0.0 dev eth0
+sudo route add -net 169.254.0.0 gw 192.168.1.51 netmask 255.255.0.0 dev "$1"
 
 # this is set up in the bashrc and doesn't work anyway. --alex
 # # Enable IP forwarding on control pi
@@ -13,5 +20,5 @@ sudo route add -net 169.254.0.0 gw 192.168.1.51 netmask 255.255.0.0 dev eth0
 
 # Add route from AI cpu to computer
 ssh pi@control \
-    ssh pi@ai \
-    sudo route add -net 192.168.1.0 gw 169.254.10.11 netmask 255.255.255.0 dev eth0
+    ssh pi@ai  \
+    sudo route add -net 192.168.1.0 gw 169.254.10.11 netmask 255.255.255.0 dev "$1"
