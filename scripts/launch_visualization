@@ -1,11 +1,6 @@
-#!/bin/sh
-
-#!/bin/sh
-
-# Script to launch the system for the control CPU
-
-# Exit on error, rather than continuing.
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
 
 cd $(dirname "$0")
 
@@ -17,12 +12,11 @@ wait_for_ros () {
     done
 }
 
-./connect_robot
 wait_for_ros
 
 # Run rviz
 rviz &
 # Run rqt image view
-rosrun rqt_image_view rqt_image_view &
+# rosrun rqt_image_view rqt_image_view &
 # Run plotter
-rosrun plotjuggler plotjuggler &
+# rosrun plotjuggler plotjuggler &
